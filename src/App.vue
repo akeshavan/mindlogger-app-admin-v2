@@ -31,7 +31,8 @@
       </b-collapse>
     </b-navbar>
     <b-container class="p-3">
-     <router-view v-on:login="saveToken" :isLoggedIn="isLoggedIn" :user="user" :authToken="authToken"/>
+     <router-view v-on:login="saveToken" :isLoggedIn="isLoggedIn"
+     :user="user" :authToken="authToken"/>
     </b-container>
   </div>
 </template>
@@ -62,8 +63,8 @@ export default {
     },
   },
   mounted() {
-    this.user = JSON.parse(localStorage.getItem('user'));
-    this.authToken = JSON.parse(localStorage.getItem('authToken'));
+    // this.user = JSON.parse(localStorage.getItem('user')) || {};
+    // this.authToken = JSON.parse(localStorage.getItem('authToken')) || {};
   },
   methods: {
     saveToken(token) {

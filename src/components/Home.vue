@@ -10,7 +10,7 @@
       <div class="row">
         <div class="col-12 text-center" v-if="!isLoggedIn">
           <b-button variant="primary" to="/login">Log In</b-button>
-          <b-button variant="success">Sign Up</b-button>
+          <b-button variant="success" to="/signup">Sign Up</b-button>
         </div>
       </div>
     </b-container>

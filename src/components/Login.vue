@@ -36,6 +36,9 @@
       <p class="mt-3">
         Don't have an account? <router-link to="/signup">Create one</router-link>
       </p>
+      <p class="mt-3">
+        Forgot your password? <router-link to="/login">Reset it</router-link>
+      </p>
     </div>
 
   </div>
@@ -55,9 +58,7 @@
 </style>
 
 <script>
-import axios from 'axios';
 import { signin } from '../api/api';
-import config from '../config';
 
 console.log(signin);
 export default {

@@ -18,11 +18,10 @@ function generateQuery(params) {
   return result.join('&');
 }
 
-export const signup = (body) => ({
-  type: types.SIGN_UP,
-  method: 'POST',
-  path: '/user',
-  body: {
+export const signup = (body) => axios({
+  method: 'post',
+  url: `${config.apiHost}/user`,
+  params: {
     ...body,
     admin: true,
   },
