@@ -20,7 +20,7 @@
 
               <!-- Links to user's pages -->
               <div class="mt-3">
-                <b-nav-item v-for="subId in viewableUsers" :key="subId"
+                <b-nav-item v-for="subId in viewableUsers" :key="subId" class="w-100"
                  :to="'/view_activity/'+ activityId + '/view_user/' + subId">
                  <span v-if="userData[subId]">
                   {{userData[subId].lastName}}, {{userData[subId].firstName}}

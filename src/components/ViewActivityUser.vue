@@ -2,7 +2,7 @@
     <b-container>
       <b-row>
         <b-col class="text-center">
-          <h1>
+          <h1 id="user">
             <b-img
             thumbnail
             rounded
@@ -38,9 +38,14 @@
       <b-row>
         <b-col>
           <div v-for="(act) in activities" :key="act._id" class="mt-2">
-            <h2 :id="act[0].meta.activity.name">
+            <h2 :id="act[0].meta.activity.name" class="mb-0 pb-0">
               {{act[0].meta.activity.name}} ({{act.length}})
             </h2>
+            <div class="mb-3">
+              <small>
+                <a href="#user">go to top</a>
+              </small>
+            </div>
             <ActivityView :activity="act"/>
           </div>
         </b-col>

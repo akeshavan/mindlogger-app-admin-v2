@@ -1,13 +1,45 @@
 <template>
-  <div class="home">
+  <div class="home mt-3">
     <b-container>
       <div class="row">
         <div class="col-12 text-center">
-          <h1 >Mindlogger App Builder</h1>
+          <h1 >Mindlogger Admin Dashboard v2</h1>
           <p class="lead">A dashboard to build mindlogger applications and visualize data</p>
         </div>
       </div>
-      <div class="row">
+
+      <b-row class="mt-3 pt-3">
+        <b-col class="text-center">
+          <img class="mx-auto w-100"
+           src="../assets/undraw/undraw_prototyping_process_rswj.svg"/>
+        </b-col>
+        <b-col class="text-center">
+          <img class="mx-auto w-100"
+           src="../assets/undraw/undraw_data_trends_b0wg.svg"/>
+        </b-col>
+        <b-col class="text-center">
+          <img class="mx-auto w-100"
+           src="../assets/undraw/undraw_experts3_3njd.svg"/>
+        </b-col>
+      </b-row>
+      <b-row class="mt-2 mb-3 pb-3">
+        <b-col class="text-center">
+          <p>
+            Build Mindlogger EMAs
+          </p>
+        </b-col>
+        <b-col class="text-center">
+          <p>
+            Visualize, interact with, and download data
+          </p>
+        </b-col>
+        <b-col class="text-center">
+          <p>
+            Manage study roles
+          </p>
+        </b-col>
+      </b-row>
+      <div class="row mt-3">
         <div class="col-12 text-center" v-if="!isLoggedIn">
           <b-button variant="primary" to="/login">Log In</b-button>
           <b-button variant="success" to="/signup">Sign Up</b-button>
