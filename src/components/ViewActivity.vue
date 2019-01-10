@@ -6,7 +6,10 @@
       <b-row>
         <b-col cols="3" class="pt-3 bg-light">
           <b-nav vertical pills class="w-100">
-
+            <b-nav-item to="/activitySets" exact v-if="isLoggedIn">
+            <i class="fas fa-long-arrow-alt-left"></i>
+            Your Activity Sets
+            </b-nav-item>
             <b-nav-item
              :to="'/view_activity/'+ activityId +'/overview'">
               Overview

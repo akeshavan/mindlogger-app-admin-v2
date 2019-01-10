@@ -9,7 +9,7 @@
       <b-collapse is-nav id="nav_collapse">
 
         <b-navbar-nav>
-          <!-- <b-nav-item href="#">Link</b-nav-item> -->
+          <b-nav-item to="/activitySets" exact v-if="isLoggedIn">Your Activity Sets</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -44,6 +44,7 @@ import _ from 'lodash';
 // eslint-disable-next-line
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 
 const localStorage = require('localStorage');
 
