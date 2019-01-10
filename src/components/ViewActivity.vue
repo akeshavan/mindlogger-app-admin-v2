@@ -4,7 +4,7 @@
     <Unauthorized v-else-if="status === 'unauthorized'" />
     <div v-else-if="isLoggedIn" class="activitySetOverview">
       <b-row>
-        <b-col cols="3" class="pt-3 bg-light">
+        <b-col class="pt-3 bg-light col-md-3 col-sm-12 col-xs-12">
           <b-nav vertical pills class="w-100">
             <b-nav-item to="/activitySets" exact v-if="isLoggedIn">
             <i class="fas fa-long-arrow-alt-left"></i>
@@ -34,7 +34,7 @@
               </div>
           </b-nav>
         </b-col>
-        <b-col cols="9" class="p-3">
+        <b-col class="p-3 col-md-9 col-sm-12 col-xs-12">
           <router-view :activityData="activityData" :authToken="authToken"></router-view>
         </b-col>
       </b-row>
