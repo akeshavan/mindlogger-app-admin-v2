@@ -15,12 +15,14 @@
             <b-nav-text class="text-center">Users</b-nav-text>
               <!-- Search users -->
               <b-nav-form class="ml-3">
-                <b-form-input class="mx-auto w-100" type="text" placeholder="Search"></b-form-input>
+                <b-form-input class="mx-auto w-100"
+                 type="text" placeholder="Search" v-model="userSearch">
+                </b-form-input>
               </b-nav-form>
 
               <!-- Links to user's pages -->
               <div class="mt-3">
-                <b-nav-item v-for="subId in viewableUsers" :key="subId" class="w-100"
+                <b-nav-item v-for="subId in searchUsers" :key="subId" class="w-100"
                  :to="'/view_activity/'+ activityId + '/view_user/' + subId">
                  <span v-if="userData[subId]">
                   {{userData[subId].lastName}}, {{userData[subId].firstName}}
@@ -79,6 +81,7 @@ export default {
       activityData: {},
       status: 'loading',
       userData: {},
+      userSearch: '',
     };
   },
   computed: {
@@ -91,6 +94,18 @@ export default {
     },
     currentRoute() {
       return this.$router.currentRoute.name;
+    },
+    searchUsers() {
+      if (!this.userSearch) {
+        return this.viewableUsers;
+      }
+      // eslint-disable-next-line
+      return _.filter(this.viewableUsers, (value) => {
+        return (this.userData[value]
+          .firstName.toLowerCase() + this.userData[value]
+          .lastName.toLowerCase())
+          .indexOf(this.userSearch.toLowerCase()) > -1;
+      });
     },
   },
   methods: {

@@ -1,5 +1,7 @@
 <template>
-    <b-container>
+  <div>
+    <Loading v-if="status==='loading'"/>
+    <b-container v-else>
       <b-row>
         <b-col class="text-center">
           <h1 id="user">
@@ -51,6 +53,7 @@
         </b-col>
       </b-row>
     </b-container>
+  </div>
 </template>
 
 <style scoped>
@@ -71,8 +74,9 @@ li {
 import _ from 'lodash';
 import { getUserMetadata, getUserDataFolder, getUserActivitySetFolders, getUserActivitySetData } from '../api/api';
 import ActivityView from './library/ActivityView';
+import Loading from './library/Loading';
 
-const TIMEOUT = 10000;
+const TIMEOUT = 1000;
 
 export default {
   name: 'ViewActivityUser',
@@ -86,6 +90,7 @@ export default {
   },
   components: {
     ActivityView,
+    Loading,
   },
   computed: {
     userId() {
@@ -99,6 +104,7 @@ export default {
     return {
       userMetaData: {},
       userData: [],
+      status: 'loading',
     };
   },
   methods: {
@@ -108,6 +114,7 @@ export default {
       });
     },
     getUserData() {
+      this.status = 'loading';
       /* eslint-disable */
       return getUserDataFolder(this.userId, this.authToken.token).then((resp) => {
         return resp.data[0]._id;
@@ -117,6 +124,7 @@ export default {
         }).then((userActivityFolderId) => {
           getUserActivitySetData(userActivityFolderId, this.authToken.token).then((resp) => {
             this.userData = resp.data;
+            this.status = 'ready';
           });
         });
       });
@@ -129,6 +137,7 @@ export default {
   },
   watch: {
     userId() {
+      this.status = 'loading';
       this.getUserMetadata().then(this.getUserData);
     },
   },
