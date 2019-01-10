@@ -18,6 +18,7 @@
     "bootstrap-vue": "^2.0.0-rc.11",
     "localStorage": "^1.0.4",
     "lodash": "^4.17.11",
+    "moment": "^2.23.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },

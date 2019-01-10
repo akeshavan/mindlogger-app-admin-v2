@@ -33,6 +33,24 @@ export const signin = ({user, password}) => axios({
     headers: { 'Girder-Authorization': `Basic ${btoa(user + ":" + password)}` }
   });
 
+export const getUserDataFolder = (userId, token) => axios({
+  method: 'get',
+  url: `${config.apiHost}/folder?parentType=user&parentId=${userId}&name=Responses`,
+  headers: { 'Girder-Token': `${token}` },
+})
+
+export const getUserActivitySetFolders = (userFolderId, token) => axios({
+  method: 'get',
+  url: `${config.apiHost}/folder?parentType=folder&parentId=${userFolderId}`,
+  headers: { 'Girder-Token': `${token}` },
+})
+
+export const getUserActivitySetData = (userActivitySetFolder, token) => axios({
+  method: 'get',
+  url: `${config.apiHost}/item?folderId=${userActivitySetFolder}&limit=5000`,
+  headers: { 'Girder-Token': `${token}` },
+});
+
 export const changeProfile = (id, body) => ({
   type: types.CHANGE_PROFILE,
   method: 'PUT',
@@ -85,10 +103,36 @@ export const setUserTemporary = (email) => ({
 
 /* ----- Acts ----- */
 
-export const getActs = (offset, limit) => ({
-  type: types.GET_LIST,
+export const getAllActivitySets = () => axios({
   method: 'GET',
-  path: `/acts?offset=${offset}&limit=${limit}`
+  url: `${config.apiHost}/collection/?text=Volumes`
+}).then((resp) => {
+  return resp.data[0]._id;
+}).then(getActivitySets)
+
+export const getActivitySets = (parentId) => axios({
+  method: 'GET',
+  url: `${config.apiHost}/folder?parentId=${parentId}&parentType=collection`,
+})
+
+export const fullImageURL = (fileId) => `${config.apiHost}/${fileId}/download?contentDisposition=inline`;
+
+/**
+ * gets a specific activity set by its id
+ * @param {String} activityId 
+ */
+export const getActivitySet = (activityId) => axios({
+  method: 'GET',
+  url: `${config.apiHost}/folder/${activityId}`
+})
+
+/**
+ * get a user's metadata
+ * @param {String} userId 
+ */
+export const getUserMetadata = (userId) => axios({
+  method: 'GET',
+  url: `${config.apiHost}/user/${userId}`,
 })
 
 export const getAssignedActs = (userId) => ({
