@@ -156,7 +156,7 @@ export default {
         this.$emit('login', { authToken: resp.data.authToken, user: cleanedUser });
 
         // redirect home
-        this.$router.push('/');
+        this.$router.push('/activitySets');
       }).catch((err) => {
         this.errors.show = true;
         this.errors.code = err.response;

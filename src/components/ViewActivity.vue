@@ -2,7 +2,7 @@
   <div>
     <Loading v-if="status === 'loading'"/>
     <Unauthorized v-else-if="status === 'unauthorized'" />
-    <div v-else class="activitySetOverview">
+    <div v-else-if="isLoggedIn" class="activitySetOverview">
       <b-row>
         <b-col cols="3" class="pt-3 bg-light">
           <b-nav vertical pills class="w-100">
@@ -39,6 +39,7 @@
         </b-col>
       </b-row>
     </div>
+    <Unauthorized v-else />
   </div>
 </template>
 

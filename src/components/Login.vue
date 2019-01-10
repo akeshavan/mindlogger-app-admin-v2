@@ -81,7 +81,7 @@ export default {
       e.preventDefault();
       signin({ user: this.form.username, password: this.form.password }).then((resp) => {
         this.$emit('login', resp.data);
-        this.$router.push('/');
+        this.$router.push('/activitySets');
       }).catch((err) => {
         this.errors.code = err.response;
         if (this.errors.code.status === 401) {

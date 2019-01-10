@@ -24,7 +24,7 @@
 
       <b-row>
         <b-col>
-          <h5> Jump to: </h5>
+          <h5> Activities in {{activityData.name}}: </h5>
         </b-col>
         <b-col offset="1" cols="11">
             <div v-for="(act) in activities" :key="act._id" class="mt-2">
