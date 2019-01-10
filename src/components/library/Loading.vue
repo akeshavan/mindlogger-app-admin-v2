@@ -14,9 +14,9 @@
 /* @vikttor_  */
 /* Loading SASS */
 .layer-preloader {
-  position: fixed;
+  position: relative;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background: rgba(255, 255, 255, 0.85);
   top: 0;
   left: 0;

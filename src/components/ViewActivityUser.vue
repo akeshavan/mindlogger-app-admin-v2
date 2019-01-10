@@ -1,6 +1,7 @@
 <template>
   <div>
     <Loading v-if="status==='loading'"/>
+    <Error v-else-if="status==='error'" :error="error"/>
     <b-container v-else>
       <b-row>
         <b-col class="text-center">
@@ -75,6 +76,8 @@ import _ from 'lodash';
 import { getUserMetadata, getUserDataFolder, getUserActivitySetFolders, getUserActivitySetData } from '../api/api';
 import ActivityView from './library/ActivityView';
 import Loading from './library/Loading';
+import Error from './library/Error';
+import config from '../config';
 
 const TIMEOUT = 1000;
 
@@ -91,6 +94,7 @@ export default {
   components: {
     ActivityView,
     Loading,
+    Error,
   },
   computed: {
     userId() {
@@ -105,29 +109,48 @@ export default {
       userMetaData: {},
       userData: [],
       status: 'loading',
+      error: {
+        message: null,
+        response: null,
+      },
     };
   },
   methods: {
     getUserMetadata() {
       return getUserMetadata(this.userId).then((resp) => {
         this.userMetaData = resp.data;
+      }).catch((e) => {
+        this.error.message = e.message;
       });
     },
     getUserData() {
       this.status = 'loading';
       /* eslint-disable */
-      return getUserDataFolder(this.userId, this.authToken.token).then((resp) => {
-        return resp.data[0]._id;
-      }).then((folderId) => {
-        return getUserActivitySetFolders(folderId, this.authToken.token).then((resp) => {
-          return _.filter(resp.data, v => v.name === this.activityData.name)[0]._id;
-        }).then((userActivityFolderId) => {
-          getUserActivitySetData(userActivityFolderId, this.authToken.token).then((resp) => {
+
+      // find the user's Responses folder. This is the only folder they have, so it should be the first.
+      return getUserDataFolder(this.userId, this.authToken.token)
+        .then((resp) => {
+          if (!resp.data.length) {
+            throw { message: `User ${this.userId} has an empty data folder!
+              Check ${config.apiHost}/folder?parentType=user&parentId=${this.userId}&name=Responses` };
+          }
+          return resp.data[0]._id;
+        })
+        // within Responses, get a list of Activity set folders
+        .then(folderId => getUserActivitySetFolders(folderId, this.authToken.token))
+        // grab the folder name that matches the activity we want.
+        .then(resp => _.filter(resp.data, v => v.name === this.activityData.name)[0]._id)
+        // get all the data from this folder Id
+        .then((userActivityFolderId) => getUserActivitySetData(userActivityFolderId, this.authToken.token))
+        // save the data to our component and say that we are ready!
+        .then((resp) => {
             this.userData = resp.data;
             this.status = 'ready';
-          });
+          })
+        .catch((e) => {
+          this.error.message = e.message;
+          this.status = 'error';
         });
-      });
       /* eslint-enable */
     },
     scrollTo(hashtag) {

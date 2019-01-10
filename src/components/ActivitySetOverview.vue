@@ -1,5 +1,5 @@
 <template>
-    <b-container>
+    <b-container class="minW">
       <b-row>
         <b-col>
           <h1 class="text-center">
@@ -43,7 +43,9 @@
 </template>
 
 <style>
-
+  .minW {
+    min-width: 300px;
+  }
 </style>
 
 <script>
