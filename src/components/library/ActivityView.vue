@@ -1,7 +1,10 @@
 <template>
-  <div>
-    <div class="d1 card mb-3 pb-3">
-      <div class="d2">
+  <div class="scrollTable">
+    <div class="d1 mb-3 pb-3">
+      <div class="text-right w-100">
+        <small class="text-right">{{activityDataTable.length}} items</small>
+      </div>
+      <div class="d2 card">
         <div class="d3">
           <div class="d3-2">
             <div class="d4">
@@ -22,6 +25,10 @@
 </template>
 
 <style scoped>
+.scrollTable {
+  margin-bottom: 4em;
+}
+
 .d1 {
     height: 500px;
 }
@@ -90,8 +97,8 @@ export default {
           const min = this.dateRange[0];
           const max = this.dateRange[1];
           const time = moment(v.updated);
-          // console.log(time, max);
-          return time >= min && time <= max;
+
+          return time >= min && time <= max.add(1, 'second');
           // eslint-disable-next-line
         }), (a) => {
           return {

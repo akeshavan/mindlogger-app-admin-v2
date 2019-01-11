@@ -122,7 +122,7 @@ export default {
     },
     drawScrub() {
       const brush = d3.brushX()
-        .extent([[0, 0], [this.width, this.height]])
+        .extent([[this.padding, 0], [this.width - (2 * this.padding), this.height]])
         .on('brush end', this.brushed);
       this.brush = brush;
       d3.select(this.$refs.brush)
