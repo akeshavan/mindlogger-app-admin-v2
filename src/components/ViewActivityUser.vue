@@ -11,7 +11,9 @@
             rounded
             width="75" height="75" blank-color="#777"
             class=""
-            :src="userMetaData.gravatar_baseUrl"></b-img>
+            :src="userMetaData.gravatar_baseUrl"
+            v-if="userMetaData.gravatar_baseUrl"
+            ></b-img>
 
             {{userMetaData.firstName}} {{userMetaData.lastName}}
           </h1>
@@ -34,12 +36,12 @@
       <!-- Table of Contents -->
       <!-- Jump to a specific activity -->
 
-      <b-row>
+      <b-row class="mt-3">
         <b-col>
           <h5> Activities in {{activityData.name}}: </h5>
         </b-col>
         <b-col offset="1" cols="11">
-            <div v-for="(act) in activities" :key="act._id" class="mt-2">
+            <div v-for="(act) in activities" :key="act._id" class="mt-3">
               <p>
                 <a :href="'#' + act[0].meta.activity.name">
                   {{act[0].meta.activity.name}} ({{act.length}})
@@ -68,7 +70,7 @@
              :colorArr="getColorArr(index)"
              v-on:setFilterDateRange="setFilterDateRange"
              />
-            <ActivityView :activity="act"/>
+            <ActivityView :activity="act" :dateRange="filterDateRange"/>
           </div>
         </b-col>
       </b-row>
