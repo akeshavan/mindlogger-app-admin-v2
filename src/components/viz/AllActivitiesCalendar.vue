@@ -16,6 +16,7 @@
 
       <activity-calendar
        key="scrubber"
+       ref="scrub"
        :activity="dataFlat"
        :width="width"
        :tMin="sMin"
@@ -110,8 +111,6 @@ export default {
       tMax: null,
       sMin: null,
       sMax: null,
-      fMin: null,
-      fMax: null,
       axisHeight: 50,
       padding: 15,
     };
@@ -145,9 +144,8 @@ export default {
     filterDateRange() {
       this.tMin = this.filterDateRange[0];
       this.tMax = this.filterDateRange[1];
-      this.fMin = this.filterDateRange[0];
-      this.fMax = this.filterDateRange[1];
-      // this.$forceUpdate();
+      this.$refs.scrub.redrawScrub(this.tMin, this.tMax);
+      this.$forceUpdate();
     },
   },
   computed: {

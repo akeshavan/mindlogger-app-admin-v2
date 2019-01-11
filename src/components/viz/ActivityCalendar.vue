@@ -112,6 +112,7 @@ export default {
     },
     brushed() {
       const s = d3.event.selection;
+      console.log('d3 event selection', s);
       if (s) {
         const newRange = s.map(this.xScale.invert, this.xScale);
         this.$emit('setRange', newRange);
@@ -127,9 +128,11 @@ export default {
       d3.select(this.$refs.brush)
         .call(brush);
     },
-    redrawScrub() {
+    redrawScrub(min, max) {
+      this.brush.on('brush end', null);
       d3.select(this.$refs.brush)
-        .call(this.brush.move, this.xScale.range());
+        .call(this.brush.move, [this.xScale(min.toDate()), this.xScale(max.toDate())]);
+      this.brush.on('brush end', this.brushed);
     },
   },
   computed: {
