@@ -20,6 +20,12 @@
         </b-col>
       </b-row>
 
+      <b-row class="mb-3">
+        <b-col>
+          <all-activites-calendar :id="'chart__'+userId" :data="activitiesArray"/>
+        </b-col>
+      </b-row>
+
       <!-- Table of Contents -->
       <!-- Jump to a specific activity -->
 
@@ -78,6 +84,7 @@ import ActivityView from './library/ActivityView';
 import Loading from './library/Loading';
 import Error from './library/Error';
 import config from '../config';
+import AllActivitesCalendar from './viz/AllActivitiesCalendar';
 
 const TIMEOUT = 1000;
 
@@ -95,6 +102,7 @@ export default {
     ActivityView,
     Loading,
     Error,
+    AllActivitesCalendar,
   },
   computed: {
     userId() {
@@ -102,6 +110,9 @@ export default {
     },
     activities() {
       return _.groupBy(this.userData, v => v.meta.activity['@id']);
+    },
+    activitiesArray() {
+      return _.map(this.activities, a => a);
     },
   },
   data() {
