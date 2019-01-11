@@ -133,7 +133,7 @@ export default {
       const newRange = [this.xScale(min.toDate()), this.xScale(max.toDate())];
       // if the newRange === this.xScale.range()
       // then don't draw anything.
-      if (_.isEqual(newRange, this.xScale.range())) {
+      if (_.isEqual(_.map(newRange, Math.round), _.map(this.xScale.range(), Math.round))) {
         d3.select(this.$refs.brush)
           .call(this.brush.move, null);
       } else {
