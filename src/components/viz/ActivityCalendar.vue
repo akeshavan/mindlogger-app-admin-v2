@@ -30,6 +30,7 @@
 
 <script>
 import moment from 'moment';
+import _ from 'lodash';
 
 const d3 = require('d3');
 
@@ -112,7 +113,6 @@ export default {
     },
     brushed() {
       const s = d3.event.selection;
-      console.log('d3 event selection', s);
       if (s) {
         const newRange = s.map(this.xScale.invert, this.xScale);
         this.$emit('setRange', newRange);
@@ -130,8 +130,16 @@ export default {
     },
     redrawScrub(min, max) {
       this.brush.on('brush end', null);
-      d3.select(this.$refs.brush)
-        .call(this.brush.move, [this.xScale(min.toDate()), this.xScale(max.toDate())]);
+      const newRange = [this.xScale(min.toDate()), this.xScale(max.toDate())];
+      // if the newRange === this.xScale.range()
+      // then don't draw anything.
+      if (_.isEqual(newRange, this.xScale.range())) {
+        d3.select(this.$refs.brush)
+          .call(this.brush.move, null);
+      } else {
+        d3.select(this.$refs.brush)
+          .call(this.brush.move, newRange);
+      }
       this.brush.on('brush end', this.brushed);
     },
   },
