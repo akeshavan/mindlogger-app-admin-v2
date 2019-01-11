@@ -99,6 +99,12 @@ export default {
     filterDateRange: {
       type: Array,
     },
+    /**
+     * optional color array
+     */
+    colorArr: {
+      type: Array,
+    },
   },
   components: {
     ActivityCalendar,
@@ -182,7 +188,8 @@ export default {
       return { min, max };
     },
     getColor(i) {
-      return d3.schemeCategory10[i % 10];
+      const colorArr = this.colorArr || d3.schemeCategory10;
+      return colorArr[i % colorArr.length];
     },
     setNewRange(newRange) {
       const mRange = _.map(newRange, l => moment(l.toISOString()));

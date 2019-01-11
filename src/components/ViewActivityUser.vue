@@ -51,7 +51,7 @@
 
       <b-row>
         <b-col>
-          <div v-for="(act, index) in activities" :key="act._id" class="mt-2">
+          <div v-for="(act, index) in activitiesArray" :key="act._id" class="mt-2">
             <h2 :id="act[0].meta.activity.name" class="mb-0 pb-0">
               {{act[0].meta.activity.name}} ({{act.length}})
             </h2>
@@ -65,6 +65,7 @@
              :data="[act]"
              :dateRange="globalDateRange"
              :filterDateRange="filterDateRange"
+             :colorArr="getColorArr(index)"
              v-on:setFilterDateRange="setFilterDateRange"
              />
             <ActivityView :activity="act"/>
@@ -97,6 +98,8 @@ import Loading from './library/Loading';
 import Error from './library/Error';
 import config from '../config';
 import AllActivitesCalendar from './viz/AllActivitiesCalendar';
+
+const d3 = require('d3');
 
 const TIMEOUT = 1000;
 
@@ -190,6 +193,9 @@ export default {
       this.filterDateRange = dateRange;
       this.$forceUpdate();
     },
+    getColorArr(i) {
+      return [d3.schemeCategory10[i % 10]];
+    },
   },
   watch: {
     userId() {
@@ -200,7 +206,6 @@ export default {
   mounted() {
     this.getUserMetadata().then(this.getUserData).then(() => {
       // From testing, without a brief timeout, it won't work.
-      console.log('hash?', this.$route.hash);
       if (this.$route.hash) {
         setTimeout(() => this.scrollTo(this.$route.hash), TIMEOUT);
       }
