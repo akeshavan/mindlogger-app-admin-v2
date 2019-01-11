@@ -2,13 +2,21 @@
     <g class="activityAxis" ref="g"
      :transform="`translate(${padding}, ${yTrans + 2*padding})`" text-anchor="left">
       <text :x="padding"  :y="-padding" fill="black" text-anchor="start">
-        {{activity[0].meta.activity.name}}
+        {{title}}
       </text>
+      <g v-if="role==='scrub'" class="brush" ref="brush" :transform="`translate(0, -${height/2})`">
+      </g>
     </g>
 </template>
 <style>
   .dot {
     opacity: 0.9;
+  }
+
+  .scrubDot {
+    opacity: 0.5;
+    stroke: black;
+    stroke-width: 0.5;
   }
 
   .domain {
@@ -57,6 +65,19 @@ export default {
       type: String,
       default: 'red',
     },
+    role: {
+      type: String,
+      default: 'data',
+    },
+    title: {
+      type: String,
+      default: '',
+    },
+  },
+  data() {
+    return {
+      brush: null,
+    };
   },
   methods: {
     getXScale() {
@@ -68,23 +89,47 @@ export default {
       return null;
     },
     drawAxis() {
-      d3.select(this.$refs.g).call(d3.axisBottom(this.xScale).ticks(5)
-        .tickFormat(d3.timeFormat('%b-%d')));
+      d3.select(this.$refs.g)
+        .call(d3.axisBottom(this.xScale).ticks(5));
+      // .tickFormat(d3.timeFormat('%b-%d')));
     },
     drawDots() {
+      const className = this.role === 'data' ? 'dot' : 'scrubDot';
+
       d3.select(this.$refs.g)
-        .selectAll('.dot')
+        .selectAll(`.${className}`)
         .data(this.activity)
         .enter()
         .append('circle')
-        .attr('class', 'dot');
+        .attr('class', className);
 
       d3.select(this.$refs.g)
-        .selectAll('.dot')
+        .selectAll(`.${className}`)
         .attr('cy', 0)
         .attr('cx', d => this.xScale(moment(d.updated).toDate()))
         .attr('r', 5)
         .attr('fill', this.color);
+    },
+    brushed() {
+      const s = d3.event.selection;
+      if (s) {
+        const newRange = s.map(this.xScale.invert, this.xScale);
+        this.$emit('setRange', newRange);
+      } else {
+        this.$emit('setRange', [this.tMin, this.tMax]);
+      }
+    },
+    drawScrub() {
+      const brush = d3.brushX()
+        .extent([[this.padding, 0], [this.width - (2 * this.padding), this.height]])
+        .on('brush end', this.brushed);
+      this.brush = brush;
+      d3.select(this.$refs.brush)
+        .call(brush);
+    },
+    redrawScrub() {
+      d3.select(this.$refs.brush)
+        .call(this.brush.move, this.xScale.range());
     },
   },
   computed: {
@@ -104,13 +149,27 @@ export default {
       if (this.width && this.xScale) {
         this.drawAxis();
         this.drawDots();
+        if (this.role === 'scrub') {
+          this.drawScrub();
+        }
       }
+    },
+    tMin() {
+      this.drawAxis();
+      this.drawDots();
+    },
+    tMax() {
+      this.drawAxis();
+      this.drawDots();
     },
   },
   mounted() {
     if (this.width && this.xScale) {
       this.drawAxis();
       this.drawDots();
+      if (this.role === 'scrub') {
+        this.drawScrub();
+      }
     }
   },
 };

@@ -22,7 +22,12 @@
 
       <b-row class="mb-3">
         <b-col>
-          <all-activites-calendar :id="'chart__'+userId" :data="activitiesArray"/>
+          <all-activites-calendar :id="'chart__'+userId"
+           :data="activitiesArray" :isBoss="true"
+           v-on:setGlobalDateRange="setGlobalDateRange"
+           v-on:setFilterDateRange="setFilterDateRange"
+           :filterDateRange="filterDateRange"
+          />
         </b-col>
       </b-row>
 
@@ -46,7 +51,7 @@
 
       <b-row>
         <b-col>
-          <div v-for="(act) in activities" :key="act._id" class="mt-2">
+          <div v-for="(act, index) in activities" :key="act._id" class="mt-2">
             <h2 :id="act[0].meta.activity.name" class="mb-0 pb-0">
               {{act[0].meta.activity.name}} ({{act.length}})
             </h2>
@@ -55,6 +60,13 @@
                 <a href="#user">go to top</a>
               </small>
             </div>
+            <all-activites-calendar
+             :id="'subchart__'+index"
+             :data="[act]"
+             :dateRange="globalDateRange"
+             :filterDateRange="filterDateRange"
+             v-on:setFilterDateRange="setFilterDateRange"
+             />
             <ActivityView :activity="act"/>
           </div>
         </b-col>
@@ -124,6 +136,8 @@ export default {
         message: null,
         response: null,
       },
+      globalDateRange: null,
+      filterDateRange: null,
     };
   },
   methods: {
@@ -167,6 +181,14 @@ export default {
     scrollTo(hashtag) {
       console.log('going to scroll to', hashtag);
       setTimeout(() => { location.href = hashtag; }, TIMEOUT);
+    },
+    setGlobalDateRange(dateRange) {
+      this.globalDateRange = dateRange;
+      this.$forceUpdate();
+    },
+    setFilterDateRange(dateRange) {
+      this.filterDateRange = dateRange;
+      this.$forceUpdate();
     },
   },
   watch: {
