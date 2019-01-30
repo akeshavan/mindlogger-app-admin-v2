@@ -44,22 +44,27 @@
       </b-container>
       <b-row class="mt-3">
         <b-col>
-          <!-- <h3>Screens</h3> -->
-          <swiper :options="swiperOption" ref="swiper" class="bg-light pt-2">
-            <swiper-slide v-for="screen in activityData.meta.screens" :key="screen.name">
-              <b-card :title="screen.name"
-                      tag="article"
-                      style="max-width: 20rem;"
-                      class="mb-2">
-                <p class="card-text">
-                  Some quick example text.
-                </p>
-              </b-card>
+          <!-- Screen Preview Netflix -->
+          <swiper :options="swiperOption"
+           ref="swiper"
+           class="bg-light pt-2"
+           v-on:ready="swiperReady = true">
+            <swiper-slide v-for="(screen, index) in activityData.meta.screens" :key="screen.name">
+              <div v-if="screens[index]">
+                <screen-preview :screenData="screens[index].meta"/>
+              </div>
             </swiper-slide>
             <div class="swiper-button-prev" slot="button-prev"></div>
             <div class="swiper-button-next" slot="button-next"></div>
             <div class="swiper-pagination" slot="pagination"></div>
           </swiper>
+
+          <!-- Current Slide Editing Panel -->
+          <div v-if="currentSlide != null && screens.length" class="container mt-3">
+            <div v-if="screens[currentSlide]">
+              <screen-editor :screenData="screens[currentSlide].meta" v-on:changedValue="updateScreen"/>
+            </div>
+          </div>
         </b-col>
       </b-row>
     </div>
@@ -70,17 +75,12 @@
   h1, h2, h3 {
     font-weight: normal;
   }
-  /* .swiper-slide {
-    width: 60%;
-  }
-  .swiper-slide:nth-child(2n) {
-      width: 40%;
-  }
-  .swiper-slide:nth-child(3n) {
-      width: 20%;
-  } */
 
-.swiper-slide-active > article.card.mb-2 {
+  .lh {
+    line-height: normal;
+  }
+
+.swiper-slide-active article.card.mb-2 {
     border-width: thick;
     color: black;
 }
@@ -93,6 +93,10 @@ article {
 .swiper-slide {
     color: gray;
 }
+
+.swiper-container {
+  min-height: 316px;
+}
 </style>
 
 <script>
@@ -103,6 +107,8 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper';
 // import _ from 'lodash';
 import Loading from './library/Loading';
 import Unauthorized from './library/Unauthorized';
+import ScreenEditor from './library/ScreenEditor';
+import ScreenPreview from './library/ScreenPreview';
 import {
   getActivitySet,
   getUserMetadata,
@@ -133,6 +139,7 @@ export default {
       activityData: {},
       status: 'loading',
       screens: [],
+      swiperReady: false,
       swiperOption: {
         slidesPerView: 6,
         spaceBetween: 30,
@@ -171,8 +178,16 @@ export default {
     Unauthorized,
     swiper,
     swiperSlide,
+    ScreenEditor,
+    ScreenPreview,
   },
   computed: {
+    currentSlide() {
+      if (this.swiperReady) {
+        return this.$refs.swiper.swiper.activeIndex;
+      }
+      return null;
+    },
     activityId() {
       return this.$route.params.activityId;
     },
@@ -220,6 +235,9 @@ export default {
       getScreenMetadata(parentFolderId).then((resp) => {
         this.screens = resp.data;
       });
+    },
+    updateScreen(key, value) {
+      this.screens[this.currentSlide].meta[key] = value;
     },
   },
   mounted() {
