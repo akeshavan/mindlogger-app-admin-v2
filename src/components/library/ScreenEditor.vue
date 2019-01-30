@@ -27,8 +27,16 @@
                v-on:needsSave="needsSave"> -->
                </textfield>
             </template>
+
+            <!-- delete action -->
+            <template slot="actions" slot-scope="row">
+              <button type="button" class="close" aria-label="Close" style="width:100%"
+               @click="removeSurvetListOption(row)">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </template>
           </b-table>
-          <b-button >Add Option</b-button>
+          <b-button variant="outline-success" class="w-100" @click="addSurveyListOption">Add Option</b-button>
         </b-col>
       </b-row>
       {{screenData}}
@@ -36,7 +44,7 @@
   </div>
 </template>
 
-<style scoped>
+<style>
   .textfield {
     border-style: none;
     background-color: #ffffff00;
@@ -95,11 +103,24 @@ export default {
         this.surveyListOptions = this.screenData.survey.options;
       }
     },
-    setSurveyListText(value, index) {
-      this.surveyListOptions[index].text = value;
+    updateSurveyList() {
       const newSurvey = { ...this.screenData.survey };
       newSurvey.options = this.surveyListOptions;
       this.$emit('changedValue', 'survey', newSurvey);
+    },
+    setSurveyListText(value, index) {
+      this.surveyListOptions[index].text = value;
+      this.updateSurveyList();
+    },
+    removeSurvetListOption(loc) {
+      this.surveyListOptions.splice(loc.index, 1);
+    },
+    addSurveyListOption() {
+      this.surveyListOptions.push({
+        text: 'option',
+        type: 'text',
+      });
+      this.updateSurveyList();
     },
   },
   watch: {
