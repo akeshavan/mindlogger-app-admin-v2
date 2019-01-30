@@ -146,15 +146,15 @@ export default {
           clickable: true,
         },
         breakpoints: {
-          1024: {
-            slidesPerView: 6,
+          1360: {
+            slidesPerView: 4,
             spaceBetween: 20,
           },
           950: {
             slidesPerView: 3,
             spaceBetween: 20,
           },
-          640: {
+          680: {
             slidesPerView: 2,
             spaceBetween: 20,
           },
