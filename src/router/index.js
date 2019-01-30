@@ -7,6 +7,10 @@ import ActivitySets from '@/components/ActivitySets';
 import ViewActivity from '@/components/ViewActivity';
 import ActivitySetOverview from '@/components/ActivitySetOverview';
 import ViewActivityUser from '@/components/ViewActivityUser';
+import ForgotPassword from '@/components/ForgotPassword';
+import EditActivitySet from '@/components/EditActivitySet';
+import EditActivity from '@/components/EditActivity';
+import EditActivitySetParentRoute from '@/components/EditActivitySetParentRoute';
 
 Vue.use(Router);
 
@@ -32,6 +36,29 @@ export default new Router({
       path: '/signup',
       name: 'SignUp',
       component: SignUp,
+    },
+    {
+      path: '/forgot',
+      name: 'Forgot',
+      component: ForgotPassword,
+    },
+    {
+      path: '/edit_activity_set/:activitySetId',
+      name: 'EditActivitySet',
+      redirect: '/edit_activity_set/:activitySetId/',
+      component: EditActivitySetParentRoute,
+      children: [
+        {
+          name: 'edit_activity_set_overview',
+          path: '/',
+          component: EditActivitySet,
+        },
+        {
+          path: 'edit_activity/:activityId',
+          name: 'EditActivity',
+          component: EditActivity,
+        },
+      ],
     },
     {
       path: '/activitySets',

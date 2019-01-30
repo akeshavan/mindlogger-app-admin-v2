@@ -37,7 +37,7 @@
         Don't have an account? <router-link to="/signup">Create one</router-link>
       </p>
       <p class="mt-3">
-        Forgot your password? <router-link to="/login">Reset it</router-link>
+        Forgot your password? <router-link to="/forgot">Reset it</router-link>
       </p>
     </div>
 
@@ -60,7 +60,7 @@
 <script>
 import { signin } from '../api/api';
 
-console.log(signin);
+// console.log(signin);
 export default {
   name: 'login',
   data() {

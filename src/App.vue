@@ -64,12 +64,17 @@ export default {
     },
   },
   mounted() {
-    this.user = JSON.parse(localStorage.getItem('user')) || {};
-    this.authToken = JSON.parse(localStorage.getItem('authToken')) || {};
+    try {
+      this.user = JSON.parse(localStorage.getItem('user')) || {};
+      this.authToken = JSON.parse(localStorage.getItem('authToken')) || {};
+    } catch (error) {
+      this.user = {};
+      this.authToken = {};
+    }
   },
   methods: {
     saveToken(token) {
-      console.log(token);
+      // console.log(token);
       this.user = token.user;
       this.authToken = token.authToken;
       localStorage.setItem('user', JSON.stringify(token.user));

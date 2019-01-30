@@ -1,6 +1,10 @@
 import axios from 'axios';
+import _ from 'lodash';
 import * as types from './types';
 import config from '../config';
+
+
+window.axios = axios;
 
 /* eslint-disable */
 function generateQuery(params) {
@@ -65,11 +69,10 @@ export const changePassword = (id, body) => ({
   body,
 });
 
-export const forgotPassword = (body) => ({
-  type: types.FORGOT_PASSWORD,
+export const forgotPassword = (body) => axios({
   method: 'PUT',
-  path: '/user/password/temporary',
-  body,
+  url: `${config.apiHost}/user/password/temporary`,
+  params: body,
 });
 
 export const resetPassword = (body) => ({
@@ -124,7 +127,35 @@ export const fullImageURL = (fileId) => `${config.apiHost}/${fileId}/download?co
 export const getActivitySet = (activityId) => axios({
   method: 'GET',
   url: `${config.apiHost}/folder/${activityId}`
-})
+});
+
+/**
+ * 
+ * @param {String} activity_id 
+ * once you get the id of the Activies folder for the particular Activity Set
+ */
+const getContentsOfActivitiesFolder = (activity_id) => axios({
+  method: 'GET',
+  url: `${config.apiHost}/folder?parentId=${activity_id}&parentType=folder`,
+});
+
+export const getActivityMetadata = (activityId) => axios({
+  method: 'GET',
+  url: `${config.apiHost}/folder?parentId=${activityId}&parentType=folder`,
+});
+
+export const getActivitiesInActivitySet = (parentId) => axios({
+  method: 'GET',
+  url: `${config.apiHost}/folder?parentId=${parentId}&parentType=folder`,
+}).then((resp) => {
+  // get the id of the folder named Activities
+  return _.filter(resp.data, d => d.name === 'Activities')[0]._id;
+}).then(getContentsOfActivitiesFolder);
+
+export const getScreenMetadata = (activityId) => axios({
+  method: 'GET',
+  url: `${config.apiHost}/item?folderId=${activityId}`,
+});
 
 /**
  * get a user's metadata

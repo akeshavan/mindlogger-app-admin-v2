@@ -25,7 +25,7 @@
                  <b-button
                   size="sm"
                   variant="secondary"
-                  :to="'/edit_activity/'+data.item.activityId">
+                  :to="'/edit_activity_set/'+data.item.activityId">
                    Edit
                  </b-button>
               </span>

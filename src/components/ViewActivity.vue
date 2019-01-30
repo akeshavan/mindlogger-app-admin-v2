@@ -28,7 +28,9 @@
                 <b-nav-item v-for="subId in searchUsers" :key="subId" class="w-100"
                  :to="'/view_activity/'+ activityId + '/view_user/' + subId">
                  <span v-if="userData[subId]">
-                  {{userData[subId].lastName}}, {{userData[subId].firstName}}
+                   <span v-if="userData[subId].lastName">
+                    {{userData[subId].lastName}}, {{userData[subId].firstName}}
+                   </span>
                  </span>
                 </b-nav-item>
               </div>
@@ -59,9 +61,11 @@
 
 <script>
 import _ from 'lodash';
+import Vue from 'vue';
 import { getActivitySet, getUserMetadata } from '../api/api';
 import Loading from './library/Loading';
 import Unauthorized from './library/Unauthorized';
+
 
 export default {
   name: 'viewActivity',
@@ -86,6 +90,7 @@ export default {
       status: 'loading',
       userData: {},
       userSearch: '',
+      // viewableUsers: [],
     };
   },
   computed: {
@@ -94,7 +99,7 @@ export default {
     },
     viewableUsers() {
       // eslint-disable-next-line
-      return this.activityData.meta.members.viewers[this.user._id];
+      return Object.keys(this.userData) // this.activityData.meta.members.viewers[this.user._id];
     },
     currentRoute() {
       return this.$router.currentRoute.name;
@@ -124,9 +129,9 @@ export default {
       return Object.keys(activity.meta.members.viewers).indexOf(userId) > -1;
     },
     getUserMetadata(userId) {
-      console.log('getting usermetedata', userId);
+      // console.log('getting usermetedata', userId);
       getUserMetadata(userId).then((resp) => {
-        this.userData[userId] = resp.data;
+        Vue.set(this.userData, userId, resp.data);
         this.$forceUpdate();
       });
     },
@@ -135,7 +140,9 @@ export default {
     this.status = 'loading';
     this.getActivitySet().then(() => {
       this.status = 'complete';
-      _.map(this.viewableUsers, this.getUserMetadata);
+      // eslint-disable-next-line
+      const viewableUsers = this.activityData.meta.members.viewers[this.user._id];
+      _.map(viewableUsers, this.getUserMetadata);
       if (!this.isViewer(this.activityData) || !this.isLoggedIn) {
         this.status = 'unauthorized';
       }

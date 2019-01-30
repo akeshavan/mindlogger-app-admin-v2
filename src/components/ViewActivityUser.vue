@@ -54,6 +54,7 @@
       <b-row>
         <b-col>
           <div v-for="(act, index) in activitiesArray" :key="act._id" class="mt-2">
+            <!-- TODO: make this its own component -->
             <h2 :id="act[0].meta.activity.name" class="mb-0 pb-0">
               {{act[0].meta.activity.name}} ({{act.length}})
             </h2>
@@ -70,7 +71,7 @@
              :colorArr="getColorArr(index)"
              v-on:setFilterDateRange="setFilterDateRange"
              />
-            <ActivityView :activity="act" :dateRange="filterDateRange"/>
+            <ActivityView :activity="act" :dateRange="filterDateRange" :color="getColorArr(index)[0]"/>
           </div>
         </b-col>
       </b-row>
@@ -184,7 +185,7 @@ export default {
       /* eslint-enable */
     },
     scrollTo(hashtag) {
-      console.log('going to scroll to', hashtag);
+      // console.log('going to scroll to', hashtag);
       setTimeout(() => { location.href = hashtag; }, TIMEOUT);
     },
     setGlobalDateRange(dateRange) {
