@@ -48,25 +48,98 @@
               </button>
             </template>
           </b-table>
-          <b-button variant="outline-success" class="w-100" @click="addSurveyListOption">Add Option</b-button>
+          <b-button variant="outline-primary" class="w-100" @click="addSurveyListOption">
+            Add Option
+          </b-button>
         </b-col>
       </b-row>
+
+      <!-- if survey type is table -->
+      <b-row v-if="screenData.surveyType === 'table'" class="mt-3">
+        <b-col sm="2" class="text-right">
+          <label for="type-text">Table Rows:</label>
+        </b-col>
+        <b-col sm="10">
+          <b-table :items="tableRowNames" :fields="tableFields" striped>
+            <template slot="name" slot-scope="data">
+              <textfield v-model="data.value"
+               :index="data.index"
+               ttype="text"
+               v-on:input="setTableRowName"
+               >
+               <!-- v-on:input="setSurveyListText"
+               v-on:needsSave="needsSave"> -->
+               </textfield>
+            </template>
+
+            <!-- delete action -->
+            <template slot="action" slot-scope="row">
+              <button v-if="row.index" type="button" class="close" aria-label="Close" style="width:100%"
+               @click="removeTableRow(row)">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </template>
+
+          </b-table>
+          <b-button variant="outline-primary" class="w-100" @click="addTableRowName">
+            Add row name
+          </b-button>
+        </b-col>
+      </b-row>
+      <b-row v-if="screenData.surveyType === 'table'" class="mt-3">
+        <b-col sm="2" class="text-right">
+          <label for="type-text">Table Columns:</label>
+        </b-col>
+        <b-col sm="10">
+          <b-table :items="tableColNames" :fields="tableFields" striped>
+            <template slot="name" slot-scope="data">
+              <textfield v-model="data.value"
+               :index="data.index"
+               ttype="text"
+               v-on:input="setTableColName"
+               >
+               <!-- v-on:input="setSurveyListText"
+               v-on:needsSave="needsSave"> -->
+               </textfield>
+            </template>
+
+            <!-- delete action -->
+            <template slot="action" slot-scope="row">
+              <button v-if="row.index" type="button" class="close" aria-label="Close" style="width:100%"
+               @click="removeTableCol(row)">
+                <span aria-hidden="true">&times; </span>
+              </button>
+            </template>
+
+          </b-table>
+          <b-button variant="outline-primary" class="w-100" @click="addTableColName">
+            Add column name
+          </b-button>
+        </b-col>
+      </b-row>
+
       {{screenData}}
     </div>
   </div>
 </template>
 
 <style>
-  .textfield {
-    border-style: none;
-    background-color: #ffffff00;
-    width: 100%;
+.textfield {
+    border-style: dashed;
+    border-top-style: none;
+    border-left-style: none;
+    border-right-style: none;
+    border-width: thin;
+    border-color:#007bff;
+    background-color: #ff020200;
+    width: -webkit-fill-available;
     text-align: center;
-  }
+}
 </style>
 
 
 <script>
+import _ from 'lodash';
 
 export const Textfield = {
   props: ['value', 'placeholder', 'index', 'ttype'],
@@ -108,6 +181,9 @@ export default {
       surveyListFields: ['text', 'type', 'actions'],
       surveyListOptions: [],
       skippable: null,
+      tableRowNames: [],
+      tableColNames: [],
+      tableFields: ['name', 'action'],
     };
   },
   methods: {
@@ -135,6 +211,42 @@ export default {
       });
       this.updateSurveyList();
     },
+    setSurveyTable() {
+      if (this.screenData.surveyType === 'table') {
+        this.tableRowNames = _.map(this.screenData.survey.rows, r => ({ name: r }));
+        this.tableColNames = _.map(this.screenData.survey.cols, c => ({ name: c }));
+      }
+    },
+    updateSurveyTable() {
+      const newSurvey = { ...this.screenData.survey };
+      newSurvey.rows = _.map(this.tableRowNames, t => t.name);
+      newSurvey.cols = _.map(this.tableColNames, t => t.name);
+      this.$emit('changedValue', 'survey', newSurvey);
+    },
+    setTableRowName(value, index) {
+      this.tableRowNames[index].name = value;
+      this.updateSurveyTable();
+    },
+    setTableColName(value, index) {
+      this.tableColNames[index].name = value;
+      this.updateSurveyTable();
+    },
+    removeTableCol(loc) {
+      this.tableColNames.splice(loc.index, 1);
+      this.updateSurveyTable();
+    },
+    removeTableRow(loc) {
+      this.tableRowNames.splice(loc.index, 1);
+      this.updateSurveyTable();
+    },
+    addTableRowName() {
+      this.tableRowNames.push({ name: `row ${this.tableRowNames.length}` });
+      this.updateSurveyTable();
+    },
+    addTableColName() {
+      this.tableColNames.push({ name: `col ${this.tableColNames.length}` });
+      this.updateSurveyTable();
+    },
   },
   watch: {
     text() {
@@ -147,12 +259,14 @@ export default {
       this.text = this.screenData.text;
       this.skippable = this.screenData.skippable;
       this.setSurveyListOptions();
+      this.setSurveyTable();
     },
   },
   mounted() {
     this.text = this.screenData.text;
     this.skippable = this.screenData.skippable;
     this.setSurveyListOptions();
+    this.setSurveyTable();
   },
 };
 </script>
