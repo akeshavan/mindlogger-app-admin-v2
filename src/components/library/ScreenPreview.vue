@@ -2,7 +2,7 @@
   <b-card footer-tag="footer"
           tag="article"
           style="max-width: 20rem;"
-          class="mb-2">
+          class="mb-2 preview">
     <p class="card-text lh">
       {{screenData.text}}
     </p>
@@ -17,6 +17,11 @@
           </b-form-radio-group>
         </b-form-group>
       </div>
+
+        <div v-if="screenData.surveyType === 'table'">
+          <b-table :items="surveyTable" small outlined striped class="specialTable"></b-table>
+      </div>
+
     </div>
 
     <em slot="footer">
@@ -31,20 +36,45 @@
   </b-card>
 </template>
 
-<style scoped>
-  .card-body {
+<style>
+  .preview .card-body {
     padding: 10px !important;
     overflow-y: scroll;
+  }
+
+  .preview .card-footer {
+    min-height: 56px;
+  }
+
+  .preview .specialTable th {
+      height: 34px;
   }
 </style>
 
 
 <script>
+import _ from 'lodash';
+
 export default {
   name: 'ScreenPreview',
   props: {
     screenData: {
       type: Object,
+    },
+  },
+  computed: {
+    surveyTable() {
+      if (this.screenData.surveyType === 'table') {
+        const entries = _.map(this.screenData.survey.rows, (rowName) => {
+          const entry = { '   ': rowName };
+          this.screenData.survey.cols.forEach((val) => {
+            entry[val] = '________';
+          });
+          return entry;
+        });
+        return entries;
+      }
+      return [];
     },
   },
 };

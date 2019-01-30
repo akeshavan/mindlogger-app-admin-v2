@@ -10,6 +10,18 @@
         </b-col>
       </b-row>
 
+      <!-- can this question be skipped? -->
+      <b-row class="my-1 mt-3">
+        <b-col sm="12" class="text-center">
+                  <b-form-checkbox id="skippable"
+                        v-model="skippable"
+                        :value="true"
+                        :unchecked-value="false">
+          This question can be skipped.
+        </b-form-checkbox>
+        </b-col>
+      </b-row>
+
       <!-- if surveyType is List -->
       <b-row v-if="screenData.surveyType === 'list'" class="mt-3">
         <b-col sm="2" class="text-right">
@@ -95,6 +107,7 @@ export default {
       text: '',
       surveyListFields: ['text', 'type', 'actions'],
       surveyListOptions: [],
+      skippable: null,
     };
   },
   methods: {
@@ -117,7 +130,7 @@ export default {
     },
     addSurveyListOption() {
       this.surveyListOptions.push({
-        text: 'option',
+        text: `option ${this.surveyListOptions.length}`,
         type: 'text',
       });
       this.updateSurveyList();
@@ -127,13 +140,18 @@ export default {
     text() {
       this.$emit('changedValue', 'text', this.text);
     },
+    skippable() {
+      this.$emit('changedValue', 'skippable', this.skippable);
+    },
     screenData() {
       this.text = this.screenData.text;
+      this.skippable = this.screenData.skippable;
       this.setSurveyListOptions();
     },
   },
   mounted() {
     this.text = this.screenData.text;
+    this.skippable = this.screenData.skippable;
     this.setSurveyListOptions();
   },
 };
