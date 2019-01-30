@@ -22,6 +22,17 @@
         </b-col>
       </b-row>
 
+      <!-- Survey Type -->
+      <b-row class="mt-3">
+        <b-col sm="2" class="text-right">
+          <label for="type-survey">Survey Type:</label>
+        </b-col>
+        <b-col sm="10">
+          <b-form-select
+          v-model="surveyType" :options="surveyTypeOptions" class="mb-3" id="type-survey" />
+        </b-col>
+      </b-row>
+
       <!-- if surveyType is List -->
       <b-row v-if="screenData.surveyType === 'list'" class="mt-3">
         <b-col sm="2" class="text-right">
@@ -118,7 +129,13 @@
         </b-col>
       </b-row>
 
-      {{screenData}}
+      <b-row class="mt-3">
+        <b-col>
+          <h5 class="text-muted text-center"> data schema </h5>
+          <p class="text-center text-muted"> <small>this is for development purposes. </small></p>
+          <p>{{screenData}}</p>
+        </b-col>
+      </b-row>
     </div>
   </div>
 </template>
@@ -184,6 +201,17 @@ export default {
       tableRowNames: [],
       tableColNames: [],
       tableFields: ['name', 'action'],
+      surveyType: null,
+      surveyTypeOptions: [
+        {
+          value: 'list',
+          text: 'list',
+        },
+        {
+          value: 'table',
+          text: 'table',
+        },
+      ],
     };
   },
   methods: {
@@ -252,12 +280,16 @@ export default {
     text() {
       this.$emit('changedValue', 'text', this.text);
     },
+    surveyType() {
+      this.$emit('changedValue', 'surveyType', this.surveyType);
+    },
     skippable() {
       this.$emit('changedValue', 'skippable', this.skippable);
     },
     screenData() {
       this.text = this.screenData.text;
       this.skippable = this.screenData.skippable;
+      this.surveyType = this.screenData.surveyType;
       this.setSurveyListOptions();
       this.setSurveyTable();
     },
@@ -265,6 +297,7 @@ export default {
   mounted() {
     this.text = this.screenData.text;
     this.skippable = this.screenData.skippable;
+    this.surveyType = this.screenData.surveyType;
     this.setSurveyListOptions();
     this.setSurveyTable();
   },
