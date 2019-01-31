@@ -42,7 +42,7 @@
           </b-col>
         </b-row>
       </b-container>
-      <b-row class="mt-3">
+      <b-row class="mt-3 sticky">
         <b-col>
           <!-- Screen Preview Netflix -->
           <swiper :options="swiperOption"
@@ -82,6 +82,7 @@
 
 .swiper-slide-active article.card.mb-2 {
     border-width: thick;
+    border-color:#17a2b8;
     color: black;
 }
 
@@ -96,6 +97,8 @@ article {
 
 .swiper-container {
   min-height: 316px;
+  position: sticky;
+  top: 0;
 }
 </style>
 
