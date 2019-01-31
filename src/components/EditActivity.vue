@@ -101,6 +101,7 @@ article {
 
 <script>
 import Vue from 'vue';
+import _ from 'lodash';
 // eslint-disable-next-line
 import 'swiper/dist/css/swiper.css';
 import { swiper, swiperSlide } from 'vue-awesome-swiper';
@@ -233,11 +234,30 @@ export default {
     },
     getScreenMetadata(parentFolderId) {
       getScreenMetadata(parentFolderId).then((resp) => {
-        this.screens = resp.data;
+        const data = _.map(resp.data, (d) => {
+          const keys = Object.keys(d.meta);
+          const newD = { ...d };
+          /**
+           * note: initialize empty fields here.
+           */
+          if (keys.indexOf('text') < 0) {
+            newD.meta.text = '';
+          }
+          return newD;
+        });
+        this.screens = data;
       });
     },
     updateScreen(key, value) {
-      this.screens[this.currentSlide].meta[key] = value;
+      const keys = Object.keys(this.screens[this.currentSlide].meta);
+      if (keys.indexOf(key) < 0) {
+        this.screens[this.currentSlide].meta[key] = value;
+        Vue.set(this.screens[this.currentSlide].meta, key, value);
+        this.$forceUpdate();
+      } else {
+        this.screens[this.currentSlide].meta[key] = value;
+      }
+      // Vue.$set(this.screens[this.currentSlide].meta, key, value);
     },
   },
   mounted() {

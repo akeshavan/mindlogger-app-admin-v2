@@ -116,7 +116,8 @@
 
             <!-- delete action -->
             <template slot="action" slot-scope="row">
-              <button v-if="row.index" type="button" class="close" aria-label="Close" style="width:100%"
+              <button v-if="row.index" type="button" class="close" aria-label="Close"
+              style="width:100%"
                @click="removeTableCol(row)">
                 <span aria-hidden="true">&times; </span>
               </button>

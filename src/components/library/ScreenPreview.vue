@@ -3,6 +3,7 @@
           tag="article"
           style="max-width: 20rem;"
           class="mb-2 preview">
+
     <p class="card-text lh">
       {{screenData.text}}
     </p>
