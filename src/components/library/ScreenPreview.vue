@@ -9,6 +9,8 @@
     </p>
 
     <div class="card-text">
+
+      <!-- list view -->
       <div v-if="screenData.surveyType === 'list'">
         <b-form-group>
           <b-form-radio-group :options="screenData.survey.options"
@@ -19,8 +21,15 @@
         </b-form-group>
       </div>
 
-        <div v-if="screenData.surveyType === 'table'">
-          <b-table :items="surveyTable" small outlined striped class="specialTable"></b-table>
+      <!-- table view -->
+      <div v-if="screenData.surveyType === 'table'">
+        <b-table :items="surveyTable" small outlined striped class="specialTable"></b-table>
+      </div>
+
+      <!-- slider view -->
+      <div v-if="screenData.surveyType === 'slider'" style="">
+        <vue-slider ref="slider" v-bind="sliderOptions">
+        </vue-slider>
       </div>
 
     </div>
@@ -55,6 +64,7 @@
 
 <script>
 import _ from 'lodash';
+import vueSlider from 'vue-slider-component';
 
 export default {
   name: 'ScreenPreview',
@@ -62,6 +72,9 @@ export default {
     screenData: {
       type: Object,
     },
+  },
+  components: {
+    vueSlider,
   },
   computed: {
     surveyTable() {
@@ -76,6 +89,24 @@ export default {
         return entries;
       }
       return [];
+    },
+    sliderOptions() {
+      const data = _.map(this.screenData.survey.options, d => d.text);
+      const isDiscrete = this.screenData.survey.increments === 'Discrete';
+      const orientation = this.screenData.survey.orientation;
+      return {
+        direction: orientation,
+        height: 100,
+        width: 4,
+        style: {
+          display: 'inline-block',
+          marginLeft: '50px',
+        },
+        data,
+        piecewise: isDiscrete,
+        piecewiseLabel: true,
+        tooltip: false,
+      };
     },
   },
 };

@@ -65,6 +65,38 @@
         </b-col>
       </b-row>
 
+      <!-- if surveyType is List -->
+      <b-row v-if="screenData.surveyType === 'slider'" class="mt-3">
+        <b-col sm="2" class="text-right">
+          <label for="optionTable">Slider Options:</label>
+        </b-col>
+        <b-col sm="10">
+          <b-table id="optionTable" :items="surveyListOptions" :fields="surveyListFields">
+            <template slot="text" slot-scope="data">
+              <textfield v-model="data.value"
+               :index="data.index"
+               ttype="text"
+               v-on:input="setSurveyListText"
+               >
+               <!-- v-on:input="setSurveyListText"
+               v-on:needsSave="needsSave"> -->
+               </textfield>
+            </template>
+
+            <!-- delete action -->
+            <template slot="actions" slot-scope="row">
+              <button type="button" class="close" aria-label="Close" style="width:100%"
+               @click="removeSurvetListOption(row)">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </template>
+          </b-table>
+          <b-button variant="outline-primary" class="w-100" @click="addSurveyListOption">
+            Add Option
+          </b-button>
+        </b-col>
+      </b-row>
+
       <!-- if survey type is table -->
       <b-row v-if="screenData.surveyType === 'table'" class="mt-3">
         <b-col sm="2" class="text-right">
@@ -212,12 +244,16 @@ export default {
           value: 'table',
           text: 'table',
         },
+        {
+          value: 'slider',
+          text: 'slider',
+        },
       ],
     };
   },
   methods: {
     setSurveyListOptions() {
-      if (this.screenData.surveyType === 'list') {
+      if (this.screenData.surveyType === 'list' || this.screenData.surveyType === 'slider') {
         this.surveyListOptions = this.screenData.survey.options;
       }
     },
