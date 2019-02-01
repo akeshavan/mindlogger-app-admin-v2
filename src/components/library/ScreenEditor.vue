@@ -1,6 +1,33 @@
 <template>
   <div>
     <div>
+      <!-- screen name -->
+      <b-row class="my-1">
+        <b-col sm="2" class="text-right">
+          <label for="type-text">Screen Id:</label>
+        </b-col>
+        <b-col sm="10">
+          <b-form-group>
+          <b-form-input id="type-text" type="text"
+         v-model="name" :rows="3"
+         :state="nameState"
+         @change="updateName"
+         aria-describedby="inputLiveHelp inputLiveFeedback"
+         >
+          <b-form-invalid-feedback id="inputLiveFeedback">
+            <!-- This will only be shown if the preceeding input has an invalid state -->
+            This name is taken. Choose another.
+          </b-form-invalid-feedback>
+          <b-form-text id="inputLiveHelp">
+            <!-- this is a form text block (formerly known as help block) -->
+            This needs to be a unique name
+          </b-form-text>
+          </b-form-input>
+          </b-form-group>
+        </b-col>
+      </b-row>
+
+      <!-- text question -->
       <b-row class="my-1">
         <b-col sm="2" class="text-right">
           <label for="type-text">Text:</label>
@@ -71,7 +98,8 @@
           <label for="optionTable">Slider Options:</label>
         </b-col>
         <b-col sm="10">
-          <b-table id="optionTable" :items="surveyListOptions" :fields="surveyListFields">
+          <b-table ref="listTable"
+           id="optionTable" :items="surveyListOptions" :fields="surveyListFields">
             <template slot="text" slot-scope="data">
               <textfield v-model="data.value"
                :index="data.index"
@@ -117,7 +145,8 @@
 
             <!-- delete action -->
             <template slot="action" slot-scope="row">
-              <button v-if="row.index" type="button" class="close" aria-label="Close" style="width:100%"
+              <button v-if="row.index" type="button" class="close"
+               aria-label="Close" style="width:100%"
                @click="removeTableRow(row)">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -221,6 +250,12 @@ export default {
     screenData: {
       type: Object,
     },
+    screenName: {
+      type: String,
+    },
+    allScreenNames: {
+      type: Array,
+    },
   },
   components: {
     Textfield,
@@ -228,6 +263,8 @@ export default {
   data() {
     return {
       text: '',
+      name: '',
+      nameState: true,
       surveyListFields: ['text', 'type', 'actions'],
       surveyListOptions: [],
       skippable: null,
@@ -248,13 +285,19 @@ export default {
           value: 'slider',
           text: 'slider',
         },
+        {
+          value: 'infoScreen',
+          text: 'infoScreen',
+        },
       ],
     };
   },
   methods: {
     setSurveyListOptions() {
+      this.surveyListOptions = [];
       if (this.screenData.surveyType === 'list' || this.screenData.surveyType === 'slider') {
-        this.surveyListOptions = this.screenData.survey.options;
+        this.surveyListOptions = [...this.screenData.survey.options];
+        // this.$refs.listTable.refresh();
       }
     },
     updateSurveyList() {
@@ -277,6 +320,8 @@ export default {
       this.updateSurveyList();
     },
     setSurveyTable() {
+      this.tableRowNames = [];
+      this.tableColNames = [];
       if (this.screenData.surveyType === 'table') {
         this.tableRowNames = _.map(this.screenData.survey.rows, r => ({ name: r }));
         this.tableColNames = _.map(this.screenData.survey.cols, c => ({ name: c }));
@@ -312,6 +357,16 @@ export default {
       this.tableColNames.push({ name: `col ${this.tableColNames.length}` });
       this.updateSurveyTable();
     },
+    updateName() {
+      // TODO: make sure the name is unique! otherwise bugs happen.
+      const isClash = _.filter(this.allScreenNames, a => a.name === this.name).length;
+      if (!isClash) {
+        this.$emit('changedName', this.name);
+        this.nameState = true;
+      } else {
+        this.nameState = false;
+      }
+    },
   },
   watch: {
     text() {
@@ -330,9 +385,13 @@ export default {
       this.setSurveyListOptions();
       this.setSurveyTable();
     },
+    screenName() {
+      this.name = this.screenName;
+    },
   },
   mounted() {
     this.text = this.screenData.text;
+    this.name = this.screenName;
     this.skippable = this.screenData.skippable;
     this.surveyType = this.screenData.surveyType;
     this.setSurveyListOptions();

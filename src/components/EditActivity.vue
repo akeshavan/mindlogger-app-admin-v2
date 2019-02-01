@@ -15,10 +15,26 @@
           <b-col>
             <h2 class="text-center">
               <span class="text-muted">Editing </span>
-              {{activityData.name}}
+                <textfield v-model="activityData.name" ttype="text" placeholder="title">
+               <!-- :index="data.index"
+               ttype="text"
+               v-on:input="setSurveyListText"
+               > -->
+               <!-- v-on:input="setSurveyListText"
+               v-on:needsSave="needsSave"> -->
+               </textfield>
+              <!-- {{activityData.name}} -->
             </h2>
             <p class="lead text-center">
-              {{activityData.meta.description}}
+              <textfield v-model="activityData.meta.description" ttype="text" placeholder="description">
+               <!-- :index="data.index"
+               ttype="text"
+               v-on:input="setSurveyListText"
+               > -->
+               <!-- v-on:input="setSurveyListText"
+               v-on:needsSave="needsSave"> -->
+               </textfield>
+              <!-- {{activityData.meta.description}} -->
             </p>
           </b-col>
         </b-row>
@@ -49,20 +65,54 @@
            ref="swiper"
            class="bg-light pt-2"
            v-on:ready="swiperReady = true">
-            <swiper-slide v-for="(screen, index) in activityData.meta.screens" :key="screen.name">
-              <div v-if="screens[index]">
-                <screen-preview :screenData="screens[index].meta"/>
+            <swiper-slide v-for="(screen) in activityData.meta.screens" :key="screen.name">
+              <small>{{screen.name.slice(0,20)}}</small>
+              <div v-if="screens[getIndex(screen)]">
+                <screen-preview :screenData="screens[getIndex(screen)].meta"/>
               </div>
             </swiper-slide>
             <div class="swiper-button-prev" slot="button-prev"></div>
             <div class="swiper-button-next" slot="button-next"></div>
             <div class="swiper-pagination" slot="pagination"></div>
           </swiper>
+          <!-- add/remove controls -->
+          <div class="screen-controls mb-3 w-100 mx-auto">
+            <b-button size="sm" variant="secondary" @click="moveLeft"
+              v-if="currentSlide">
+              <i class="fas fa-arrow-left"></i>
+            </b-button>
+            <b-button size="sm" variant="info" @click="addBefore">
+              <i class="fas fa-arrow-left"></i>  <i class="fas fa-plus"></i>
+            </b-button>
+
+
+            <b-button size="sm" variant="danger" @click="removeScreen">
+              <i class="fas fa-trash"></i>
+            </b-button>
+
+
+            <b-button size="sm" variant="info" @click="addAfter">
+              <i class="fas fa-plus"></i>  <i class="fas fa-arrow-right"></i>
+            </b-button>
+
+            <b-button size="sm" variant="secondary" @click="moveRight"
+              v-if="currentSlide !== screens.length - 1">
+              <i class="fas fa-arrow-right"></i>
+            </b-button>
+
+          </div>
 
           <!-- Current Slide Editing Panel -->
           <div v-if="currentSlide != null && screens.length" class="container mt-3">
-            <div v-if="screens[currentSlide]">
-              <screen-editor :screenData="screens[currentSlide].meta" v-on:changedValue="updateScreen"/>
+            <div v-if="screens[currentScreenIndex]">
+              <screen-editor
+                :key="screens[currentScreenIndex].name"
+                :screenName="screens[currentScreenIndex].name"
+                :allScreenNames="activityData.meta.screens"
+               :screenData="screens[currentScreenIndex].meta"
+               v-on:changedValue="updateScreen"
+               v-on:changedName="updateScreenName"
+               />
             </div>
           </div>
         </b-col>
@@ -87,7 +137,7 @@
 }
 
 article {
-  height: 300px;
+  height: 280px;
   width: 225px;
 }
 
@@ -97,8 +147,12 @@ article {
 
 .swiper-container {
   min-height: 316px;
-  position: sticky;
-  top: 0;
+  /* position: sticky;
+  top: 0; */
+}
+
+.screen-controls {
+  text-align: center;
 }
 </style>
 
@@ -111,7 +165,7 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper';
 // import _ from 'lodash';
 import Loading from './library/Loading';
 import Unauthorized from './library/Unauthorized';
-import ScreenEditor from './library/ScreenEditor';
+import ScreenEditor, { Textfield } from './library/ScreenEditor';
 import ScreenPreview from './library/ScreenPreview';
 import {
   getActivitySet,
@@ -119,6 +173,7 @@ import {
   getActivityMetadata,
   getScreenMetadata,
 } from '../api/api';
+import schemas from '../api/schemas';
 
 
 export default {
@@ -148,6 +203,11 @@ export default {
         slidesPerView: 6,
         spaceBetween: 30,
         centeredSlides: true,
+        mousewheel: false,
+        grabCursor: true,
+        keyboard: {
+          enabled: true,
+        },
         navigation: {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',
@@ -184,6 +244,7 @@ export default {
     swiperSlide,
     ScreenEditor,
     ScreenPreview,
+    Textfield,
   },
   computed: {
     currentSlide() {
@@ -205,6 +266,9 @@ export default {
         return true;
       }
       return false;
+    },
+    currentScreenIndex() {
+      return this.getIndex(this.activityData.meta.screens[this.currentSlide]);
     },
   },
   methods: {
@@ -246,21 +310,87 @@ export default {
           if (keys.indexOf('text') < 0) {
             newD.meta.text = '';
           }
+          if (keys.indexOf('surveyType') < 0) {
+            newD.meta.surveyType = 'infoScreen';
+          }
+          if (!newD.meta.surveyType) {
+            newD.meta.surveyType = 'infoScreen';
+          }
+          if (keys.indexOf('survey') < 0) {
+            newD.meta.survey = {
+              increments: 'Discrete',
+              orientation: 'vertical',
+              mode: 'single',
+              options: [],
+            };
+          }
           return newD;
         });
         this.screens = data;
       });
     },
     updateScreen(key, value) {
-      const keys = Object.keys(this.screens[this.currentSlide].meta);
+      const keys = Object.keys(this.screens[this.currentScreenIndex].meta);
       if (keys.indexOf(key) < 0) {
-        this.screens[this.currentSlide].meta[key] = value;
-        Vue.set(this.screens[this.currentSlide].meta, key, value);
+        this.screens[this.currentScreenIndex].meta[key] = value;
+        Vue.set(this.screens[this.currentScreenIndex].meta, key, value);
         this.$forceUpdate();
       } else {
-        this.screens[this.currentSlide].meta[key] = value;
+        this.screens[this.currentScreenIndex].meta[key] = value;
       }
       // Vue.$set(this.screens[this.currentSlide].meta, key, value);
+    },
+    getIndex(activityScreenIndex) {
+      if (activityScreenIndex) {
+        const nameMatcher = activityScreenIndex.name;
+        const screen = _.filter(this.screens, s => s.name === nameMatcher);
+        const screenIdx = _.indexOf(this.screens, screen[0]);
+        return screenIdx;
+      }
+      return 0;
+    },
+    addBefore() {
+      const screenSchema = schemas.screenSchema();
+      this.screens.push(screenSchema);
+      const activityScreenSchema = {
+        name: screenSchema.name,
+      };
+      this.activityData.meta.screens.splice(this.currentSlide, 0, activityScreenSchema);
+    },
+    addAfter() {
+      const screenSchema = schemas.screenSchema();
+      this.screens.push(screenSchema);
+      const activityScreenSchema = {
+        name: screenSchema.name,
+      };
+      this.activityData.meta.screens.splice(this.currentSlide + 1, 0, activityScreenSchema);
+      this.$refs.swiper.swiper.activeIndex += 1;
+    },
+    removeScreen() {
+      this.screens.splice(this.currentScreenIndex, 1);
+      this.activityData.meta.screens.splice(this.currentSlide, 1);
+      Vue.set(this.activityData.meta, 'screens', [...this.activityData.meta.screens]);
+    },
+    moveRight() {
+      const order = this.activityData.meta.screens;
+      [order[this.currentSlide],
+        order[this.currentSlide + 1]] = [order[this.currentSlide + 1],
+        order[this.currentSlide]];
+      this.$refs.swiper.swiper.activeIndex += 1;
+      this.$forceUpdate();
+    },
+    moveLeft() {
+      const order = this.activityData.meta.screens;
+      [order[this.currentSlide],
+        order[this.currentSlide - 1]] = [order[this.currentSlide - 1],
+        order[this.currentSlide]];
+      this.$refs.swiper.swiper.activeIndex -= 1;
+      this.$forceUpdate();
+    },
+    updateScreenName(name) {
+      const idx = this.currentScreenIndex;
+      this.activityData.meta.screens[this.currentSlide].name = name;
+      this.screens[idx].name = name;
     },
   },
   mounted() {
