@@ -57,12 +57,15 @@
   }
 
   .preview .card-footer {
-    min-height: 56px;
+    min-height: 20px;
+    padding: 5px;
   }
 
   .preview .specialTable th {
       height: 34px;
   }
+
+
 </style>
 
 
