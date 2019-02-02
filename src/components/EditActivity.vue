@@ -26,7 +26,8 @@
               <!-- {{activityData.name}} -->
             </h2>
             <p class="lead text-center">
-              <textfield v-model="activityData.meta.description" ttype="text" placeholder="description">
+              <textfield v-model="activityData.meta.description" ttype="text"
+               placeholder="description">
                <!-- :index="data.index"
                ttype="text"
                v-on:input="setSurveyListText"

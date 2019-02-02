@@ -12,20 +12,21 @@
           class=""
           :src="getImageURL(activityData.meta.logoImage['@id'])">
         </b-img>
-        {{activityData.meta.shortName}}
-        <b-button v-b-tooltip.hover title="Click to edit!" size="lg" variant="default">
-          <i class="fas fa-pencil-alt"></i>
-        </b-button>
-
+        <textfield v-model="activityData.meta.shortName"
+          ttype="text"
+          placeholder="short name" />
       </h1>
       <p class="lead text-center">
-        {{activityData.name}}
+          <textfield v-model="activityData.name"
+          ttype="text"
+          placeholder="name" />
       </p>
       <b-row>
         <b-col>
           <p class="lead text-center">
-            {{activityData.meta.description}}
-
+          <textfield v-model="activityData.meta.description"
+          ttype="text"
+          placeholder="description" />
           </p>
         </b-col>
       </b-row>
@@ -56,13 +57,23 @@
         <b-col>
           <h3> Activities </h3>
           <p>in this activity set are:</p>
-           <b-table striped hover outlined :items="activitiesTable" :fields="activityTableFields">
+           <b-table striped hover outlined responsive
+           :items="activitiesTable" :fields="activityTableFields">
+            <template slot="name" slot-scope="data">
+              <router-link
+                :to="'/edit_activity_set/' + activityId + '/edit_activity/' + data.item.id">
+                {{data.item.name}}
+              </router-link>
+            </template>
             <template slot="actions" slot-scope="data">
-              <b-button variant="info" size="sm"
+              <!-- <b-button variant="info" size="sm"
                :to="'/edit_activity_set/' + activityId + '/edit_activity/' + data.item.id">
                 edit
+              </b-button> -->
+              <b-button size="sm" class="close" aria-label="Close">
+                <!-- <i class="fas fa-trash"></i> -->
+                <span aria-hidden="true">&times; </span>
               </b-button>
-              <b-button variant="danger" size="sm">delete</b-button>
             </template>
            </b-table>
         </b-col>
@@ -113,6 +124,7 @@ import {
   getActivityMetadata,
 } from '../api/api';
 import ActivitySetOverview from './ActivitySetOverview';
+import { Textfield } from './library/ScreenEditor';
 
 
 export default {
@@ -135,6 +147,7 @@ export default {
     Loading,
     Unauthorized,
     ActivitySetOverview,
+    Textfield,
   },
   data() {
     return {
@@ -148,9 +161,6 @@ export default {
         {
           key: 'name',
           sortable: true,
-        },
-        {
-          key: 'description',
         },
         {
           key: 'screens',

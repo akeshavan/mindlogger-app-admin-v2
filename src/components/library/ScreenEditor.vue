@@ -178,7 +178,6 @@
             <!-- delete action -->
             <template slot="action" slot-scope="row">
               <button v-if="row.index" type="button" class="close" aria-label="Close"
-              style="width:100%"
                @click="removeTableCol(row)">
                 <span aria-hidden="true">&times; </span>
               </button>
@@ -219,15 +218,34 @@
 
 <script>
 import _ from 'lodash';
+import Vue from 'vue';
+import VueInputAutowidth from 'vue-input-autowidth';
+
+Vue.use(VueInputAutowidth);
 
 export const Textfield = {
   props: ['value', 'placeholder', 'index', 'ttype'],
   template: `
   <div>
-    <input class="textfield" :value="value" :placeholder="getPlaceholder()" v-on:input="onInput" v-if="ttype=='text'">
+    <input ref="input" class="textfield" v-autowidth="{minWidth: '100px', comfortZone: 10}" :value="value" :placeholder="getPlaceholder()" v-on:input="onInput" v-if="ttype=='text'">
     <textarea class="textfield text-center" :value="value" :placeholder="getPlaceholder()" v-on:input="onInput" v-else></textarea>
   </div>
   `,
+  computed: {
+    style() {
+      const charLen = this.value.length;
+      const perChar = 20;
+      let width = perChar * charLen;
+      if (width < 200) {
+        width = '200px';
+      } else {
+        width = `${width}px`;
+      }
+      return {
+        width,
+      };
+    },
+  },
   methods: {
     onInput(e) {
       const value = e.target.value;
@@ -288,6 +306,10 @@ export default {
         {
           value: 'infoScreen',
           text: 'infoScreen',
+        },
+        {
+          value: 'time',
+          text: 'time',
         },
       ],
     };

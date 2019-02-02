@@ -32,6 +32,10 @@
         </vue-slider>
       </div>
 
+      <div v-if="screenData.surveyType === 'time'">
+        <VueCtkDateTimePicker onlyTime disabled label="select time" />
+      </div>
+
     </div>
 
     <em slot="footer">
@@ -64,7 +68,12 @@
 
 <script>
 import _ from 'lodash';
+import Vue from 'vue';
 import vueSlider from 'vue-slider-component';
+import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
+import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
+
+Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
 
 export default {
   name: 'ScreenPreview',
