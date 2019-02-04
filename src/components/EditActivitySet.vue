@@ -215,11 +215,11 @@ export default {
       return fullImageURL(id);
     },
     getActivitySet() {
-      return getActivitySet(this.activityId).then((resp) => {
+      return getActivitySet(this.activityId, this.authToken.token).then((resp) => {
         this.activityData = resp.data;
         // eslint-disable-next-line
         return this.activityId;
-      }).then(getActivitiesInActivitySet)
+      }).then(id => getActivitiesInActivitySet(id, this.authToken.token))
         .then((resp) => {
           this.activities = resp.data;
           _.map(resp.data, (d, i) => {

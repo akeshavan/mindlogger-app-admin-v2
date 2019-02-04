@@ -106,16 +106,20 @@ export const setUserTemporary = (email) => ({
 
 /* ----- Acts ----- */
 
-export const getAllActivitySets = () => axios({
+export const getAllActivitySets = (token) => axios({
   method: 'GET',
-  url: `${config.apiHost}/collection/?text=Volumes`
+  url: `${config.apiHost}/collection/?text=Volumes`,
 }).then((resp) => {
   return resp.data[0]._id;
-}).then(getActivitySets)
+}).then((parentId) => getActivitySets(parentId, token));
 
-export const getActivitySets = (parentId) => axios({
+export const getActivitySets = (parentId, token) => axios({
   method: 'GET',
   url: `${config.apiHost}/folder?parentId=${parentId}&parentType=collection`,
+  headers: {
+    // 'Cache-Control': 'no-cache',
+    'Girder-Token': `${token}`,
+  },
 })
 
 export const fullImageURL = (fileId) => `${config.apiHost}/${fileId}/download?contentDisposition=inline`;
@@ -124,9 +128,12 @@ export const fullImageURL = (fileId) => `${config.apiHost}/${fileId}/download?co
  * gets a specific activity set by its id
  * @param {String} activityId 
  */
-export const getActivitySet = (activityId) => axios({
+export const getActivitySet = (activityId, token) => axios({
   method: 'GET',
-  url: `${config.apiHost}/folder/${activityId}`
+  url: `${config.apiHost}/folder/${activityId}`,
+  headers: {
+    'Girder-Token': `${token}`,
+  },
 });
 
 /**
@@ -134,9 +141,12 @@ export const getActivitySet = (activityId) => axios({
  * @param {String} activity_id 
  * once you get the id of the Activies folder for the particular Activity Set
  */
-const getContentsOfActivitiesFolder = (activity_id) => axios({
+const getContentsOfActivitiesFolder = (activity_id, token) => axios({
   method: 'GET',
   url: `${config.apiHost}/folder?parentId=${activity_id}&parentType=folder`,
+  headers: {
+    'Girder-Token': `${token}`,
+  },
 });
 
 export const getActivityMetadata = (activityId) => axios({
@@ -144,17 +154,58 @@ export const getActivityMetadata = (activityId) => axios({
   url: `${config.apiHost}/folder?parentId=${activityId}&parentType=folder`,
 });
 
-export const getActivitiesInActivitySet = (parentId) => axios({
+export const getActivitiesInActivitySet = (parentId, token) => axios({
   method: 'GET',
   url: `${config.apiHost}/folder?parentId=${parentId}&parentType=folder`,
+  headers: {
+    'Girder-Token': `${token}`,
+  },
 }).then((resp) => {
   // get the id of the folder named Activities
   return _.filter(resp.data, d => d.name === 'Activities')[0]._id;
-}).then(getContentsOfActivitiesFolder);
+}).then((id) => getContentsOfActivitiesFolder(id, token));
 
 export const getScreenMetadata = (activityId) => axios({
   method: 'GET',
   url: `${config.apiHost}/item?folderId=${activityId}`,
+});
+
+export const createNewActivitySet = (userId, token) => axios({
+  method: 'GET',
+  url: `${config.apiHost}/collection/?text=Volumes`
+}).then((resp) => {
+  console.log('got id', resp.data[0]._id);
+  return resp.data[0]._id;
+}).then((parentId) => axios({
+  method: 'POST',
+  url: `${config.apiHost}/folder`,
+  params: {
+    name: 'Untitled Activity Set',
+    metadata: {
+      shortName: 'untitled',
+      description: 'an untitled activity set',
+      members: {
+        editors: [userId],
+        managers: [userId],
+        users: [],
+        viewers: [],
+      },
+    },
+    parentId,
+    parentType: 'collection',
+    reuseExisting: true,
+  },
+  headers: { 'Girder-Token': `${token}` },
+}));
+
+export const updateActivitySetMetadata = (name, metadata, token) => axios({
+  method: 'PUT',
+  url: `${config.apiHost}/folder`,
+  headers: { 'Girder-Token': `${token}` },
+  body: {
+    name,
+    metadata,
+  },
 });
 
 /**

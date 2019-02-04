@@ -12,6 +12,9 @@
           <p class="lead">
             Here are the activies you own, manage, or can view.
           </p>
+
+          <b-button @click="createNewActivitySet">Create New Activity Set</b-button>
+
           <b-table striped hover :items="userActivityTable" :fields="userTableFields">
             <!-- A virtual column -->
             <template slot="logo" slot-scope="data">
@@ -82,11 +85,18 @@ li {
 
 <script>
 import _ from 'lodash';
-import { getAllActivitySets, fullImageURL } from '../api/api';
+import {
+  getAllActivitySets,
+  fullImageURL,
+  createNewActivitySet,
+} from '../api/api';
 
 export default {
   name: 'ActivitySets',
   props: {
+    authToken: {
+      type: Object,
+    },
     isLoggedIn: {
       type: Boolean,
     },
@@ -143,7 +153,7 @@ export default {
     },
   },
   mounted() {
-    getAllActivitySets().then((resp) => {
+    getAllActivitySets(this.authToken.token).then((resp) => {
       this.allActivitySets = resp.data;
     });
   },
@@ -172,6 +182,12 @@ export default {
     },
     getImageURL(id) {
       return fullImageURL(id);
+    },
+    createNewActivitySet() {
+      // eslint-disable-next-line
+      createNewActivitySet(this.user._id, this.authToken.token).then((resp) => {
+        console.log(resp);
+      });
     },
   },
 };
