@@ -14,19 +14,25 @@
         </b-img>
         <textfield v-model="activityData.meta.shortName"
           ttype="text"
-          placeholder="short name" />
+          placeholder="short name"
+          @change="updateMetadata"
+        />
       </h1>
       <p class="lead text-center">
           <textfield v-model="activityData.name"
           ttype="text"
-          placeholder="name" />
+          placeholder="name"
+          @change="updateMetadata"
+        />
       </p>
       <b-row>
         <b-col>
           <p class="lead text-center">
           <textfield v-model="activityData.meta.description"
           ttype="text"
-          placeholder="description" />
+          placeholder="description"
+          @change="updateMetadata"
+          />
           </p>
         </b-col>
       </b-row>
@@ -56,7 +62,13 @@
       <b-row class="mt-3">
         <b-col>
           <h3> Activities </h3>
+
           <p>in this activity set are:</p>
+
+          <b-button @click="createNewActivity" class="mb-3" variant="success">
+            <i class="fas fa-plus mr-2"></i>Create New Activity
+          </b-button>
+
            <b-table striped hover outlined responsive
            :items="activitiesTable" :fields="activityTableFields">
             <template slot="name" slot-scope="data">
@@ -122,6 +134,8 @@ import {
   fullImageURL,
   getActivitiesInActivitySet,
   getActivityMetadata,
+  updateActivitySetMetadata,
+  createNewActivity,
 } from '../api/api';
 import ActivitySetOverview from './ActivitySetOverview';
 import { Textfield } from './library/ScreenEditor';
@@ -256,6 +270,30 @@ export default {
       // eslint-disable-next-line
       const userId = this.user._id;
       return Object.keys(activity.meta.members.viewers).indexOf(userId) > -1;
+    },
+    updateMetadata() {
+      const name = this.activityData.name;
+      const metadata = this.activityData.meta;
+      updateActivitySetMetadata({
+        name,
+        metadata,
+        parentId: this.activityId,
+        token: this.authToken.token,
+      }).then(() => {
+        // TODO: tell the user it was saved
+      }).catch(() => {
+        // TODO: tell the user their input wasn't saved.
+      });
+    },
+    createNewActivity() {
+      createNewActivity({
+        name: 'untitled activity',
+        parentId: this.activityId,
+        token: this.authToken.token,
+      }).then((resp) => {
+        // eslint-disable-next-line
+        this.$router.push(`${this.activityId}/edit_activity/${resp.data._id}`);
+      });
     },
   },
   mounted() {

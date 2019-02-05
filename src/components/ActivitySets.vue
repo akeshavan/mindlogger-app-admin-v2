@@ -13,7 +13,9 @@
             Here are the activies you own, manage, or can view.
           </p>
 
-          <b-button @click="createNewActivitySet">Create New Activity Set</b-button>
+          <b-button @click="createNewActivitySet" class="mb-3" variant="success">
+            <i class="fas fa-plus mr-2"></i>Create New Activity Set
+          </b-button>
 
           <b-table striped hover :items="userActivityTable" :fields="userTableFields">
             <!-- A virtual column -->
@@ -186,7 +188,8 @@ export default {
     createNewActivitySet() {
       // eslint-disable-next-line
       createNewActivitySet(this.user._id, this.authToken.token).then((resp) => {
-        console.log(resp);
+        // eslint-disable-next-line
+        this.$router.push(`edit_activity_set/${resp.data._id}`);
       });
     },
   },

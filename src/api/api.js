@@ -198,13 +198,28 @@ export const createNewActivitySet = (userId, token) => axios({
   headers: { 'Girder-Token': `${token}` },
 }));
 
-export const updateActivitySetMetadata = (name, metadata, token) => axios({
+export const updateActivitySetMetadata = ({name, metadata, parentId, token}) => axios({
   method: 'PUT',
-  url: `${config.apiHost}/folder`,
+  url: `${config.apiHost}/folder/${parentId}`,
   headers: { 'Girder-Token': `${token}` },
-  body: {
+  params: {
     name,
     metadata,
+  },
+});
+
+export const createNewActivity = ({name, parentId, token}) => axios({
+  method: 'POST',
+  url: `${config.apiHost}/folder/`,
+  headers: { 'Girder-Token': `${token}` },
+  params: {
+    name,
+    metadata: {
+      shortName: 'untitled activity',
+    },
+    parentId,
+    parentType: 'folder',
+    reuseExisting: true,
   },
 });
 

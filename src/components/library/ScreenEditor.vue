@@ -227,7 +227,12 @@ export const Textfield = {
   props: ['value', 'placeholder', 'index', 'ttype'],
   template: `
   <div>
-    <input ref="input" class="textfield" v-autowidth="{minWidth: '100px', comfortZone: 10}" :value="value" :placeholder="getPlaceholder()" v-on:input="onInput" v-if="ttype=='text'">
+    <input ref="input" class="textfield" 
+     v-autowidth="{minWidth: '100px', comfortZone: 10}" 
+     :value="value" :placeholder="getPlaceholder()" 
+     v-on:input="onInput" v-if="ttype=='text'"
+     v-on:change="onChange"
+    >
     <textarea class="textfield text-center" :value="value" :placeholder="getPlaceholder()" v-on:input="onInput" v-else></textarea>
   </div>
   `,
@@ -247,6 +252,9 @@ export const Textfield = {
     },
   },
   methods: {
+    onChange() {
+      this.$emit('change', this.value);
+    },
     onInput(e) {
       const value = e.target.value;
       // Add this line
