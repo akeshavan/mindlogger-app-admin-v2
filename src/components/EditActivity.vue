@@ -196,7 +196,9 @@ export default {
   data() {
     return {
       activitySetData: {},
-      activityData: {},
+      activityData: {
+        meta: {},
+      },
       status: 'loading',
       screens: [],
       swiperReady: false,
@@ -279,7 +281,8 @@ export default {
       return activity.meta.members.editors.indexOf(userId) > -1;
     },
     getActivitySet() {
-      return getActivitySet(this.activitySetId).then((resp) => {
+      return getActivitySet(this.activitySetId, this.authToken.token).then((resp) => {
+        console.log('activity set data', resp);
         this.activitySetData = resp.data;
       }).catch((e) => {
         console.log('error', e);
@@ -293,42 +296,58 @@ export default {
       });
     },
     getActivityMetadata() {
-      return getActivityMetadata(this.activityId).then((resp) => {
-        this.activityData = resp.data[0];
+      console.log('getting activity metadata');
+      return getActivityMetadata(this.activityId, this.authToken.token).then((resp) => {
+        console.log('setting activityData');
+        if (resp.data.length) {
+          this.activityData = resp.data[0];
+        }
         this.status = 'ready';
-        // eslint-disable-next-line
-        return resp.data[0]._id;
+        if (resp.data.length) {
+          // eslint-disable-next-line
+          return resp.data[0]._id;
+        }
+        return null;
       });
     },
     getScreenMetadata(parentFolderId) {
-      getScreenMetadata(parentFolderId).then((resp) => {
-        const data = _.map(resp.data, (d) => {
-          const keys = Object.keys(d.meta);
-          const newD = { ...d };
-          /**
-           * note: initialize empty fields here.
-           */
-          if (keys.indexOf('text') < 0) {
-            newD.meta.text = '';
-          }
-          if (keys.indexOf('surveyType') < 0) {
-            newD.meta.surveyType = 'infoScreen';
-          }
-          if (!newD.meta.surveyType) {
-            newD.meta.surveyType = 'infoScreen';
-          }
-          if (keys.indexOf('survey') < 0) {
-            newD.meta.survey = {
-              increments: 'Discrete',
-              orientation: 'vertical',
-              mode: 'single',
-              options: [],
-            };
-          }
-          return newD;
+      if (parentFolderId) {
+        getScreenMetadata(parentFolderId).then((resp) => {
+          const data = _.map(resp.data, (d) => {
+            const keys = Object.keys(d.meta);
+            const newD = { ...d };
+            /**
+             * note: initialize empty fields here.
+             */
+            if (keys.indexOf('text') < 0) {
+              newD.meta.text = '';
+            }
+            if (keys.indexOf('surveyType') < 0) {
+              newD.meta.surveyType = 'infoScreen';
+            }
+            if (!newD.meta.surveyType) {
+              newD.meta.surveyType = 'infoScreen';
+            }
+            if (keys.indexOf('survey') < 0) {
+              newD.meta.survey = {
+                increments: 'Discrete',
+                orientation: 'vertical',
+                mode: 'single',
+                options: [],
+              };
+            }
+            return newD;
+          });
+          this.screens = data;
         });
-        this.screens = data;
-      });
+      } else {
+        const screenSchema = schemas.screenSchema();
+        this.screens.push(screenSchema);
+        const activityScreenSchema = {
+          name: screenSchema.name,
+        };
+        this.activityData.meta.screens = [activityScreenSchema];
+      }
     },
     updateScreen(key, value) {
       const keys = Object.keys(this.screens[this.currentScreenIndex].meta);

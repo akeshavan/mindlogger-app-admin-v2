@@ -3,7 +3,6 @@ import _ from 'lodash';
 import * as types from './types';
 import config from '../config';
 
-
 window.axios = axios;
 
 /* eslint-disable */
@@ -35,6 +34,9 @@ export const signin = ({user, password}) => axios({
     method: 'get',
     url: `${config.apiHost}/user/authentication`,
     headers: { 'Girder-Authorization': `Basic ${btoa(user + ":" + password)}` }
+  }).then((resp) => {
+    axios.defaults.headers.common['Girder-Token'] = resp.data.authToken.token;
+    return resp;
   });
 
 export const getUserDataFolder = (userId, token) => axios({
@@ -149,9 +151,12 @@ const getContentsOfActivitiesFolder = (activity_id, token) => axios({
   },
 });
 
-export const getActivityMetadata = (activityId) => axios({
+export const getActivityMetadata = (activityId, token) => axios({
   method: 'GET',
   url: `${config.apiHost}/folder?parentId=${activityId}&parentType=folder`,
+  headers: {
+    'Girder-Token': `${token}`,
+  },
 });
 
 export const getActivitiesInActivitySet = (parentId, token) => axios({
