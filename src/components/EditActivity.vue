@@ -15,7 +15,8 @@
           <b-col>
             <h2 class="text-center">
               <span class="text-muted">Editing </span>
-                <textfield v-model="activityData.name" ttype="text" placeholder="title">
+                <textfield v-model="activityData.name" ttype="text" placeholder="title" 
+                @change="updateMetadata(1)">
                <!-- :index="data.index"
                ttype="text"
                v-on:input="setSurveyListText"
@@ -26,7 +27,21 @@
               <!-- {{activityData.name}} -->
             </h2>
             <p class="lead text-center">
-              <textfield v-model="activityData.meta.description" ttype="text"
+              <textfield v-model="activityData.meta.shortName" ttype="text"
+               @change="updateMetadata"
+               placeholder="short name">
+               <!-- :index="data.index"
+               ttype="text"
+               v-on:input="setSurveyListText"
+               > -->
+               <!-- v-on:input="setSurveyListText"
+               v-on:needsSave="needsSave"> -->
+               </textfield>
+              <!-- {{activityData.meta.description}} -->
+            </p>
+            <p class="lead text-center">
+              <textfield v-model="activityData.meta.description" ttype="textarea"
+               @change="updateMetadata"
                placeholder="description">
                <!-- :index="data.index"
                ttype="text"
@@ -172,7 +187,11 @@ import {
   getActivitySet,
   getUserMetadata,
   getActivityMetadata,
+  initializeActivity,
   getScreenMetadata,
+  updateActivityMetadata,
+  addScreen,
+  updateScreen,
 } from '../api/api';
 import schemas from '../api/schemas';
 
@@ -197,7 +216,11 @@ export default {
     return {
       activitySetData: {},
       activityData: {
-        meta: {},
+        meta: {
+          shortName: 'untitled activity',
+          description: 'add a description',
+        },
+        name: 'full name of untitled activity',
       },
       status: 'loading',
       screens: [],
@@ -285,7 +308,7 @@ export default {
         console.log('activity set data', resp);
         this.activitySetData = resp.data;
       }).catch((e) => {
-        console.log('error', e);
+        console.log('error in getActivitySet', e);
       });
     },
     getUserMetadata(userId) {
@@ -296,23 +319,40 @@ export default {
       });
     },
     getActivityMetadata() {
-      console.log('getting activity metadata');
       return getActivityMetadata(this.activityId, this.authToken.token).then((resp) => {
-        console.log('setting activityData');
         if (resp.data.length) {
           this.activityData = resp.data[0];
-        }
-        this.status = 'ready';
-        if (resp.data.length) {
+          if (Object.keys(this.activityData).indexOf('meta') < 0) {
+            this.activityData.meta = {
+              screens: [],
+            };
+          }
+          this.status = 'ready';
           // eslint-disable-next-line
           return resp.data[0]._id;
         }
-        return null;
+        return initializeActivity({
+          name: this.activityData.name,
+          id: this.activityId,
+          token: this.authToken.token,
+        }).then((resp1) => {
+          this.activityData = resp1.data;
+          if (Object.keys(this.activityData).indexOf('meta') < 0) {
+            this.activityData.meta = {
+              screens: [],
+            };
+          }
+          this.status = 'ready';
+          // eslint-disable-next-line
+          return this.activityData._id;
+        });
+      }).catch((e) => {
+        console.log('error in getActivityMetadata', e);
       });
     },
     getScreenMetadata(parentFolderId) {
       if (parentFolderId) {
-        getScreenMetadata(parentFolderId).then((resp) => {
+        getScreenMetadata(parentFolderId, this.authToken.token).then((resp) => {
           const data = _.map(resp.data, (d) => {
             const keys = Object.keys(d.meta);
             const newD = { ...d };
@@ -339,14 +379,22 @@ export default {
             return newD;
           });
           this.screens = data;
+        }).catch((e) => {
+          console.log('error in getScreenMetadata', e);
         });
       } else {
+        console.log('there are not any screens yet. initializing one now.');
         const screenSchema = schemas.screenSchema();
-        this.screens.push(screenSchema);
-        const activityScreenSchema = {
-          name: screenSchema.name,
-        };
-        this.activityData.meta.screens = [activityScreenSchema];
+        this.addScreen(screenSchema.name).then((resp) => {
+          this.screens.push(screenSchema);
+          const activityScreenSchema = {
+            // eslint-disable-next-line
+            id: `item/${resp.data._id}`,
+            name: screenSchema.name,
+          };
+          this.activityData.meta.screens = [activityScreenSchema];
+          return this.updateMetadata();
+        });
       }
     },
     updateScreen(key, value) {
@@ -358,6 +406,7 @@ export default {
       } else {
         this.screens[this.currentScreenIndex].meta[key] = value;
       }
+      this.updateCurrentScreen();
       // Vue.$set(this.screens[this.currentSlide].meta, key, value);
     },
     getIndex(activityScreenIndex) {
@@ -369,22 +418,42 @@ export default {
       }
       return 0;
     },
+    addScreen(name) {
+      // eslint-disable-next-line
+      return addScreen({ name, folderId: this.activityData._id, token: this.authToken.token });
+    },
     addBefore() {
       const screenSchema = schemas.screenSchema();
-      this.screens.push(screenSchema);
-      const activityScreenSchema = {
-        name: screenSchema.name,
-      };
-      this.activityData.meta.screens.splice(this.currentSlide, 0, activityScreenSchema);
+      this.addScreen(screenSchema.name).then((resp) => {
+        console.log('response from addScreen is', resp);
+        this.screens.push(screenSchema);
+        const activityScreenSchema = {
+          // eslint-disable-next-line
+          id: `item/${resp.data._id}`,
+          name: screenSchema.name,
+        };
+        this.activityData.meta.screens.splice(this.currentSlide, 0, activityScreenSchema);
+        return this.updateMetadata();
+      });
     },
     addAfter() {
       const screenSchema = schemas.screenSchema();
-      this.screens.push(screenSchema);
-      const activityScreenSchema = {
-        name: screenSchema.name,
-      };
-      this.activityData.meta.screens.splice(this.currentSlide + 1, 0, activityScreenSchema);
-      this.$refs.swiper.swiper.activeIndex += 1;
+      console.log('adding after');
+      this.addScreen(screenSchema.name).then((resp) => {
+        console.log('adding screen');
+        this.screens.push(screenSchema);
+        const activityScreenSchema = {
+          // eslint-disable-next-line
+          id: `item/${resp.data._id}`,
+          name: screenSchema.name,
+        };
+        if (!this.activityData.meta.screens) {
+          this.activityData.meta.screens = [];
+        }
+        this.activityData.meta.screens.splice(this.currentSlide + 1, 0, activityScreenSchema);
+        this.$refs.swiper.swiper.activeIndex += 1;
+        return this.updateMetadata();
+      });
     },
     removeScreen() {
       this.screens.splice(this.currentScreenIndex, 1);
@@ -411,6 +480,44 @@ export default {
       const idx = this.currentScreenIndex;
       this.activityData.meta.screens[this.currentSlide].name = name;
       this.screens[idx].name = name;
+    },
+    updateCurrentScreen() {
+      if (this.activityData.meta.screens[this.currentSlide].id) {
+        updateScreen({
+          name: this.activityData.meta.screens[this.currentSlide].name,
+          metadata: this.screens[this.currentScreenIndex].meta,
+          screenPath: this.activityData.meta.screens[this.currentSlide].id,
+          token: this.authToken.token,
+        }).then((resp) => {
+          console.log('updated screen', resp);
+          this.updateMetadata();
+        });
+      }
+    },
+    updateMetadata(doName = false) {
+      updateActivityMetadata({
+        name: this.activityData.name,
+        metadata: this.activityData.meta,
+        // eslint-disable-next-line
+        parentId: this.activityData._id,
+        token: this.authToken.token,
+      }).then(() => {
+        if (doName) {
+          return this.updateMetadataName();
+        }
+        return 0;
+      });
+    },
+    updateMetadataName() {
+      // ak: i'm not sure why the "name" option doesn't sync well.
+      updateActivityMetadata({
+        name: this.activityData.name,
+        metadata: {},
+        parentId: this.activityId,
+        token: this.authToken.token,
+      }).then((resp) => {
+        console.log(resp);
+      });
     },
   },
   mounted() {

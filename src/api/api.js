@@ -151,6 +151,26 @@ const getContentsOfActivitiesFolder = (activity_id, token) => axios({
   },
 });
 
+export const initializeActivity = ({ name, id, token }) => {
+  const bodyFormData = new FormData();
+  bodyFormData.set('name', name);
+  bodyFormData.set('parentId', id);
+  bodyFormData.set('parentType', 'folder');
+  bodyFormData.set('reuseExisting', true);
+  bodyFormData.set('metadata', JSON.stringify({}));
+  return axios({
+    method: 'POST',
+    url: `${config.apiHost}/folder`,
+    data: bodyFormData,
+    headers: {
+      'Girder-Token': `${token}`,
+    },
+  }).then((resp) => {
+    console.log('response from initialize', resp.data);
+    return resp;
+  });
+}
+
 export const getActivityMetadata = (activityId, token) => axios({
   method: 'GET',
   url: `${config.apiHost}/folder?parentId=${activityId}&parentType=folder`,
@@ -167,12 +187,19 @@ export const getActivitiesInActivitySet = (parentId, token) => axios({
   },
 }).then((resp) => {
   // get the id of the folder named Activities
-  return _.filter(resp.data, d => d.name === 'Activities')[0]._id;
-}).then((id) => getContentsOfActivitiesFolder(id, token));
+  const filtered = _.filter(resp.data, d => d.name === 'Activities');
+  console.log('activities?', filtered);
+  if (filtered.length) {
+    return _.filter(resp.data, d => d.name === 'Activities')[0]._id;
+  }
+}).then((id) => id ? getContentsOfActivitiesFolder(id, token) : { data: [] });
 
-export const getScreenMetadata = (activityId) => axios({
+export const getScreenMetadata = (activityId, token) => axios({
   method: 'GET',
   url: `${config.apiHost}/item?folderId=${activityId}`,
+  headers: {
+    'Girder-Token': `${token}`,
+  },
 });
 
 export const createNewActivitySet = (userId, token) => axios({
@@ -213,20 +240,93 @@ export const updateActivitySetMetadata = ({name, metadata, parentId, token}) => 
   },
 });
 
+export const updateActivityMetadata = ({name, metadata, parentId, token}) => {
+  const bodyFormData = new FormData();
+  bodyFormData.set('name', name);
+  bodyFormData.set('metadata', JSON.stringify(metadata));
+
+  return axios({
+    method: 'PUT',
+    url: `${config.apiHost}/folder/${parentId}`,
+    headers: { 'Girder-Token': `${token}` },
+    data: bodyFormData,
+  });
+};
+
+
+
 export const createNewActivity = ({name, parentId, token}) => axios({
-  method: 'POST',
-  url: `${config.apiHost}/folder/`,
-  headers: { 'Girder-Token': `${token}` },
-  params: {
-    name,
-    metadata: {
-      shortName: 'untitled activity',
-    },
-    parentId,
-    parentType: 'folder',
-    reuseExisting: true,
+  method: 'GET',
+  url: `${config.apiHost}/folder?parentId=${parentId}&parentType=folder`,
+  headers: {
+    'Girder-Token': `${token}`,
   },
+}).then((resp) => {
+  // get the id of the folder named Activities
+  const filtered = _.filter(resp.data, d => d.name === 'Activities')
+  if (filtered.length) {
+    return filtered[0]._id;
+  } else {
+    console.log('creating the folder')
+    const bodyFormData = new FormData();
+    bodyFormData.set('name', 'Activities');
+    bodyFormData.set('parentId', parentId);
+    bodyFormData.set('parentType', 'folder');
+    bodyFormData.set('reuseExisting', true);
+    bodyFormData.set('metadata', JSON.stringify({}));
+    return axios({
+      method: 'POST',
+      url: `${config.apiHost}/folder`,
+      headers: {
+        'Girder-Token': `${token}`,
+      },
+      data: bodyFormData,
+    }).then((resp) => resp.data._id);
+  }
+}).then((activityFolderId) => {
+  console.log('activities folder id is', activityFolderId);
+  const bodyFormData = new FormData();
+  bodyFormData.set('name', name);
+  bodyFormData.set('parentId', activityFolderId);
+  bodyFormData.set('parentType', 'folder');
+  bodyFormData.set('reuseExisting', true);
+  bodyFormData.set('metadata', JSON.stringify({}));
+  return axios({
+    method: 'POST',
+    url: `${config.apiHost}/folder/`,
+    headers: { 'Girder-Token': `${token}` },
+    data: bodyFormData,
+  })
 });
+
+export const addScreen = ({name, folderId, token}) => {
+  const bodyFormData = new FormData();
+  bodyFormData.set('name', name);
+  bodyFormData.set('folderId', folderId);
+  bodyFormData.set('metadata', JSON.stringify({skippable: true}));
+  return axios({
+    method: 'POST',
+    url: `${config.apiHost}/item`,
+    headers: {
+      'Girder-Token': `${token}`,
+    },
+    data: bodyFormData,
+  });
+}
+
+export const updateScreen = ({ name, metadata, screenPath, token }) => {
+  const bodyFormData = new FormData();
+  bodyFormData.set('name', name);
+  bodyFormData.set('metadata', JSON.stringify(metadata));
+  return axios({
+    method: 'PUT',
+    url: `${config.apiHost}/${screenPath}`,
+    headers: {
+      'Girder-Token': `${token}`,
+    },
+    data: bodyFormData,
+  });
+}
 
 /**
  * get a user's metadata

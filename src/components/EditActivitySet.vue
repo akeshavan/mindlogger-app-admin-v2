@@ -72,10 +72,16 @@
            <b-table striped hover outlined responsive
            :items="activitiesTable" :fields="activityTableFields">
             <template slot="name" slot-scope="data">
-              <router-link
-                :to="'/edit_activity_set/' + activityId + '/edit_activity/' + data.item.id">
-                {{data.item.name}}
-              </router-link>
+              <span v-if="data.item.id != null">
+                <router-link
+                  :to="'/edit_activity_set/' + activityId + '/edit_activity/' + data.item.id">
+                  {{data.item.name}}
+                </router-link>
+              </span>
+              <span v-else>
+                {{data.item.name}} (error) {{data.item}}
+              </span>
+
             </template>
             <template slot="actions" slot-scope="data">
               <!-- <b-button variant="info" size="sm"
@@ -232,21 +238,27 @@ export default {
       return getActivitySet(this.activityId, this.authToken.token).then((resp) => {
         this.activityData = resp.data;
         // eslint-disable-next-line
-        return this.activityId;
+        return this.activityData._id;
       }).then(id => getActivitiesInActivitySet(id, this.authToken.token))
         .then((resp) => {
+          console.log('got some activities', resp.data);
           this.activities = resp.data;
           _.map(resp.data, (d, i) => {
             // eslint-disable-next-line
-            getActivityMetadata(d._id).then((resp_md) => {
-              // this.activitiesMetadata[i] = resp_md.data[0];
-              Vue.set(this.activitiesMetadata, i, resp_md.data[0]);
-              this.$forceUpdate();
+            getActivityMetadata(d._id, this.authToken.token).then((resp_md) => {
+              if (resp_md.data.length) {
+                const val = resp_md.data[0];
+                if (!val.meta.screens) {
+                  val.meta.screens = [];
+                }
+                Vue.set(this.activitiesMetadata, i, val);
+                this.$forceUpdate();
+              }
             });
           });
         })
         .catch((e) => {
-          console.log('error', e);
+          console.log('error in get activity set', e);
         });
     },
     getUserMetadata(userId) {
@@ -281,8 +293,9 @@ export default {
         token: this.authToken.token,
       }).then(() => {
         // TODO: tell the user it was saved
-      }).catch(() => {
+      }).catch((e) => {
         // TODO: tell the user their input wasn't saved.
+        console.log('error in update metadata', e);
       });
     },
     createNewActivity() {
@@ -293,6 +306,8 @@ export default {
       }).then((resp) => {
         // eslint-disable-next-line
         this.$router.push(`${this.activityId}/edit_activity/${resp.data._id}`);
+      }).catch((e) => {
+        console.log('error in create new activity', e);
       });
     },
   },

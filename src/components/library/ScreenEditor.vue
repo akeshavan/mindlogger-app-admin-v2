@@ -233,7 +233,12 @@ export const Textfield = {
      v-on:input="onInput" v-if="ttype=='text'"
      v-on:change="onChange"
     >
-    <textarea class="textfield text-center" :value="value" :placeholder="getPlaceholder()" v-on:input="onInput" v-else></textarea>
+    <textarea v-on:change="onChange" 
+    class="textfield text-center" 
+    :value="value" 
+    :placeholder="getPlaceholder()" 
+    v-on:input="onInput" v-else>
+    </textarea>
   </div>
   `,
   computed: {
