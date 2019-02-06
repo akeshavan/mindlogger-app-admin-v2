@@ -281,6 +281,7 @@ export default {
     },
     removeSurvetListOption(loc) {
       this.surveyListOptions.splice(loc.index, 1);
+      this.updateSurveyList();
     },
     addSurveyListOption() {
       this.surveyListOptions.push({

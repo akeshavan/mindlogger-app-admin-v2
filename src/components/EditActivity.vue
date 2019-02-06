@@ -183,7 +183,6 @@ import {
 } from '../api/api';
 import schemas from '../api/schemas';
 
-
 export default {
   name: 'EditActivity',
   props: {
@@ -387,15 +386,21 @@ export default {
     },
     updateScreen(key, value) {
       const keys = Object.keys(this.screens[this.currentScreenIndex].meta);
+      let needsSave = true;
       if (keys.indexOf(key) < 0) {
         this.screens[this.currentScreenIndex].meta[key] = value;
         Vue.set(this.screens[this.currentScreenIndex].meta, key, value);
         this.$forceUpdate();
       } else {
+        const same = this.screens[this.currentScreenIndex].meta[key] === value;
+        if (same) {
+          needsSave = false;
+        }
         this.screens[this.currentScreenIndex].meta[key] = value;
       }
-      this.updateCurrentScreen();
-      // Vue.$set(this.screens[this.currentSlide].meta, key, value);
+      if (needsSave) {
+        this.updateCurrentScreen();
+      }
     },
     getIndex(activityScreenIndex) {
       if (activityScreenIndex) {
@@ -475,7 +480,7 @@ export default {
       this.activityData.meta.screens[this.currentSlide].name = name;
       this.screens[idx].name = name;
     },
-    updateCurrentScreen() {
+    updateCurrentScreen: _.debounce(function foo() {
       if (this.activityData.meta.screens[this.currentSlide]) {
         if (this.activityData.meta.screens[this.currentSlide].id) {
           updateScreen({
@@ -484,12 +489,11 @@ export default {
             screenPath: this.activityData.meta.screens[this.currentSlide].id,
             token: this.authToken.token,
           }).then(() => {
-            // console.log('updated screen', resp);
             this.updateMetadata();
           });
         }
       }
-    },
+    }, 2000),
     updateMetadata(doName = false) {
       updateActivityMetadata({
         name: this.activityData.name,

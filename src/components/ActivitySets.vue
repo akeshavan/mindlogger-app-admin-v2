@@ -26,7 +26,7 @@
             <i class="fas fa-plus mr-2"></i>Create New Activity Set
           </b-button>
 
-          <b-table striped hover :items="userActivityTable" :fields="userTableFields">
+          <b-table striped hover responsive :items="userActivityTable" :fields="userTableFields">
             <!-- A virtual column -->
             <template slot="logo" slot-scope="data">
               <span v-if="data.item.logoImage">
@@ -150,7 +150,7 @@ export default {
   data() {
     return {
       allActivitySets: [],
-      userTableFields: ['logo', 'shortName', 'role', 'manage', 'view', 'edit', 'delete'],
+      userTableFields: ['logo', 'shortName', 'manage', 'view', 'edit', 'delete'],
       remainingTableFields: ['logo', 'shortName', 'description'],
       toDelete: {},
     };
