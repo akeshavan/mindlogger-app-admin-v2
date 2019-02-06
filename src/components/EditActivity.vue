@@ -3,6 +3,13 @@
     <Loading v-if="status==='loading'"/>
     <Unauthorized v-else-if="!authorized"/>
     <div v-else>
+      <!-- Are you sure you want to delete modal? -->
+      <b-modal id="delete" title="Deleting"
+       v-on:ok="removeScreen" header-bg-variant="danger"
+       header-text-variant="light" ok-variant="danger">
+        <p class="my-4 lead">Are you sure you want to delete this screen?</p>
+      </b-modal>
+
       <!-- Title, navigations, and description -->
       <span>
         <b-button :to="'/edit_activity_set/' + this.activitySetId" variant="default" size="sm">
@@ -15,7 +22,7 @@
           <b-col>
             <h2 class="text-center">
               <span class="text-muted">Editing </span>
-                <textfield v-model="activityData.name" ttype="text" placeholder="title" 
+                <textfield v-model="activityData.name" ttype="text" placeholder="title"
                 @change="updateMetadata(1)">
                <!-- :index="data.index"
                ttype="text"
@@ -102,7 +109,7 @@
             </b-button>
 
 
-            <b-button size="sm" variant="danger" @click="removeScreen">
+            <b-button size="sm" variant="danger" v-b-modal.delete>
               <i class="fas fa-trash"></i>
             </b-button>
 
@@ -192,6 +199,7 @@ import {
   updateActivityMetadata,
   addScreen,
   updateScreen,
+  deleteScreen,
 } from '../api/api';
 import schemas from '../api/schemas';
 
@@ -456,9 +464,15 @@ export default {
       });
     },
     removeScreen() {
-      this.screens.splice(this.currentScreenIndex, 1);
-      this.activityData.meta.screens.splice(this.currentSlide, 1);
-      Vue.set(this.activityData.meta, 'screens', [...this.activityData.meta.screens]);
+      const value = this.activityData.meta.screens[this.currentSlide];
+      console.log('removing', value);
+      deleteScreen({ itemId: value.id, token: this.authToken.token }).then((resp) => {
+        console.log(resp);
+        this.screens.splice(this.currentScreenIndex, 1);
+        this.activityData.meta.screens.splice(this.currentSlide, 1);
+        Vue.set(this.activityData.meta, 'screens', [...this.activityData.meta.screens]);
+        return this.updateMetadata();
+      });
     },
     moveRight() {
       const order = this.activityData.meta.screens;

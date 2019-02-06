@@ -299,6 +299,14 @@ export const createNewActivity = ({name, parentId, token}) => axios({
   })
 });
 
+export const deleteActivity = ({activityId, token}) => axios({
+  method: 'DELETE',
+  url: `${config.apiHost}/folder/${activityId}`,
+  headers: {
+    'Girder-Token': `${token}`,
+  },
+});
+
 export const addScreen = ({name, folderId, token}) => {
   const bodyFormData = new FormData();
   bodyFormData.set('name', name);
@@ -326,7 +334,15 @@ export const updateScreen = ({ name, metadata, screenPath, token }) => {
     },
     data: bodyFormData,
   });
-}
+};
+
+export const deleteScreen = ({ itemId, token }) => axios({
+  method: 'DELETE',
+  url: `${config.apiHost}/${itemId}`,
+  headers: {
+    'Girder-Token': `${token}`,
+  },
+});
 
 /**
  * get a user's metadata

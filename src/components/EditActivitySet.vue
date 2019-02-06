@@ -3,6 +3,18 @@
     <Unauthorized v-if="!authorized" />
     <Loading v-if="status==='loading'" />
     <div v-else class="main container">
+
+      <!-- delete modal -->
+
+      <b-modal id="deleteActivity" ref="deleteModal" title="Deleting"
+       v-on:ok="deleteActivity(toDelete.id)" header-bg-variant="danger"
+       header-text-variant="light" ok-variant="danger">
+        <p class="my-4 lead">Are you sure you want to delete
+          <b class="text-bold">{{toDelete.name}} </b>?
+        </p>
+      </b-modal>
+
+      <!-- main content -->
       <p class="lead text-muted text-center mt-3">Edit Activity Set </p>
       <h1 class="text-center mt-3">
         <b-img v-if="activityData.meta.logoImage"
@@ -90,7 +102,7 @@
               </b-button> -->
               <b-button size="sm" class="close" aria-label="Close">
                 <!-- <i class="fas fa-trash"></i> -->
-                <span aria-hidden="true">&times; </span>
+                <span aria-hidden="true" @click="removeActivity(data.item)">&times; </span>
               </b-button>
             </template>
            </b-table>
@@ -127,6 +139,9 @@
   h1, h2, h3 {
     font-weight: normal;
   }
+  text-bold {
+    font-weight: bold;
+  }
 </style>
 
 <script>
@@ -142,6 +157,7 @@ import {
   getActivityMetadata,
   updateActivitySetMetadata,
   createNewActivity,
+  deleteActivity,
 } from '../api/api';
 import ActivitySetOverview from './ActivitySetOverview';
 import { Textfield } from './library/ScreenEditor';
@@ -177,6 +193,7 @@ export default {
       userSearch: '',
       activities: [],
       activitiesMetadata: {},
+      toDelete: {},
       activityTableFields: [
         {
           key: 'name',
@@ -308,6 +325,22 @@ export default {
         this.$router.push(`${this.activityId}/edit_activity/${resp.data._id}`);
       }).catch((e) => {
         console.log('error in create new activity', e);
+      });
+    },
+    removeActivity(stage) {
+      console.log(stage);
+      this.toDelete = stage;
+      this.$refs.deleteModal.show();
+    },
+    deleteActivity(id) {
+      console.log('deleting activity....', id);
+      deleteActivity({ activityId: id, token: this.authToken.token }).then((resp) => {
+        console.log(resp);
+        this.toDelete = {};
+        this.status = 'loading';
+        this.getActivitySet().then(() => {
+          this.status = 'complete';
+        });
       });
     },
   },
