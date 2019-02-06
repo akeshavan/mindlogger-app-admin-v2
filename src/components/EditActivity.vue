@@ -483,7 +483,7 @@ export default {
             metadata: this.screens[this.currentScreenIndex].meta,
             screenPath: this.activityData.meta.screens[this.currentSlide].id,
             token: this.authToken.token,
-          }).then((resp) => {
+          }).then(() => {
             // console.log('updated screen', resp);
             this.updateMetadata();
           });

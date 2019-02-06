@@ -21,8 +21,6 @@
         </p>
       </b-modal>
 
-
-
       <!-- main content -->
       <p class="lead text-muted text-center mt-3">Edit Activity Set </p>
       <h1 class="text-center mt-3">
@@ -116,29 +114,6 @@
               </b-button>
             </template>
            </b-table>
-        </b-col>
-      </b-row>
-
-      <b-row class="mt-3">
-        <b-col>
-          <h3> Role Management </h3>
-          <p> Add/remove editors, managers, viewers, and users</p>
-          <b-card no-body>
-            <b-tabs card>
-              <b-tab title="editors" active>
-                editors
-              </b-tab>
-              <b-tab title="managers" >
-                managers
-              </b-tab>
-              <b-tab title="users">
-                users
-              </b-tab>
-              <b-tab title="viewers">
-                viewers
-              </b-tab>
-            </b-tabs>
-          </b-card>
         </b-col>
       </b-row>
     </div>

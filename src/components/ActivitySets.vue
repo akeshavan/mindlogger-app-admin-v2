@@ -1,5 +1,14 @@
 <template>
     <b-container class="p-3">
+      <!-- Are you sure you want to delete modal? -->
+      <b-modal id="delete" ref="deleteModal" title="Deleting"
+       v-on:ok="removeActivitySet" header-bg-variant="danger"
+       header-text-variant="light" ok-variant="danger">
+        <p class="my-4 lead">
+          Are you sure you want to delete <strong>{{toDelete.shortName}}</strong> ?
+        </p>
+      </b-modal>
+
       <b-row>
         <b-col class="text-center">
           <h1>Activity Sets</h1>
@@ -25,22 +34,50 @@
               </span>
             </template>
 
-            <template slot="actions" slot-scope="data">
-              <span v-if="data.item.role.indexOf('Editor') > -1">
+            <template slot="manage" slot-scope="data">
+              <span v-if="data.item.role.indexOf('Manager') > -1">
                  <b-button
+                 v-b-tooltip.hover title="Manage User Roles"
                   size="sm"
-                  variant="secondary"
-                  :to="'/edit_activity_set/'+data.item.activityId">
-                   Edit
+                  variant="outline-secondary"
+                  :to="'/manage/'+data.item.activityId">
+                   <i class="fas fa-users"></i>
                  </b-button>
               </span>
+            </template>
+            <template slot="view" slot-scope="data">
               <span v-if="data.item.role.indexOf('Viewer') > -1">
                  <b-button
                   size="sm"
                   variant="info"
+                  v-b-tooltip.hover title="View data"
                   :to="'/view_activity/'+data.item.activityId">
-                   View
+                   <i class="fas fa-eye"></i>
                  </b-button>
+              </span>
+            </template>
+
+            <template slot="edit" slot-scope="data">
+              <span v-if="data.item.role.indexOf('Editor') > -1">
+                 <b-button
+                  size="sm"
+                  variant="secondary"
+                  v-b-tooltip.hover title="Edit activities"
+                  :to="'/edit_activity_set/'+data.item.activityId">
+                   <i class="fas fa-pen"></i>
+                 </b-button>
+              </span>
+            </template>
+
+            <template slot="delete" slot-scope="data">
+              <span v-if="data.item.role.indexOf('Editor') > -1">
+                <button type="button" class="close"
+                 aria-label="Close" style="width:100%"
+                 v-b-tooltip.hover title="Delete this activity set"
+                 @click="deleteActivitySet(data.item)"
+                 >
+                <span aria-hidden="true">&times;</span>
+              </button>
               </span>
             </template>
 
@@ -80,6 +117,10 @@ li {
   margin: 0 10px;
 }
 
+strong {
+  font-weight: bold;
+}
+
 .tableLogo {
   max-height: 25px;
 }
@@ -109,8 +150,9 @@ export default {
   data() {
     return {
       allActivitySets: [],
-      userTableFields: ['logo', 'shortName', 'role', 'actions'],
+      userTableFields: ['logo', 'shortName', 'role', 'manage', 'view', 'edit', 'delete'],
       remainingTableFields: ['logo', 'shortName', 'description'],
+      toDelete: {},
     };
   },
   computed: {
@@ -191,6 +233,14 @@ export default {
         // eslint-disable-next-line
         this.$router.push(`edit_activity_set/${resp.data._id}`);
       });
+    },
+    deleteActivitySet(item) {
+      this.toDelete = item;
+      this.$refs.deleteModal.show();
+    },
+    removeActivitySet() {
+      console.log('removing...', this.toDelete);
+      this.toDelete = {};
     },
   },
 };

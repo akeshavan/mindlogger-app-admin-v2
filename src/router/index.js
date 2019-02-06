@@ -11,6 +11,7 @@ import ForgotPassword from '@/components/ForgotPassword';
 import EditActivitySet from '@/components/EditActivitySet';
 import EditActivity from '@/components/EditActivity';
 import EditActivitySetParentRoute from '@/components/EditActivitySetParentRoute';
+import Manage from '@/components/Manage';
 
 Vue.use(Router);
 
@@ -41,6 +42,11 @@ export default new Router({
       path: '/forgot',
       name: 'Forgot',
       component: ForgotPassword,
+    },
+    {
+      path: '/manage/:activitySetId',
+      name: 'Manage',
+      component: Manage,
     },
     {
       path: '/edit_activity_set/:activitySetId',
