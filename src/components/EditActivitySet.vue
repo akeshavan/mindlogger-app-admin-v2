@@ -91,7 +91,8 @@
                 </router-link>
               </span>
               <span v-else>
-                {{data.item.name}} (error) {{data.item}}
+                <!-- {{data.item.name}} (error) {{data.item}} -->
+                loading..
               </span>
 
             </template>
