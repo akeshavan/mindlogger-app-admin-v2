@@ -1,5 +1,12 @@
 <template>
-  <div>
+  <div class="mt-3">
+    <span>
+      <b-button :to="'/activitySets'" variant="default" size="sm">
+        <i class="fas fa-long-arrow-alt-left"></i>
+        Back to your Activity Sets
+      </b-button>
+    </span>
+
     <Unauthorized v-if="!authorized" />
     <Loading v-if="status==='loading'" />
     <div v-else class="main container">
@@ -13,6 +20,8 @@
           <b class="text-bold">{{toDelete.name}} </b>?
         </p>
       </b-modal>
+
+
 
       <!-- main content -->
       <p class="lead text-muted text-center mt-3">Edit Activity Set </p>
@@ -161,7 +170,7 @@ import {
   deleteActivity,
 } from '../api/api';
 import ActivitySetOverview from './ActivitySetOverview';
-import { Textfield } from './library/ScreenEditor';
+import Textfield from './library/Textfield';
 
 
 export default {

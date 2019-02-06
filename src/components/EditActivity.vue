@@ -24,40 +24,19 @@
               <span class="text-muted">Editing </span>
                 <textfield v-model="activityData.name" ttype="text" placeholder="title"
                 @change="updateMetadata(1)">
-               <!-- :index="data.index"
-               ttype="text"
-               v-on:input="setSurveyListText"
-               > -->
-               <!-- v-on:input="setSurveyListText"
-               v-on:needsSave="needsSave"> -->
                </textfield>
-              <!-- {{activityData.name}} -->
             </h2>
             <p class="lead text-center">
               <textfield v-model="activityData.meta.shortName" ttype="text"
                @change="updateMetadata"
                placeholder="short name">
-               <!-- :index="data.index"
-               ttype="text"
-               v-on:input="setSurveyListText"
-               > -->
-               <!-- v-on:input="setSurveyListText"
-               v-on:needsSave="needsSave"> -->
                </textfield>
-              <!-- {{activityData.meta.description}} -->
             </p>
             <p class="lead text-center">
               <textfield v-model="activityData.meta.description" ttype="textarea"
                @change="updateMetadata"
                placeholder="description">
-               <!-- :index="data.index"
-               ttype="text"
-               v-on:input="setSurveyListText"
-               > -->
-               <!-- v-on:input="setSurveyListText"
-               v-on:needsSave="needsSave"> -->
                </textfield>
-              <!-- {{activityData.meta.description}} -->
             </p>
           </b-col>
         </b-row>
@@ -188,7 +167,8 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper';
 // import _ from 'lodash';
 import Loading from './library/Loading';
 import Unauthorized from './library/Unauthorized';
-import ScreenEditor, { Textfield } from './library/ScreenEditor';
+import ScreenEditor from './library/ScreenEditor';
+import Textfield from './library/Textfield';
 import ScreenPreview from './library/ScreenPreview';
 import {
   getActivitySet,
@@ -496,16 +476,18 @@ export default {
       this.screens[idx].name = name;
     },
     updateCurrentScreen() {
-      if (this.activityData.meta.screens[this.currentSlide].id) {
-        updateScreen({
-          name: this.activityData.meta.screens[this.currentSlide].name,
-          metadata: this.screens[this.currentScreenIndex].meta,
-          screenPath: this.activityData.meta.screens[this.currentSlide].id,
-          token: this.authToken.token,
-        }).then((resp) => {
-          console.log('updated screen', resp);
-          this.updateMetadata();
-        });
+      if (this.activityData.meta.screens[this.currentSlide]) {
+        if (this.activityData.meta.screens[this.currentSlide].id) {
+          updateScreen({
+            name: this.activityData.meta.screens[this.currentSlide].name,
+            metadata: this.screens[this.currentScreenIndex].meta,
+            screenPath: this.activityData.meta.screens[this.currentSlide].id,
+            token: this.authToken.token,
+          }).then((resp) => {
+            // console.log('updated screen', resp);
+            this.updateMetadata();
+          });
+        }
       }
     },
     updateMetadata(doName = false) {

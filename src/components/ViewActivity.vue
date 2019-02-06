@@ -2,6 +2,7 @@
   <div>
     <Loading v-if="status === 'loading'"/>
     <Unauthorized v-else-if="status === 'unauthorized'" />
+    <Error v-else-if="status === 'error'" :error="error"/>
     <div v-else-if="isLoggedIn" class="activitySetOverview">
       <b-row>
         <b-col class="pt-3 bg-light col-md-3 col-sm-12 col-xs-12">
@@ -65,6 +66,7 @@ import Vue from 'vue';
 import { getActivitySet, getUserMetadata } from '../api/api';
 import Loading from './library/Loading';
 import Unauthorized from './library/Unauthorized';
+import Error from './library/Error';
 
 
 export default {
@@ -83,11 +85,15 @@ export default {
   components: {
     Loading,
     Unauthorized,
+    Error,
   },
   data() {
     return {
       activityData: {},
       status: 'loading',
+      error: {
+        message: null,
+      },
       userData: {},
       userSearch: '',
       // viewableUsers: [],
@@ -146,7 +152,11 @@ export default {
       if (!this.isViewer(this.activityData) || !this.isLoggedIn) {
         this.status = 'unauthorized';
       }
-    });
+    })
+      .catch((e) => {
+        this.status = 'error';
+        this.error.message = e.message;
+      });
   },
 };
 </script>
