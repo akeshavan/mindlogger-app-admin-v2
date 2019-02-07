@@ -38,7 +38,9 @@
           </b-nav>
         </b-col>
         <b-col class="p-3 col-md-9 col-sm-12 col-xs-12">
-          <router-view :activityData="activityData" :authToken="authToken"></router-view>
+          <transition name="fade" mode="out-in">
+            <router-view :activityData="activityData" :authToken="authToken"></router-view>
+          </transition>
         </b-col>
       </b-row>
     </div>

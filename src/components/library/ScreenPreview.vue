@@ -57,7 +57,7 @@
   }
 
   .preview .card-footer {
-    min-height: 20px;
+    min-height: 42px;
     padding: 5px;
   }
 

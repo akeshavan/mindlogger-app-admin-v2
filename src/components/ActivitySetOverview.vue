@@ -39,6 +39,20 @@
           <p>Viewers</p>
         </b-col>
         </b-row>
+        <b-row>
+          <b-col>
+            <h2 class="text-center">Group Stats</h2>
+            <p class="lead">
+              A placeholder for some summary statistics:
+            </p>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col class="text-center">
+            <img class="mx-auto w-100 pl-3 pr-3"
+            src="../assets/undraw/undraw_data_trends_b0wg.svg"/>
+          </b-col>
+        </b-row>
     </b-container>
 </template>
 

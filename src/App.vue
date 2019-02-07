@@ -31,8 +31,10 @@
       </b-collapse>
     </b-navbar>
     <div class="">
-     <router-view v-on:login="saveToken" :isLoggedIn="isLoggedIn"
-     :user="user" :authToken="authToken"/>
+      <transition name="fade" mode="out-in">
+        <router-view v-on:login="saveToken" :isLoggedIn="isLoggedIn"
+        :user="user" :authToken="authToken"/>
+     </transition>
     </div>
   </div>
 </template>
@@ -97,4 +99,23 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
+h1, h2, h3 {
+  font-weight: normal;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
 </style>

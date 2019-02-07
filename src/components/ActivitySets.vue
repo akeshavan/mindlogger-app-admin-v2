@@ -12,7 +12,9 @@
       <b-row>
         <b-col class="text-center">
           <h1>Activity Sets</h1>
-          <p class="lead">A collection of activities.</p>
+          <p class="lead">An activity set consists of various activities (e.g. assessments).
+            Each activity consists of various screens.
+          </p>
         </b-col>
       </b-row>
       <b-row v-if="isLoggedIn">
@@ -149,6 +151,7 @@ export default {
   },
   data() {
     return {
+      status: 'loading',
       allActivitySets: [],
       userTableFields: ['logo', 'shortName', 'manage', 'view', 'edit', 'delete'],
       remainingTableFields: ['logo', 'shortName', 'description'],
@@ -156,6 +159,9 @@ export default {
     };
   },
   computed: {
+    token() {
+      return this.authToken.token;
+    },
     userActivitySets() {
       if (!this.isLoggedIn) {
         return [];
@@ -196,10 +202,22 @@ export default {
       });
     },
   },
+  watch: {
+    token() {
+      if (this.token) {
+        getAllActivitySets(this.authToken.token).then((resp) => {
+          this.allActivitySets = resp.data;
+          this.status = 'ready';
+        });
+      }
+    },
+  },
   mounted() {
-    getAllActivitySets(this.authToken.token).then((resp) => {
-      this.allActivitySets = resp.data;
-    });
+    if (this.token) {
+      getAllActivitySets(this.authToken.token).then((resp) => {
+        this.allActivitySets = resp.data;
+      });
+    }
   },
   methods: {
     isEditor(activity) {
