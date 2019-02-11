@@ -84,10 +84,6 @@
 
           <p>in this activity set are:</p>
 
-          <b-button @click="createNewActivity" class="mb-3" variant="success">
-            <i class="fas fa-plus mr-2"></i>Create New Activity
-          </b-button>
-
            <b-table striped hover outlined responsive
            :items="activitiesTable" :fields="activityTableFields">
             <template slot="name" slot-scope="data">
@@ -114,6 +110,13 @@
               </b-button>
             </template>
            </b-table>
+           <b-row>
+             <b-col class="text-center">
+              <b-button @click="createNewActivity" class="mb-3" variant="success" size="lg">
+                <i class="fas fa-plus mr-2"></i>Create New Activity
+              </b-button>
+             </b-col>
+          </b-row>
         </b-col>
       </b-row>
     </div>
@@ -335,6 +338,9 @@ export default {
       this.status = 'complete';
     });
   },
+  // deactivated() {
+  //   this.$destroy();
+  // },
 };
 </script>
 

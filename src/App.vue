@@ -32,8 +32,10 @@
     </b-navbar>
     <div class="">
       <transition name="fade" mode="out-in">
+        <keep-alive :exclude="['view_activity']">
         <router-view v-on:login="saveToken" :isLoggedIn="isLoggedIn"
-        :user="user" :authToken="authToken"/>
+        :user="user" :authToken="authToken" keep/>
+        </keep-alive>
      </transition>
     </div>
   </div>
@@ -92,9 +94,17 @@ export default {
 };
 </script>
 
+<style lang="scss">
+  @import "../custom-bootstrap.scss";
+</style>
+
 <style>
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,200,400');
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */
+  font-family: 'IBM Plex Sans', 'Avenir', Helvetica, Arial, sans-serif;
+  /* font-weight: 100; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;

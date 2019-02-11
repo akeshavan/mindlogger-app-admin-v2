@@ -10,6 +10,9 @@
         <p class="my-4 lead">Are you sure you want to delete this screen?</p>
       </b-modal>
 
+      <!-- Error from server -->
+      <ErrorToast v-if="error.show" :error="error" v-on:resetError="resetError"/>
+
       <!-- Title, navigations, and description -->
       <span>
         <b-button :to="'/edit_activity_set/' + this.activitySetId" variant="default" size="sm">
@@ -170,6 +173,7 @@ import Unauthorized from './library/Unauthorized';
 import ScreenEditor from './library/ScreenEditor';
 import Textfield from './library/Textfield';
 import ScreenPreview from './library/ScreenPreview';
+import ErrorToast from './library/ErrorToast';
 import {
   getActivitySet,
   getUserMetadata,
@@ -208,6 +212,10 @@ export default {
           description: 'add a description',
         },
         name: 'full name of untitled activity',
+      },
+      error: {
+        show: false,
+        message: null,
       },
       status: 'loading',
       screens: [],
@@ -258,6 +266,7 @@ export default {
     ScreenEditor,
     ScreenPreview,
     Textfield,
+    ErrorToast,
   },
   computed: {
     currentSlide() {
@@ -359,6 +368,9 @@ export default {
               newD.meta.survey = {
                 increments: 'Discrete',
                 orientation: 'vertical',
+                // optionsCount: 2,
+                optionsMax: 1,
+                optionsMin: 1,
                 mode: 'single',
                 options: [],
               };
@@ -398,6 +410,7 @@ export default {
         }
         this.screens[this.currentScreenIndex].meta[key] = value;
       }
+      console.log('needs save?', needsSave);
       if (needsSave) {
         this.updateCurrentScreen();
       }
@@ -481,19 +494,26 @@ export default {
       this.screens[idx].name = name;
     },
     updateCurrentScreen: _.debounce(function foo() {
+      console.log('updating');
       if (this.activityData.meta.screens[this.currentSlide]) {
-        if (this.activityData.meta.screens[this.currentSlide].id) {
+        console.log('hi', this.activityData.meta.screens[this.currentSlide]);
+        if (this.activityData.meta.screens[this.currentSlide].id || this.activityData.meta.screens[this.currentSlide]['@id']) {
+          console.log('updating screen');
           updateScreen({
             name: this.activityData.meta.screens[this.currentSlide].name,
             metadata: this.screens[this.currentScreenIndex].meta,
-            screenPath: this.activityData.meta.screens[this.currentSlide].id,
+            screenPath: this.activityData.meta.screens[this.currentSlide].id || this.activityData.meta.screens[this.currentSlide]['@id'],
             token: this.authToken.token,
           }).then(() => {
             this.updateMetadata();
+          }).catch((e) => {
+            console.log('oh no, an error');
+            this.error.message = e.message;
+            this.error.show = true;
           });
         }
       }
-    }, 2000),
+    }, 500),
     updateMetadata(doName = false) {
       updateActivityMetadata({
         name: this.activityData.name,
@@ -518,6 +538,10 @@ export default {
       }).then((resp) => {
         console.log(resp);
       });
+    },
+    resetError() {
+      this.error.show = false;
+      this.error.message = '';
     },
   },
   mounted() {

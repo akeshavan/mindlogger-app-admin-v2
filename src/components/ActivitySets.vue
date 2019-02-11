@@ -24,10 +24,6 @@
             Here are the activies you own, manage, or can view.
           </p>
 
-          <b-button @click="createNewActivitySet" class="mb-3" variant="success">
-            <i class="fas fa-plus mr-2"></i>Create New Activity Set
-          </b-button>
-
           <b-table striped hover responsive :items="userActivityTable" :fields="userTableFields">
             <!-- A virtual column -->
             <template slot="logo" slot-scope="data">
@@ -84,6 +80,15 @@
             </template>
 
           </b-table>
+
+          <b-row>
+            <b-col class="text-center">
+              <b-button @click="createNewActivitySet" class="mb-3" variant="success" size="lg">
+                <i class="fas fa-plus mr-2"></i>Create New Activity Set
+              </b-button>
+            </b-col>
+          </b-row>
+
         </b-col>
       </b-row>
       <b-row class="mt-3">

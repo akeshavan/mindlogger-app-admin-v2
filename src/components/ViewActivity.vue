@@ -160,5 +160,8 @@ export default {
         this.error.message = e.message;
       });
   },
+  deactivated() {
+    this.$destroy();
+  },
 };
 </script>

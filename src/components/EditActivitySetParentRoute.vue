@@ -36,6 +36,9 @@ export default {
       return this.$route.params.activitySetId;
     },
   },
+  deactivated() {
+    this.$destroy();
+  },
 };
 </script>
 
