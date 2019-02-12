@@ -9,7 +9,7 @@
         </p>
       </b-modal>
 
-      <b-row>
+      <b-row class="jumbotron mb-0 pb-0 mt-3 pt-3">
         <b-col class="text-center">
           <h1>Activity Sets</h1>
           <p class="lead">An activity set consists of various activities (e.g. assessments).
@@ -24,7 +24,9 @@
             Here are the activies you own, manage, or can view.
           </p>
 
-          <b-table striped hover responsive :items="userActivityTable" :fields="userTableFields">
+          <transition name="fade" mode="out-in">
+          <b-table striped hover responsive v-if="userActivityTable.length"
+            :items="userActivityTable" :fields="userTableFields">
             <!-- A virtual column -->
             <template slot="logo" slot-scope="data">
               <span v-if="data.item.logoImage">
@@ -37,7 +39,7 @@
                  <b-button
                  v-b-tooltip.hover title="Manage User Roles"
                   size="sm"
-                  variant="outline-secondary"
+                  variant="outline-primary"
                   :to="'/manage/'+data.item.activityId">
                    <i class="fas fa-users"></i>
                  </b-button>
@@ -80,6 +82,9 @@
             </template>
 
           </b-table>
+
+          <Loading v-else />
+          </transition>
 
           <b-row>
             <b-col class="text-center">
@@ -140,6 +145,7 @@ import {
   fullImageURL,
   createNewActivitySet,
 } from '../api/api';
+import Loading from './library/Loading';
 
 export default {
   name: 'ActivitySets',
@@ -153,6 +159,9 @@ export default {
     user: {
       type: Object,
     },
+  },
+  components: {
+    Loading,
   },
   data() {
     return {

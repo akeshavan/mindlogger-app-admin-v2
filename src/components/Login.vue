@@ -1,5 +1,5 @@
 <template name="login">
-  <div id="login" class="text-center">
+  <div id="login" class="text-center jumbotron mb-0">
     <h1> Log In </h1>
 
     <div id="signupForm" class="container fluid">

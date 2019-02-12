@@ -8,8 +8,8 @@ function makeId(len = 10) {
   return text;
 }
 
-const screenSchema = () => ({
-  name: makeId(10),
+const screenSchema = n => ({
+  name: n || makeId(10),
   meta: {
     surveyType: 'list',
     skippable: true,

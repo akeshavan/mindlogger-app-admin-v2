@@ -1,5 +1,6 @@
 <template name="signup">
-  <div id="signup" class="pt-3">
+  <div id="signup" class="pt-3 ">
+    <div class="jumbotron">
     <h1 class="text-center"> Sign Up </h1>
     <!-- Modal Component -->
 
@@ -88,6 +89,7 @@
 
       </b-form>
     </div>
+  </div>
   </div>
 </template>
 <style>

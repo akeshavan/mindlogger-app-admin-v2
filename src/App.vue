@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <b-navbar toggleable="md" type="light" variant="light">
+    <b-navbar toggleable="md" type="dark" class="site-header">
 
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
@@ -32,10 +32,10 @@
     </b-navbar>
     <div class="">
       <transition name="fade" mode="out-in">
-        <keep-alive :exclude="['view_activity']">
+        <!-- <keep-alive :exclude="['view_activity']"> -->
         <router-view v-on:login="saveToken" :isLoggedIn="isLoggedIn"
         :user="user" :authToken="authToken" keep/>
-        </keep-alive>
+        <!-- </keep-alive> -->
      </transition>
     </div>
   </div>
@@ -46,10 +46,14 @@ import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import _ from 'lodash';
 // eslint-disable-next-line
+import style from './custom-bootstrap.scss';
+// eslint-disable-next-line
 import 'bootstrap/dist/css/bootstrap.css';
+// eslint-disable-next-line
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 
+console.log('style', style);
 const localStorage = require('localStorage');
 
 Vue.use(BootstrapVue);
@@ -95,11 +99,16 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "../custom-bootstrap.scss";
+  @import './custom-bootstrap.scss';
+  @import '../node_modules/bootstrap/scss/bootstrap.scss';
 </style>
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,200,400');
+
+.site-header {
+  background: url(//27c2s3mdcxk2qzutg1z8oa91-wpengine.netdna-ssl.com/wp-content/themes/childmind/assets/img/bg-header.svg) bottom center #0067a0;
+}
 
 #app {
   /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */

@@ -126,6 +126,16 @@
   </div>
 </template>
 
+<style lang="scss">
+  @import '../custom-bootstrap.scss';
+
+.swiper-slide-active article.card.mb-2 {
+    border-width: thick;
+    border-color: $light-blue;
+    color: black;
+}
+</style>
+
 <style scoped>
   h1, h2, h3 {
     font-weight: normal;
@@ -134,12 +144,6 @@
   .lh {
     line-height: normal;
   }
-
-.swiper-slide-active article.card.mb-2 {
-    border-width: thick;
-    border-color:#17a2b8;
-    color: black;
-}
 
 article {
   height: 280px;
@@ -382,18 +386,18 @@ export default {
           console.log('error in getScreenMetadata', e);
         });
       } else {
-        console.log('there are not any screens yet. initializing one now.');
-        const screenSchema = schemas.screenSchema();
-        this.addScreen(screenSchema.name).then((resp) => {
-          this.screens.push(screenSchema);
-          const activityScreenSchema = {
-            // eslint-disable-next-line
-            id: `item/${resp.data._id}`,
-            name: screenSchema.name,
-          };
-          this.activityData.meta.screens = [activityScreenSchema];
-          return this.updateMetadata();
-        });
+        // console.log('there are not any screens yet. initializing one now.');
+        // const screenSchema = schemas.screenSchema();
+        // this.addScreen(screenSchema.name).then((resp) => {
+        //   this.screens.push(screenSchema);
+        //   const activityScreenSchema = {
+        //     // eslint-disable-next-line
+        //     id: `item/${resp.data._id}`,
+        //     name: screenSchema.name,
+        //   };
+        //   this.activityData.meta.screens = [activityScreenSchema];
+        //   return this.updateMetadata();
+        // });
       }
     },
     updateScreen(key, value) {
@@ -429,7 +433,7 @@ export default {
       return addScreen({ name, folderId: this.activityData._id, token: this.authToken.token });
     },
     addBefore() {
-      const screenSchema = schemas.screenSchema();
+      const screenSchema = schemas.screenSchema(`Q${this.screens.length}`);
       this.addScreen(screenSchema.name).then((resp) => {
         console.log('response from addScreen is', resp);
         this.screens.push(screenSchema);
@@ -443,7 +447,7 @@ export default {
       });
     },
     addAfter() {
-      const screenSchema = schemas.screenSchema();
+      const screenSchema = schemas.screenSchema(`Q${this.screens.length}`);
       console.log('adding after');
       this.addScreen(screenSchema.name).then((resp) => {
         console.log('adding screen');

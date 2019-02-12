@@ -35,7 +35,7 @@ export const signin = ({user, password}) => axios({
     url: `${config.apiHost}/user/authentication`,
     headers: { 'Girder-Authorization': `Basic ${btoa(user + ":" + password)}` }
   }).then((resp) => {
-    axios.defaults.headers.common['Girder-Token'] = resp.data.authToken.token;
+    // axios.defaults.headers.common['Girder-Token'] = resp.data.authToken.token;
     return resp;
   });
 

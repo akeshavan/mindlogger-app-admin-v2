@@ -1,8 +1,8 @@
 <template>
-  <div class="home mt-3">
+  <div class="mt-3 home">
     <b-container>
       <div class="row">
-        <div class="col-12 text-center">
+        <div class="col-12 text-center jumbotron mb-0 pb-0">
           <h1 >Mindlogger Admin Dashboard v2</h1>
           <p class="lead">A dashboard to build mindlogger applications and visualize data</p>
         </div>
@@ -46,7 +46,7 @@
         </div>
         <div v-else class="col-12 text-center">
           <h3>Welcome, {{user.firstName}} !</h3>
-           <b-button variant="primary" to="/activitySets">Manage Activity Sets</b-button>
+           <b-button variant="danger" to="/activitySets">Manage Activity Sets</b-button>
         </div>
       </div>
     </b-container>

@@ -45,17 +45,17 @@
   animation-timing-function: linear;
 }
 .loading .loader.firstColor {
-  border-top-color: #830025;
+  border-top-color: #00c8dd;
 }
 .loading .loader.secondColor {
-  border-top-color: #f24f77;
+  border-top-color: #25286e;
   left: 7px;
   width: 127px;
   height: 127px;
   top: 7px;
 }
 .loading .loader.thirdColor {
-  border-top-color: #c9c9c9;
+  border-top-color: #ff0045;
   left: 8px;
   width: 103px;
   height: 103px;

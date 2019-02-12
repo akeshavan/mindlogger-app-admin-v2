@@ -15,14 +15,16 @@
     </div>
 </template>
 
-<style scoped>
+<style lang="scss">
+  @import '../../custom-bootstrap.scss';
+
   .textfield {
       border-style: dashed;
       border-top-style: none;
       border-left-style: none;
       border-right-style: none;
       border-width: thin;
-      border-color:#007bff;
+      border-color: $green;
       background-color: #ff020200;
       width: -webkit-fill-available;
       text-align: center;
