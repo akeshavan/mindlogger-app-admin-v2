@@ -12,103 +12,6 @@
       <Loading v-if="status==='loading'"/>
       <unauthorized v-else-if="!authorized" />
       <div v-else>
-
-      <!-- Are you sure you want to delete modal? -->
-      <b-modal id="delete"
-       title="Deleting"
-       v-on:ok="removeEditor"
-       header-bg-variant="danger"
-       header-text-variant="light"
-       ok-variant="danger">
-        <p class="my-4 lead">
-          <strong>Are you sure you want to delete
-            <span class="text-danger">{{toDelete.email}}</span>
-          ?</strong>
-        </p>
-      </b-modal>
-
-      <!-- Add a new user modal -->
-      <b-modal id="inviteUser" ref="inviteUser" :title="`Invite ${query}`"
-       v-on:ok="inviteUser" header-bg-variant="success"
-       header-text-variant="light" ok-variant="success">
-        <p class="my-4">
-          <h4 class="mb-3">Create a new Mindlogger account for
-            <strong class="text-primary">{{query}}</strong>
-          </h4>
-        <b-form-group id="emailAddressInputGroup"
-                      label="Email address:"
-                      label-for="emailAddress"
-                      description="">
-          <b-form-input id="emailAddress"
-                        type="email"
-                        v-model="form.email"
-                        required
-                        placeholder="Enter email">
-          </b-form-input>
-        </b-form-group>
-        <b-form-group id="usernameInputGroup"
-                      label="Username:"
-                      label-for="usernameInput"
-                      description="">
-          <b-form-input id="usernameInput"
-                        type="text"
-                        v-model="form.login"
-                        required
-                        placeholder="Choose a username">
-          </b-form-input>
-        </b-form-group>
-
-        <b-form-group id="firstNameInputGroup"
-                      label="First Name:"
-                      label-for="firstNameInput"
-                      description="">
-          <b-form-input id="firstNameInput"
-                        type="text"
-                        v-model="form.firstName"
-                        required
-                        placeholder="First Name">
-          </b-form-input>
-        </b-form-group>
-
-        <b-form-group id="lastNameInputGroup"
-                      label="Last Name:"
-                      label-for="lastNameInput"
-                      description="">
-          <b-form-input id="lastNameInput"
-                        type="text"
-                        v-model="form.lastName"
-                        required
-                        placeholder="Last Name">
-          </b-form-input>
-        </b-form-group>
-
-        <b-form-group id="passwordInputGroup"
-                      label="Password:"
-                      label-for="passwordInput">
-          <b-form-input id="passwordInput"
-                        type="password"
-                        v-model="form.password"
-                        required
-                        placeholder="Password">
-          </b-form-input>
-        </b-form-group>
-
-        <b-form-group id="password2InputGroup"
-                      label="Confirm Password:"
-                      label-for="password2Input">
-          <b-alert :show="!validated" variant="danger">
-            Make sure your passwords match!
-          </b-alert>
-          <b-form-input id="password2Input"
-                        type="password"
-                        v-model="form.password2"
-                        required
-                        placeholder="Confirm password">
-          </b-form-input>
-        </b-form-group>
-        </p>
-      </b-modal>
-
         <b-row class="mt-3">
           <b-col class="text-center">
             <h2> Role Management: <span class="actName">{{activityData.name}}</span> </h2>
@@ -168,61 +71,44 @@
             -->
             <b-tabs nav-class="hideTabHeader" ref="tabs" v-on:input="setTab" v-model="currentTab">
               <b-tab title="editors" active>
-                <b-row class="mb-1">
-                  <b-col></b-col>
-                  <b-col>
-                    <b-input-group>
-                      <b-input-group-text slot="prepend">
-                          <strong class="text-primary"><i class="fas fa-search"></i></strong>
-                      </b-input-group-text>
-                      <b-form-input></b-form-input>
-                    </b-input-group>
-                  </b-col>
-
-                </b-row>
-
-                <b-table responsive striped hover :items="editorTable" :fields="tableFields">
-                  <template slot="action" slot-scope="data">
-                    <!-- <b-button variant="info" size="sm"
-                    :to="'/edit_activity_set/' + activityId + '/edit_activity/' + data.item.id">
-                      edit
-                    </b-button> -->
-                    <b-button size="sm"
-                     class="close" aria-label="Close"
-                     v-if="editorTable.length > 1 && !(data.item._id == user._id)">
-                      <!-- <i class="fas fa-trash"></i> -->
-                      <span aria-hidden="true" v-b-modal.delete @click="toDelete = data.item">&times; </span>
-                    </b-button>
-                  </template>
-                </b-table>
-
-                <div class="mt-3">
-                  <p>Add a new or existing user by providing an email address</p>
-
-
-                  <!-- AUTOCOMPLETE USER -->
-                  <vue-bootstrap-typeahead size="lg"
-                    prepend="Email"
-                    type='email'
-                    v-model="query"
-                    :serializer="s => s.email"
-                    :data="allUsers"
-                  >
-                  <template slot="append">
-                  <button class="btn btn-primary" @click="addEditor" :disabled="!query">
-                  Add
-                  </button>
-                  </template>
-                  </vue-bootstrap-typeahead>
-
-                </div>
+                <management-editor
+                 :editorTable="editorTable"
+                 :tableFields="tableFields"
+                 :user="user"
+                 role="editors"
+                 :form="form"
+                 :allUsers="allUsers"
+                 v-on:removeUser="removeUser"
+                 v-on:inviteUser="inviteUser"
+                 v-on:addUser="addUser"
+                 />
 
               </b-tab>
               <b-tab title="managers" >
-                <b-table striped hover :items="managerTable" :fields="tableFields"></b-table>
+                <management-editor
+                 :editorTable="managerTable"
+                 :tableFields="tableFields"
+                 :user="user"
+                 role="managers"
+                 :form="form"
+                 :allUsers="allUsers"
+                 v-on:removeUser="removeUser"
+                 v-on:inviteUser="inviteUser"
+                 v-on:addUser="addUser"
+                 />
               </b-tab>
               <b-tab title="users">
-                <b-table striped hover :items="userTable" :fields="tableFields"></b-table>
+                <management-editor
+                 :editorTable="userTable"
+                 :tableFields="tableFields"
+                 :user="user"
+                 role="users"
+                 :form="form"
+                 :allUsers="allUsers"
+                 v-on:removeUser="removeUser"
+                 v-on:inviteUser="inviteUser"
+                 v-on:addUser="addUser"
+                 />
               </b-tab>
               <b-tab title="viewers">
                 {{activityData.meta.members.viewers}}
@@ -230,6 +116,9 @@
             </b-tabs>
           </b-card>
         </b-col>
+      </b-row>
+      <b-row>
+        <b-col class="jumbotron"></b-col>
       </b-row>
       <b-row>
         <b-col class="jumbotron"></b-col>
@@ -284,7 +173,6 @@
 
 <script>
 import Vue from 'vue';
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 import _ from 'lodash';
 import Loading from './library/Loading';
 import Unauthorized from './library/Unauthorized';
@@ -305,6 +193,7 @@ import ManagerIcon from './viz/icons/Manager';
 import EditorIcon from './viz/icons/Editor';
 import UserIcon from './viz/icons/User';
 import ViewerIcon from './viz/icons/Viewer';
+import ManagementEditor from './library/ManagementEditor';
 
 export default {
   name: 'manage',
@@ -329,8 +218,6 @@ export default {
       userData: {},
       access: [],
       tableFields: ['firstName', 'lastName', 'email', 'action'],
-      toDelete: {},
-      query: '',
       currentTab: 0,
       allUsers: [],
       form: {
@@ -350,7 +237,7 @@ export default {
     EditorIcon,
     UserIcon,
     ViewerIcon,
-    VueBootstrapTypeahead,
+    ManagementEditor,
   },
   computed: {
     activityId() {
@@ -465,13 +352,14 @@ export default {
       const userId = this.user._id;
       return Object.keys(activity.meta.members.viewers).indexOf(userId) > -1;
     },
-    removeEditor() {
-      const editors = [...this.activityData.meta.members.editors];
+    removeUser(role, data) {
+      const editors = [...this.activityData.meta.members[role]];
+
       _.remove(editors,
       // eslint-disable-next-line
-        d => d === this.toDelete._id);
+        d => d === data._id);
 
-      this.activityData.meta.members.editors = editors;
+      this.activityData.meta.members[role] = editors;
       // tell the server to get rid of this.
       removeUserFromActivitySet({
         token: this.authToken.token,
@@ -491,37 +379,22 @@ export default {
         this.allUsers = resp.data;
       });
     },
-    addEditor() {
-      console.log('you want to add', this.query);
-      const matches = _.filter(this.allUsers, f => f.email === this.query);
-      let item = null;
-      if (matches.length) {
-        item = matches[0];
-      }
-      if (!item) {
-        console.log('you want to add a new user, launch the modal!');
-        this.form.email = this.query;
-        this.$refs.inviteUser.show();
-      } else {
-        console.log('you want to add', item);
-        // eslint-disable-next-line
-        this.activityData.meta.members.editors.push(item._id);
-        // eslint-disable-next-line
-        this.getUserMetadata(item._id);
+    addUser(role, data) {
+      this.activityData.meta.members[role] = data.newList;
+      // eslint-disable-next-line
+      this.getUserMetadata(data.id);
 
-        addExistingUserToActivitySet({
-          token: this.authToken.token,
-          parentId: this.activityId,
-          name: this.activityData.name,
-          metadata: this.activityData.meta,
-        }).then((resp) => {
-          console.log('response from put', resp);
-          this.query = '';
-        });
-      }
+      addExistingUserToActivitySet({
+        token: this.authToken.token,
+        parentId: this.activityId,
+        name: this.activityData.name,
+        metadata: this.activityData.meta,
+      }).then((resp) => {
+        console.log('response from put', resp);
+      });
     },
-    inviteUser() {
-      console.log('you want to invite');
+    inviteUser(role, data) {
+      console.log('you want to invite', role, data);
     },
     getActivitySetAccess() {
       getActivitySetAccess({ token: this.authToken.token, activitySetId: this.activityId })
