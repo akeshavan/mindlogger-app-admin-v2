@@ -12,6 +12,103 @@
       <Loading v-if="status==='loading'"/>
       <unauthorized v-else-if="!authorized" />
       <div v-else>
+
+      <!-- Are you sure you want to delete modal? -->
+      <b-modal id="delete"
+       title="Deleting"
+       v-on:ok="removeEditor"
+       header-bg-variant="danger"
+       header-text-variant="light"
+       ok-variant="danger">
+        <p class="my-4 lead">
+          <strong>Are you sure you want to delete
+            <span class="text-danger">{{toDelete.email}}</span>
+          ?</strong>
+        </p>
+      </b-modal>
+
+      <!-- Add a new user modal -->
+      <b-modal id="inviteUser" ref="inviteUser" :title="`Invite ${query}`"
+       v-on:ok="inviteUser" header-bg-variant="success"
+       header-text-variant="light" ok-variant="success">
+        <p class="my-4">
+          <h4 class="mb-3">Create a new Mindlogger account for
+            <strong class="text-primary">{{query}}</strong>
+          </h4>
+        <b-form-group id="emailAddressInputGroup"
+                      label="Email address:"
+                      label-for="emailAddress"
+                      description="">
+          <b-form-input id="emailAddress"
+                        type="email"
+                        v-model="form.email"
+                        required
+                        placeholder="Enter email">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group id="usernameInputGroup"
+                      label="Username:"
+                      label-for="usernameInput"
+                      description="">
+          <b-form-input id="usernameInput"
+                        type="text"
+                        v-model="form.login"
+                        required
+                        placeholder="Choose a username">
+          </b-form-input>
+        </b-form-group>
+
+        <b-form-group id="firstNameInputGroup"
+                      label="First Name:"
+                      label-for="firstNameInput"
+                      description="">
+          <b-form-input id="firstNameInput"
+                        type="text"
+                        v-model="form.firstName"
+                        required
+                        placeholder="First Name">
+          </b-form-input>
+        </b-form-group>
+
+        <b-form-group id="lastNameInputGroup"
+                      label="Last Name:"
+                      label-for="lastNameInput"
+                      description="">
+          <b-form-input id="lastNameInput"
+                        type="text"
+                        v-model="form.lastName"
+                        required
+                        placeholder="Last Name">
+          </b-form-input>
+        </b-form-group>
+
+        <b-form-group id="passwordInputGroup"
+                      label="Password:"
+                      label-for="passwordInput">
+          <b-form-input id="passwordInput"
+                        type="password"
+                        v-model="form.password"
+                        required
+                        placeholder="Password">
+          </b-form-input>
+        </b-form-group>
+
+        <b-form-group id="password2InputGroup"
+                      label="Confirm Password:"
+                      label-for="password2Input">
+          <b-alert :show="!validated" variant="danger">
+            Make sure your passwords match!
+          </b-alert>
+          <b-form-input id="password2Input"
+                        type="password"
+                        v-model="form.password2"
+                        required
+                        placeholder="Confirm password">
+          </b-form-input>
+        </b-form-group>
+        </p>
+      </b-modal>
+
         <b-row class="mt-3">
           <b-col class="text-center">
             <h2> Role Management: <span class="actName">{{activityData.name}}</span> </h2>
@@ -90,9 +187,11 @@
                     :to="'/edit_activity_set/' + activityId + '/edit_activity/' + data.item.id">
                       edit
                     </b-button> -->
-                    <b-button size="sm" class="close" aria-label="Close" v-if="editorTable.length > 1 && !(data.item._id == user._id)">
+                    <b-button size="sm"
+                     class="close" aria-label="Close"
+                     v-if="editorTable.length > 1 && !(data.item._id == user._id)">
                       <!-- <i class="fas fa-trash"></i> -->
-                      <span aria-hidden="true" @click="removeEditor(data.item)">&times; </span>
+                      <span aria-hidden="true" v-b-modal.delete @click="toDelete = data.item">&times; </span>
                     </b-button>
                   </template>
                 </b-table>
@@ -104,12 +203,13 @@
                   <!-- AUTOCOMPLETE USER -->
                   <vue-bootstrap-typeahead size="lg"
                     prepend="Email"
+                    type='email'
                     v-model="query"
                     :serializer="s => s.email"
                     :data="allUsers"
                   >
                   <template slot="append">
-                  <button class="btn btn-primary">
+                  <button class="btn btn-primary" @click="addEditor" :disabled="!query">
                   Add
                   </button>
                   </template>
@@ -192,6 +292,9 @@ import {
   getActivitySet,
   getUserMetadata,
   getAllUsers,
+  addExistingUserToActivitySet,
+  getActivitySetAccess,
+  removeUserFromActivitySet,
   // getAllActivitySets,
   // fullImageURL,
   // getActivitiesInActivitySet,
@@ -224,10 +327,20 @@ export default {
       status: 'loading',
       activityData: {},
       userData: {},
+      access: [],
       tableFields: ['firstName', 'lastName', 'email', 'action'],
+      toDelete: {},
       query: '',
       currentTab: 0,
       allUsers: [],
+      form: {
+        email: null,
+        username: null,
+        password: '',
+        password2: '',
+        firstName: null,
+        lastName: null,
+      },
     };
   },
   components: {
@@ -295,6 +408,9 @@ export default {
       }
       return [{}];
     },
+    validated() {
+      return this.form.password === this.form.password2;
+    },
   },
   methods: {
     getActivitySet() {
@@ -349,8 +465,23 @@ export default {
       const userId = this.user._id;
       return Object.keys(activity.meta.members.viewers).indexOf(userId) > -1;
     },
-    removeEditor(item) {
-      console.log('you want to remove', item);
+    removeEditor() {
+      const editors = [...this.activityData.meta.members.editors];
+      _.remove(editors,
+      // eslint-disable-next-line
+        d => d === this.toDelete._id);
+
+      this.activityData.meta.members.editors = editors;
+      // tell the server to get rid of this.
+      removeUserFromActivitySet({
+        token: this.authToken.token,
+        parentId: this.activityId,
+        name: this.activityData.name,
+        metadata: this.activityData.meta,
+      });
+      // .then((resp) => {
+      //   console.log('delete', resp.data);
+      // });
     },
     setTab(index) {
       this.currentTab = index;
@@ -360,6 +491,44 @@ export default {
         this.allUsers = resp.data;
       });
     },
+    addEditor() {
+      console.log('you want to add', this.query);
+      const matches = _.filter(this.allUsers, f => f.email === this.query);
+      let item = null;
+      if (matches.length) {
+        item = matches[0];
+      }
+      if (!item) {
+        console.log('you want to add a new user, launch the modal!');
+        this.form.email = this.query;
+        this.$refs.inviteUser.show();
+      } else {
+        console.log('you want to add', item);
+        // eslint-disable-next-line
+        this.activityData.meta.members.editors.push(item._id);
+        // eslint-disable-next-line
+        this.getUserMetadata(item._id);
+
+        addExistingUserToActivitySet({
+          token: this.authToken.token,
+          parentId: this.activityId,
+          name: this.activityData.name,
+          metadata: this.activityData.meta,
+        }).then((resp) => {
+          console.log('response from put', resp);
+          this.query = '';
+        });
+      }
+    },
+    inviteUser() {
+      console.log('you want to invite');
+    },
+    getActivitySetAccess() {
+      getActivitySetAccess({ token: this.authToken.token, activitySetId: this.activityId })
+        .then((resp) => {
+          this.access = resp.data;
+        });
+    },
   },
   mounted() {
     this.status = 'loading';
@@ -367,6 +536,8 @@ export default {
       this.status = 'complete';
       this.getAllUserMetadata();
       this.getAllUsers();
+      // TODO: does the access object even matter?
+      // this.getActivitySetAccess();
     });
   },
 };

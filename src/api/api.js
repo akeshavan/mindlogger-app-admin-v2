@@ -57,6 +57,27 @@ export const getUserActivitySetData = (userActivitySetFolder, token) => axios({
   headers: { 'Girder-Token': `${token}` },
 });
 
+// export const addExistingUserToActivitySet = ({token, activitySetId, access}) => {
+//   const bodyFormData = new FormData();
+//   bodyFormData.set('access', access);
+//   return axios({
+//     method: 'PUT',
+//     url: `${config.apiHost}/folder/${activitySetId}/access`,
+//     data: bodyFormData,
+//     headers: {
+//       'Girder-Token': `${token}`,
+//     },
+//   });
+// };
+
+export const getActivitySetAccess = ({ token, activitySetId }) => axios({
+  method: 'GET',
+  url: `${config.apiHost}/folder/${activitySetId}/access`,
+  headers: {
+    'Girder-Token': `${token}`,
+  },
+});
+
 export const getAllUsers = (token) => axios({
   method: 'get',
   url: `${config.apiHost}/user?`,
@@ -90,9 +111,6 @@ export const resetPassword = (body) => ({
   body,
 });
 
-export const signout = (body) => ({
-  type: types.SIGN_OUT,
-})
 
 export const inviteUser = (body, meta) => ({
   type: types.POST_USER,
@@ -245,6 +263,9 @@ export const updateActivitySetMetadata = ({name, metadata, parentId, token}) => 
     metadata,
   },
 });
+
+export const addExistingUserToActivitySet = updateActivitySetMetadata;
+export const removeUserFromActivitySet = addExistingUserToActivitySet;
 
 export const updateActivityMetadata = ({name, metadata, parentId, token}) => {
   const bodyFormData = new FormData();
