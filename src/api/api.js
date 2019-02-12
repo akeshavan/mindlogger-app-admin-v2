@@ -57,6 +57,12 @@ export const getUserActivitySetData = (userActivitySetFolder, token) => axios({
   headers: { 'Girder-Token': `${token}` },
 });
 
+export const getAllUsers = (token) => axios({
+  method: 'get',
+  url: `${config.apiHost}/user?`,
+  headers: { 'Girder-Token': `${token}` },
+});
+
 export const changeProfile = (id, body) => ({
   type: types.CHANGE_PROFILE,
   method: 'PUT',

@@ -137,4 +137,8 @@ li {
   opacity: 0;
 }
 
+  .hideTabHeader {
+    display: none;
+  }
+
 </style>
