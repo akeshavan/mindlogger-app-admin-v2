@@ -17,11 +17,13 @@
 
     <!-- Add a new user modal -->
     <b-modal :id="`inviteUser_${role}`" ref="inviteUser" :title="`Invite ${query}`"
-      v-on:ok="inviteUser" header-bg-variant="success"
-      header-text-variant="light" ok-variant="success">
+      v-on:ok="inviteUser"
+      :header-bg-variant="variant"
+      header-text-variant="light"
+      :ok-variant="variant">
       <p class="my-4">
         <h4 class="mb-3">Create a new Mindlogger account for
-          <strong class="text-primary">{{query}}</strong>
+          <strong :class="`text-${variant}`">{{query}}</strong>
         </h4>
       <b-form-group :id="`emailAddressInputGroup_${role}`"
                     label="Email address:"
@@ -104,7 +106,7 @@
           <b-input-group-text slot="prepend">
               <strong :class="`text-${variant}`"><i class="fas fa-search"></i></strong>
           </b-input-group-text>
-          <b-form-input></b-form-input>
+          <b-form-input v-model="search"></b-form-input>
         </b-input-group>
       </b-col>
 
@@ -113,7 +115,7 @@
     <!--
       user table
     -->
-    <b-table responsive striped hover :items="editorTable" :fields="tableFields">
+    <b-table responsive striped hover :items="filteredTable" :fields="tableFields">
       <template slot="action" slot-scope="data">
         <b-button size="sm"
           class="close" aria-label="Close"
@@ -202,6 +204,18 @@ export default {
   computed: {
     validated() {
       return this.form.password === this.form.password2;
+    },
+    filteredTable() {
+      if (!this.search) {
+        return this.editorTable;
+      }
+      return _.filter(this.editorTable, (e) => {
+        // search by first name, last name and email.
+        const inFirst = e.firstName.indexOf(this.search) > -1;
+        const inLast = e.lastName.indexOf(this.search) > -1;
+        const inEmail = e.email.indexOf(this.search) > -1;
+        return inFirst || inLast || inEmail;
+      });
     },
     canRemove() {
       if (this.editorTable.length === 1) {
