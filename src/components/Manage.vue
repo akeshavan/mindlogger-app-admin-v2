@@ -77,6 +77,7 @@
                  :user="user"
                  role="editors"
                  variant="primary"
+                 type="regular"
                  :canRemoveYourself="false"
                  :canBeEmpty="false"
                  :form="form"
@@ -94,6 +95,7 @@
                  :user="user"
                  variant="success"
                  role="managers"
+                 type="regular"
                  :canRemoveYourself="false"
                  :canBeEmpty="false"
                  :form="form"
@@ -112,6 +114,7 @@
                  variant="danger"
                  :user="user"
                  role="users"
+                 type="regular"
                  :form="form"
                  :allUsers="allUsers"
                  v-on:removeUser="removeUser"
@@ -120,7 +123,22 @@
                  />
               </b-tab>
               <b-tab title="viewers">
-                {{activityData.meta.members.viewers}}
+                <management-editor
+                 :editorTable="viewerTable"
+                 :tableFields="viewerTableFields"
+                 :subFields="tableFields"
+                 :canRemoveYourself="true"
+                 :canBeEmpty="true"
+                 variant="info"
+                 :user="user"
+                 role="viewers"
+                 type="enhanced"
+                 :form="form"
+                 :allUsers="allUsers"
+                 v-on:removeUser="removeViewer"
+                 v-on:inviteUser="inviteUser"
+                 v-on:addUser="addViewer"
+                 />
               </b-tab>
             </b-tabs>
           </b-card>
@@ -227,6 +245,7 @@ export default {
       userData: {},
       access: [],
       tableFields: ['firstName', 'lastName', 'email', 'action'],
+      viewerTableFields: ['select', 'firstName', 'lastName', 'email', 'numUsers', 'show_users', 'action'],
       currentTab: 0,
       allUsers: [],
       form: {
@@ -298,6 +317,28 @@ export default {
           if (this.userData[e]) {
             const { firstName, lastName, email, _id } = this.userData[e];
             return { firstName, lastName, email, _id };
+          }
+          return {};
+        });
+      }
+      return [{}];
+    },
+    viewerTable() {
+      if (this.activityData) {
+        return _.map(Object.keys(this.activityData.meta.members.viewers), (e) => {
+          if (this.userData[e]) {
+            const { firstName, lastName, email, _id } = this.userData[e];
+            // eslint-disable-next-line
+            const numUsers = this.activityData.meta.members.viewers[_id].length;
+            return {
+              firstName,
+              lastName,
+              email,
+              numUsers,
+              _rowVariant: numUsers ? '' : 'warning',
+              // eslint-disable-next-line
+              users: _.map(this.activityData.meta.members.viewers[_id], i => this.userData[i]),
+              _showDetails: false };
           }
           return {};
         });
@@ -380,6 +421,9 @@ export default {
       //   console.log('delete', resp.data);
       // });
     },
+    removeViewer(role, data) {
+      console.log('you want to remove viewer', data);
+    },
     setTab(index) {
       this.currentTab = index;
     },
@@ -401,6 +445,9 @@ export default {
       }).then((resp) => {
         console.log('response from put', resp);
       });
+    },
+    addViewer(role, data) {
+      console.log('you want to add a viewer', data);
     },
     inviteUser(role, data) {
       console.log('you want to invite', role, data);

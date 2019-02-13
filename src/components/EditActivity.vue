@@ -24,7 +24,8 @@
         <b-row>
           <b-col>
             <h2 class="text-center">
-              <span class="text-muted">Editing </span>
+              <img src="@/assets/custom/ScreensIcon.svg" class="highlightIcon"/>
+              <span class="text-muted">Editing Screens </span>
                 <textfield v-model="activityData.name" ttype="text" placeholder="title"
                 @change="updateMetadata(1)">
                </textfield>
@@ -134,6 +135,15 @@
     border-color: $light-blue;
     color: black;
 }
+
+.highlightIcon {
+  height: 50px;
+  background: #e9ecef57;
+  padding: 10px;
+  border-style: solid;
+  border-color: white;
+  border-radius: 10px;
+}
 </style>
 
 <style scoped>
@@ -162,6 +172,18 @@ article {
 
 .screen-controls {
   text-align: center;
+}
+
+.highlightIcon {
+  height: 50px;
+  background: #e9ecef57;
+  padding: 10px;
+  border-style: solid;
+  border-color: #e9ecef57;
+  border-radius: 10px;
+/* -webkit-box-shadow: 3px 5px 30px -5px rgba(0,0,0,0.75);
+-moz-box-shadow: 3px 5px 30px -5px rgba(0,0,0,0.75);
+box-shadow: 3px 5px 30px -5px rgba(0,0,0,0.75); */
 }
 </style>
 

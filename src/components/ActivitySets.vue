@@ -15,11 +15,16 @@
           <p class="lead">An activity set consists of various activities (e.g. assessments).
             Each activity consists of various screens.
           </p>
+          <img src="@/assets/custom/MentalModel.svg" class="w-75 mb-3"/>
         </b-col>
       </b-row>
       <b-row v-if="isLoggedIn">
         <b-col>
-          <h2>Your Activity Sets</h2>
+
+          <h2>
+            <img src="@/assets/custom/ActivitySetIcon.svg" class="highlightIcon"/>
+            Your Activity Sets
+          </h2>
           <p class="lead">
             Here are the activies you own, manage, or can view.
           </p>
@@ -136,6 +141,15 @@ strong {
 .tableLogo {
   max-height: 25px;
 }
+
+.highlightIcon {
+  height: 50px;
+  background: #00cce2;
+  padding: 10px;
+  border-style: solid;
+  border-color: white;
+  border-radius: 10px;
+}
 </style>
 
 <script>
@@ -167,7 +181,7 @@ export default {
     return {
       status: 'loading',
       allActivitySets: [],
-      userTableFields: ['logo', 'shortName', 'manage', 'view', 'edit', 'delete'],
+      userTableFields: ['logo', 'shortName', 'edit', 'manage', 'view', 'delete'],
       remainingTableFields: ['logo', 'shortName', 'description'],
       toDelete: {},
     };

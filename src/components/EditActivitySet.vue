@@ -80,7 +80,10 @@
 
       <b-row class="mt-3">
         <b-col>
-          <h3> Activities </h3>
+          <h3>
+            <img src="@/assets/custom/ActivitiesIcon.svg" class="mr-3 highlightIcon"/>
+            Activities
+          </h3>
 
           <p>in this activity set are:</p>
 
@@ -130,6 +133,15 @@
   text-bold {
     font-weight: bold;
   }
+
+  .highlightIcon {
+    height: 50px;
+    background: #00cce2;
+    padding: 10px;
+    border-style: solid;
+    border-color: white;
+    border-radius: 10px;
+}
 </style>
 
 <script>

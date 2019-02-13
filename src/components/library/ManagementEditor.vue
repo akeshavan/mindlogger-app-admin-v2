@@ -126,6 +126,49 @@
           </span>
         </b-button>
       </template>
+      <template v-if="type==='enhanced'" slot="select" slot-scope="data">
+        <b-form-checkbox id="checkbox1"
+                        v-model="selected[data.item._id]"
+                        :value="true"
+                        :unchecked-value="false">
+        </b-form-checkbox>
+      </template>
+
+    <template slot="show_users" slot-scope="row">
+      <!-- we use @click.stop here to prevent emitting of a 'row-clicked' event  -->
+      <b-button size="sm" variant="outline-danger"
+       @click.stop="row.toggleDetails" class="mr-2">
+       {{ row.detailsShowing ? 'Hide' : 'Show'}} Users
+      </b-button>
+    </template>
+
+      <template slot="row-details" slot-scope="row">
+        <b-card>
+          <b-row class="mb-2">
+            <b-col sm="3" class="text-sm-right"><b>Users:</b></b-col>
+            <b-col>
+              <div v-if="row.item.users.length">
+                {{row}}
+                <b-table responsive hover small :items="row.item.users" :fields="subFields">
+                  <template slot="action" slot-scope="data">
+                    <b-button size="sm"
+                      class="close" aria-label="Close"
+                    >
+                      <!-- <span aria-hidden="true" v-b-modal="`delete_user_${role}`" @click="toDeleteUser = {viewer: row.item._: data.item}"> -->
+                      <span aria-hidden="true">
+                        &times;
+                      </span>
+                    </b-button>
+                  </template>
+                </b-table>
+              </div>
+            </b-col>
+          </b-row>
+          <b-button size="sm" variant="outline-danger"
+           @click="row.toggleDetails">Hide Users</b-button>
+        </b-card>
+      </template>
+
     </b-table>
 
     <div class="mt-3">
@@ -141,9 +184,15 @@
         :data="allUsers"
       >
       <template slot="append">
-      <button :class="`btn btn-${variant}`" @click="addUser" :disabled="!query">
-        Add
-      </button>
+
+        <button :class="`btn btn-${variant}`" @click="addUserToViewer"
+         :disabled="!query" v-if="selectedViewers">
+          Add User to Viewers
+        </button>
+
+        <button :class="`btn btn-${variant}`" @click="addUser" :disabled="!query" v-else>
+          Add
+        </button>
       </template>
       </vue-bootstrap-typeahead>
 
@@ -190,12 +239,20 @@ export default {
       type: String,
       default: 'primary',
     },
+    type: {
+      type: String,
+      default: 'regular',
+    },
+    subFields: {
+      type: Array,
+    },
   },
   data() {
     return {
       query: '',
       search: '',
       toDelete: {},
+      selected: {},
     };
   },
   components: {
@@ -204,6 +261,11 @@ export default {
   computed: {
     validated() {
       return this.form.password === this.form.password2;
+    },
+    selectedViewers() {
+      const keys = Object.keys(this.selected);
+      const anySelected = _.filter(keys, k => this.selected[k]).length;
+      return anySelected;
     },
     filteredTable() {
       if (!this.search) {
@@ -246,7 +308,7 @@ export default {
       this.$emit('removeUser', this.role, this.toDelete);
     },
     delete(item) {
-      console.log('delete')
+      console.log('delete');
       this.toDelete = item;
       this.$refs.delete.show();
     },
@@ -271,10 +333,14 @@ export default {
         // eslint-disable-next-line
         currentEditors.push(item._id);
         currentEditors = _.uniq(currentEditors);
+        console.log('current editors', currentEditors);
         // eslint-disable-next-line
         this.$emit('addUser', this.role, { newList: currentEditors, id:item._id });
         this.query = '';
       }
+    },
+    addUserToViewer() {
+      console.log('you want to add', this.query, 'to', this.selected);
     },
   },
 };
