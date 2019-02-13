@@ -11,7 +11,7 @@
       <p class="my-4 lead">
         <strong>Are you sure you want to delete
           <span class="text-danger">{{toDelete.email}}</span>
-        ?</strong>
+        from <b>{{role}}</b> ?</strong>
       </p>
     </b-modal>
 
@@ -117,9 +117,11 @@
       <template slot="action" slot-scope="data">
         <b-button size="sm"
           class="close" aria-label="Close"
-          v-if="editorTable.length > 1 && !(data.item._id == user._id)">
+          v-if="canRemove[data.index]">
           <!-- <i class="fas fa-trash"></i> -->
-          <span aria-hidden="true" v-b-modal="`delete_${role}`" @click="toDelete = data.item">&times; </span>
+          <span aria-hidden="true" v-b-modal="`delete_${role}`" @click="toDelete = data.item">
+            &times;
+          </span>
         </b-button>
       </template>
     </b-table>
@@ -174,6 +176,14 @@ export default {
     allUsers: {
       type: Array,
     },
+    canRemoveYourself: {
+      type: Boolean,
+      default: false,
+    },
+    canBeEmpty: {
+      type: Boolean,
+      default: false,
+    },
     variant: {
       type: String,
       default: 'primary',
@@ -192,6 +202,29 @@ export default {
   computed: {
     validated() {
       return this.form.password === this.form.password2;
+    },
+    canRemove() {
+      if (this.editorTable.length === 1) {
+        // there is only 1 item left. Can you delete it?
+        if (!this.canBeEmpty) {
+          return [false];
+        }
+        return [true];
+      }
+      // there is more than 1 item. Loop through and check for yourself.
+      // if you can remove yourself, awesome
+      // if not, don't let them!
+      return _.map(this.editorTable, (t) => {
+        let decision = true;
+        if (!this.canRemoveYourself) {
+          // eslint-disable-next-line
+          if (t._id === this.user._id) {
+            decision = false;
+          }
+        }
+
+        return decision;
+      });
     },
   },
   methods: {
