@@ -127,7 +127,7 @@ export default {
   },
   methods: {
     getActivitySet() {
-      return getActivitySet(this.activityId).then((resp) => {
+      return getActivitySet(this.activityId, this.authToken.token).then((resp) => {
         this.activityData = resp.data;
       });
     },
@@ -143,22 +143,27 @@ export default {
         this.$forceUpdate();
       });
     },
+    mount() {
+      this.status = 'loading';
+      this.getActivitySet().then(() => {
+        this.status = 'complete';
+        // eslint-disable-next-line
+        const viewableUsers = this.activityData.meta.members.viewers[this.user._id];
+        _.map(viewableUsers, this.getUserMetadata);
+        if (!this.isViewer(this.activityData) || !this.isLoggedIn) {
+          this.status = 'unauthorized';
+        }
+      })
+        .catch((e) => {
+          this.status = 'error';
+          this.error.message = e.message;
+        });
+    },
   },
   mounted() {
-    this.status = 'loading';
-    this.getActivitySet().then(() => {
-      this.status = 'complete';
-      // eslint-disable-next-line
-      const viewableUsers = this.activityData.meta.members.viewers[this.user._id];
-      _.map(viewableUsers, this.getUserMetadata);
-      if (!this.isViewer(this.activityData) || !this.isLoggedIn) {
-        this.status = 'unauthorized';
-      }
-    })
-      .catch((e) => {
-        this.status = 'error';
-        this.error.message = e.message;
-      });
+    if (this.authToken.token) {
+      this.mount();
+    }
   },
   deactivated() {
     this.$destroy();

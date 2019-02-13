@@ -15,6 +15,20 @@
       </p>
     </b-modal>
 
+    <!-- Are you sure you want to delete a user from a viewer modal? -->
+    <b-modal :id="`delete_user_${role}`"
+      title="Deleting"
+      v-on:ok="removeUserFromViewer"
+      header-bg-variant="danger"
+      header-text-variant="light"
+      ok-variant="danger">
+      <p v-if="toDeleteUser[1]" class="my-4 lead">
+        <strong>Are you sure you want to delete user
+          <span class="text-danger" >{{toDeleteUser[1].email}}</span>
+        from viewer <b v-if="toDeleteUser[0] != null">{{editorTable[toDeleteUser[0]].email}}</b> ?</strong>
+      </p>
+    </b-modal>
+
     <!-- Add a new user modal -->
     <b-modal :id="`inviteUser_${role}`" ref="inviteUser" :title="`Invite ${query}`"
       v-on:ok="inviteUser"
@@ -148,14 +162,15 @@
             <b-col sm="3" class="text-sm-right"><b>Users:</b></b-col>
             <b-col>
               <div v-if="row.item.users.length">
-                {{row}}
+                <!-- {{row}} -->
                 <b-table responsive hover small :items="row.item.users" :fields="subFields">
                   <template slot="action" slot-scope="data">
                     <b-button size="sm"
                       class="close" aria-label="Close"
                     >
-                      <!-- <span aria-hidden="true" v-b-modal="`delete_user_${role}`" @click="toDeleteUser = {viewer: row.item._: data.item}"> -->
-                      <span aria-hidden="true">
+                      <span aria-hidden="true"
+                       v-b-modal="`delete_user_${role}`"
+                       @click="toDeleteUser = [row.index,data.item]">
                         &times;
                       </span>
                     </b-button>
@@ -252,6 +267,7 @@ export default {
       query: '',
       search: '',
       toDelete: {},
+      toDeleteUser: [],
       selected: {},
     };
   },
@@ -341,6 +357,9 @@ export default {
     },
     addUserToViewer() {
       console.log('you want to add', this.query, 'to', this.selected);
+    },
+    removeUserFromViewer() {
+      console.log('you want to delete', this.toDeleteUser);
     },
   },
 };

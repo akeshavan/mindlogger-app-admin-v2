@@ -4,7 +4,9 @@
 
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-      <b-navbar-brand to="/">Mindlogger</b-navbar-brand>
+      <b-navbar-brand to="/">
+        Mindlogger
+      </b-navbar-brand>
 
       <b-collapse is-nav id="nav_collapse">
 
@@ -38,6 +40,16 @@
         <!-- </keep-alive> -->
      </transition>
     </div>
+    <footer class="bg-light pt-3 pb-3 mt-3">
+      <b-row>
+        <b-col class="text-center">
+          <p class="mt-3">
+          <img class="logo"
+          src="https://27c2s3mdcxk2qzutg1z8oa91-wpengine.netdna-ssl.com/wp-content/themes/childmind/assets/img/cmi-logo-vert-ko.svg" />
+          © <a href="https://childmind.org">Child Mind Institute</a> MATTER Lab 2019</p>
+        </b-col>
+      </b-row>
+    </footer>
   </div>
 </template>
 
@@ -101,6 +113,15 @@ export default {
 <style lang="scss">
   @import './custom-bootstrap.scss';
   @import '../node_modules/bootstrap/scss/bootstrap.scss';
+
+   .logo {
+    background: $dark-blue;
+    border-style: solid;
+    border-radius: 25px;
+    border-width: 0px;
+    padding: 10px;
+    height: 40px;
+  }
 </style>
 
 <style>

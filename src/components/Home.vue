@@ -46,7 +46,12 @@
         </div>
         <div v-else class="col-12 text-center">
           <h3>Welcome, {{user.firstName}} !</h3>
-           <b-button variant="danger" to="/activitySets">Manage Activity Sets</b-button>
+           <b-button variant="danger" size="lg" to="/activitySets">Manage Activity Sets</b-button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 text-center jumbotron mb-3 pb-3">
         </div>
       </div>
     </b-container>
