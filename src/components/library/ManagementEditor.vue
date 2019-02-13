@@ -15,6 +15,23 @@
       </p>
     </b-modal>
 
+    <!-- Warning, trying to add a user that doesn't exist -->
+    <b-modal :id="`warning_${role}`"
+      ref="warning"
+      title="Oops"
+      v-on:ok="removeUser"
+      header-bg-variant="warning"
+      header-text-variant="dark"
+      :ok-only="true"
+      ok-variant="warning">
+      <p class="my-4 lead">
+        <strong>
+          <span class="text-danger">{{query}}</span>
+        has not been added as a <span class="text-danger"><b>user</b></span> yet!
+        Please add them as a user before adding them to a <span class="text-info"><b>viewer</b></span>.</strong>
+      </p>
+    </b-modal>
+
     <!-- Are you sure you want to delete a user from a viewer modal? -->
     <b-modal :id="`delete_user_${role}`"
       title="Deleting"
@@ -25,7 +42,8 @@
       <p v-if="toDeleteUser[1]" class="my-4 lead">
         <strong>Are you sure you want to delete user
           <span class="text-danger" >{{toDeleteUser[1].email}}</span>
-        from viewer <b v-if="toDeleteUser[0] != null">{{editorTable[toDeleteUser[0]].email}}</b> ?</strong>
+        from viewer <b v-if="toDeleteUser[0] != null">
+          {{editorTable[toDeleteUser[0]].email}}</b> ?</strong>
       </p>
     </b-modal>
 
@@ -141,7 +159,7 @@
         </b-button>
       </template>
       <template v-if="type==='enhanced'" slot="select" slot-scope="data">
-        <b-form-checkbox id="checkbox1"
+        <b-form-checkbox :id="`checkbox_${data.item._id}`"
                         v-model="selected[data.item._id]"
                         :value="true"
                         :unchecked-value="false">
@@ -196,16 +214,28 @@
         type='email'
         v-model="query"
         :serializer="s => s.email"
-        :data="allUsers"
+        :data="validUsersToView"
+        v-if="selectedViewers"
       >
       <template slot="append">
-
         <button :class="`btn btn-${variant}`" @click="addUserToViewer"
-         :disabled="!query" v-if="selectedViewers">
+         :disabled="!query" >
           Add User to Viewers
         </button>
+      </template>
+      </vue-bootstrap-typeahead>
 
-        <button :class="`btn btn-${variant}`" @click="addUser" :disabled="!query" v-else>
+      <!-- AUTOCOMPLETE USER -->
+      <vue-bootstrap-typeahead size="lg"
+        prepend="Email"
+        type='email'
+        v-model="query"
+        :serializer="s => s.email"
+        :data="allUsers"
+        v-else
+      >
+      <template slot="append">
+        <button :class="`btn btn-${variant}`" @click="addUser" :disabled="!query">
           Add
         </button>
       </template>
@@ -219,6 +249,7 @@
 
 <script>
 import _ from 'lodash';
+import Vue from 'vue';
 import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 
 export default {
@@ -240,6 +271,9 @@ export default {
       type: Object,
     },
     allUsers: {
+      type: Array,
+    },
+    validUsersToView: {
       type: Array,
     },
     canRemoveYourself: {
@@ -356,11 +390,37 @@ export default {
       }
     },
     addUserToViewer() {
-      console.log('you want to add', this.query, 'to', this.selected);
+      const matches = _.filter(this.allUsers, f => f.email === this.query);
+      let item = null;
+      if (matches.length) {
+        item = matches[0];
+      }
+      if (!item) {
+        this.$refs.warning.show();
+        return;
+      }
+
+      console.log('you want to add', item, 'to', this.selected);
+      const selectedList = _.filter(Object.keys(this.selected), s => this.selected[s]);
+
+      this.$emit('addUsertoViewer', { user: item, selected: selectedList });
     },
     removeUserFromViewer() {
       console.log('you want to delete', this.toDeleteUser);
+      // eslint-disable-next-line
+      this.$emit('removeUserFromViewer', { viewer: this.editorTable[this.toDeleteUser[0]]._id,
+      // eslint-disable-next-line
+        user: this.toDeleteUser[1]._id });
     },
+  },
+  mounted() {
+    if (this.type === 'enhanced') {
+      _.map(this.editorTable, (t) => {
+        console.log(t);
+        // eslint-disable-next-line
+        Vue.set(this.selected, t._id, false);
+      });
+    }
   },
 };
 </script>

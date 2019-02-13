@@ -135,9 +135,12 @@
                  type="enhanced"
                  :form="form"
                  :allUsers="allUsers"
+                 :validUsersToView="validUsersToView"
                  v-on:removeUser="removeViewer"
                  v-on:inviteUser="inviteUser"
                  v-on:addUser="addViewer"
+                 v-on:addUsertoViewer="addUserToViewer"
+                 v-on:removeUserFromViewer="removeUserFromViewer"
                  />
               </b-tab>
             </b-tabs>
@@ -323,6 +326,9 @@ export default {
       }
       return [{}];
     },
+    validUsersToView() {
+      return _.filter(this.allUsers, u => this.activityData.meta.members.users.indexOf(u._id) > -1);
+    },
     viewerTable() {
       if (this.activityData) {
         return _.map(Object.keys(this.activityData.meta.members.viewers), (e) => {
@@ -335,6 +341,7 @@ export default {
               lastName,
               email,
               numUsers,
+              _id,
               _rowVariant: numUsers ? '' : 'warning',
               // eslint-disable-next-line
               users: _.map(this.activityData.meta.members.viewers[_id], i => this.userData[i]),
@@ -423,6 +430,17 @@ export default {
     },
     removeViewer(role, data) {
       console.log('you want to remove viewer', data);
+      this.activityData.meta.members[role] = _.pick(this.activityData.meta.members[role],
+        // eslint-disable-next-line
+        _.filter(Object.keys(this.activityData.meta.members[role]), k => k !== data._id));
+      // Why doesn't the below line work?
+      // Vue.delete(this.activityData.meta.members[role], data.id);
+      removeUserFromActivitySet({
+        token: this.authToken.token,
+        parentId: this.activityId,
+        name: this.activityData.name,
+        metadata: this.activityData.meta,
+      });
     },
     setTab(index) {
       this.currentTab = index;
@@ -447,7 +465,17 @@ export default {
       });
     },
     addViewer(role, data) {
-      console.log('you want to add a viewer', data);
+      Vue.set(this.activityData.meta.members[role], data.id, []);
+      this.getUserMetadata(data.id);
+
+      addExistingUserToActivitySet({
+        token: this.authToken.token,
+        parentId: this.activityId,
+        name: this.activityData.name,
+        metadata: this.activityData.meta,
+      }).then((resp) => {
+        console.log('response from put', resp);
+      });
     },
     inviteUser(role, data) {
       console.log('you want to invite', role, data);
@@ -457,6 +485,34 @@ export default {
         .then((resp) => {
           this.access = resp.data;
         });
+    },
+    addUserToViewer({ user, selected }) {
+      console.log('adding', user, 'to', selected);
+      _.map(selected, (s) => {
+        const existingUsers = this.activityData.meta.members.viewers[s];
+        // eslint-disable-next-line
+        existingUsers.push(user._id);
+        this.activityData.meta.members.viewers[s] = _.uniq(existingUsers);
+      });
+      addExistingUserToActivitySet({
+        token: this.authToken.token,
+        parentId: this.activityId,
+        name: this.activityData.name,
+        metadata: this.activityData.meta,
+      }).then((resp) => {
+        console.log('response from put', resp);
+      });
+    },
+    removeUserFromViewer({ user, viewer }) {
+      let existingUsers = this.activityData.meta.members.viewers[viewer];
+      existingUsers = _.uniq(_.filter(existingUsers, u => u !== user));
+      this.activityData.meta.members.viewers[viewer] = existingUsers;
+      removeUserFromActivitySet({
+        token: this.authToken.token,
+        parentId: this.activityId,
+        name: this.activityData.name,
+        metadata: this.activityData.meta,
+      });
     },
   },
   mounted() {
