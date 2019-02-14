@@ -47,7 +47,7 @@
       <!-- notifications collapse card -->
         <b-row class="mt3">
           <b-col>
-            <b-card no-body class="mb-1">
+            <!-- <b-card no-body class="mb-1">
               <b-card-header header-tag="header" class="p-1" role="tab">
                 <b-btn block href="#" v-b-toggle.accordion1 variant="light">
                   <i class="fas fa-sliders-h"></i> settings
@@ -60,7 +60,7 @@
                   </p>
                 </b-card-body>
               </b-collapse>
-            </b-card>
+            </b-card> -->
           </b-col>
         </b-row>
       </b-container>
@@ -108,6 +108,23 @@
 
           </div>
 
+          <div v-if="!screens.length" >
+            <b-row>
+              <b-col class="text-center">
+                <h3>
+                  You have no screens yet!
+                </h3>
+                <p class="lead">
+                  Click the
+                    <b-button size="sm" variant="info" @click="addAfter">
+                      <i class="fas fa-plus"></i>  <i class="fas fa-arrow-right"></i>
+                    </b-button>
+                  button to get started!
+                </p>
+              </b-col>
+            </b-row>
+          </div>
+
           <!-- Current Slide Editing Panel -->
           <div v-if="currentSlide != null && screens.length" class="container mt-3">
             <div v-if="screens[currentScreenIndex]">
@@ -121,6 +138,7 @@
                />
             </div>
           </div>
+
         </b-col>
       </b-row>
     </div>
