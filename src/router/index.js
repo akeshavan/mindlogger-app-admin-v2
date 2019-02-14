@@ -12,6 +12,7 @@ import EditActivitySet from '@/components/EditActivitySet';
 import EditActivity from '@/components/EditActivity';
 import EditActivitySetParentRoute from '@/components/EditActivitySetParentRoute';
 import Manage from '@/components/Manage';
+import Guide from '@/components/UserGuide';
 
 Vue.use(Router);
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/',
       name: 'Home',
       component: Home,
+    },
+    {
+      path: '/guide',
+      name: 'Guide',
+      component: Guide,
     },
     {
       path: '/login',

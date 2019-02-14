@@ -16,6 +16,8 @@
             Each activity consists of various screens.
           </p>
           <img src="@/assets/custom/MentalModel.svg" class="w-75 mb-3"/>
+          <p>Not sure where to start? Check out our User Guide:</p>
+          <b-button to="/guide" size="lg" variant="primary">User Guide</b-button>
         </b-col>
       </b-row>
       <b-row v-if="isLoggedIn">

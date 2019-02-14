@@ -1,12 +1,31 @@
 <template>
   <div class="mt-3">
     <!-- back to activity set -->
-    <span>
-      <b-button :to="'/activitySets'" variant="default" size="sm">
-        <i class="fas fa-long-arrow-alt-left"></i>
-        Back to your Activity Sets
-      </b-button>
-    </span>
+    <div class="row">
+      <b-col cols="2">
+      <span>
+        <b-button :to="'/activitySets'" variant="default" size="sm">
+          <i class="fas fa-long-arrow-alt-left"></i>
+          Back to your Activity Sets
+        </b-button>
+      </span>
+      </b-col>
+      <b-col cols="8"></b-col>
+      <b-col cols="2">
+        <div v-if="isAnEditor">
+          <b-button :to="`/edit_activity_set/${activityId}`" variant="default" size="sm">
+            Go to editor panel
+            <i class="fas fa-long-arrow-alt-right"></i>
+          </b-button>
+        </div>
+        <div v-if="isAViewer">
+          <b-button :to="`/view_activity/${activityId}`" variant="default" size="sm">
+            View data
+            <i class="fas fa-long-arrow-alt-right"></i>
+          </b-button>
+        </div>
+      </b-col>
+    </div>
 
     <b-container>
       <Loading v-if="status==='loading'"/>
@@ -286,6 +305,18 @@ export default {
         return true;
       }
       return false;
+    },
+    isAViewer() {
+      if (this.activityData.meta) {
+        return this.isViewer(this.activityData);
+      }
+      return null;
+    },
+    isAnEditor() {
+      if (this.activityData.meta) {
+        return this.isEditor(this.activityData);
+      }
+      return null;
     },
     numViewers() {
       return Object.keys(this.activityData.meta.members.viewers).length;

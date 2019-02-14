@@ -38,6 +38,23 @@
           </b-nav>
         </b-col>
         <b-col class="p-3 col-md-9 col-sm-12 col-xs-12">
+          <div class="row">
+            <b-col cols="8"></b-col>
+            <b-col cols="4" class="text-right">
+              <div v-if="isAnEditor">
+                <b-button :to="`/edit_activity_set/${activityId}`" variant="default" size="sm">
+                  Go to editor panel
+                  <i class="fas fa-long-arrow-alt-right"></i>
+                </b-button>
+              </div>
+              <div v-if="isAManager">
+                <b-button :to="`/manage/${activityId}`" variant="default" size="sm">
+                  Go to management panel
+                  <i class="fas fa-long-arrow-alt-right"></i>
+                </b-button>
+              </div>
+            </b-col>
+          </div>
           <transition name="fade" mode="out-in">
             <router-view :activityData="activityData" :authToken="authToken"></router-view>
           </transition>
@@ -112,6 +129,18 @@ export default {
     currentRoute() {
       return this.$router.currentRoute.name;
     },
+    isAnEditor() {
+      if (this.activityData.meta) {
+        return this.isEditor(this.activityData);
+      }
+      return null;
+    },
+    isAManager() {
+      if (this.activityData.meta) {
+        return this.isManager(this.activityData);
+      }
+      return null;
+    },
     searchUsers() {
       if (!this.userSearch) {
         return this.viewableUsers;
@@ -135,6 +164,16 @@ export default {
       // eslint-disable-next-line
       const userId = this.user._id;
       return Object.keys(activity.meta.members.viewers).indexOf(userId) > -1;
+    },
+    isEditor(activity) {
+      // eslint-disable-next-line
+      const userId = this.user._id;
+      return activity.meta.members.editors.indexOf(userId) > -1;
+    },
+    isManager(activity) {
+      // eslint-disable-next-line
+      const userId = this.user._id;
+      return activity.meta.members.managers.indexOf(userId) > -1;
     },
     getUserMetadata(userId) {
       // console.log('getting usermetedata', userId);

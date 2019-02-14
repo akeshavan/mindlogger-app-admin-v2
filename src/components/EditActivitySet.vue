@@ -1,12 +1,30 @@
 <template>
   <div class="mt-3">
-    <span>
-      <b-button :to="'/activitySets'" variant="default" size="sm">
-        <i class="fas fa-long-arrow-alt-left"></i>
-        Back to your Activity Sets
-      </b-button>
-    </span>
-
+    <div class="row">
+      <b-col cols="2">
+      <span>
+        <b-button :to="'/activitySets'" variant="default" size="sm">
+          <i class="fas fa-long-arrow-alt-left"></i>
+          Back to your Activity Sets
+        </b-button>
+      </span>
+      </b-col>
+      <b-col cols="8"></b-col>
+      <b-col cols="2">
+        <div v-if="isAManager">
+          <b-button :to="`/manage/${activityId}`" variant="default" size="sm">
+            Go to management panel
+            <i class="fas fa-long-arrow-alt-right"></i>
+          </b-button>
+        </div>
+        <div v-if="isAViewer">
+          <b-button :to="`/view_activity/${activityId}`" variant="default" size="sm">
+            View data
+            <i class="fas fa-long-arrow-alt-right"></i>
+          </b-button>
+        </div>
+      </b-col>
+    </div>
     <Unauthorized v-if="!authorized" />
     <Loading v-if="status==='loading'" />
     <div v-else class="main container">
@@ -225,6 +243,18 @@ export default {
         return true;
       }
       return false;
+    },
+    isAViewer() {
+      if (this.activityData.meta) {
+        return this.isViewer(this.activityData);
+      }
+      return null;
+    },
+    isAManager() {
+      if (this.activityData.meta) {
+        return this.isManager(this.activityData);
+      }
+      return null;
     },
     activitiesTable() {
       const outputTable = _.map(this.activities, (d, i) => {
