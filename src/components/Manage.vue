@@ -2,7 +2,7 @@
   <div class="mt-3">
     <!-- back to activity set -->
     <div class="row">
-      <b-col cols="2">
+      <b-col cols="3">
       <span>
         <b-button :to="'/activitySets'" variant="default" size="sm">
           <i class="fas fa-long-arrow-alt-left"></i>
@@ -10,8 +10,8 @@
         </b-button>
       </span>
       </b-col>
-      <b-col cols="8"></b-col>
-      <b-col cols="2">
+      <b-col cols="6"></b-col>
+      <b-col cols="3" class="text-right">
         <div v-if="isAnEditor">
           <b-button :to="`/edit_activity_set/${activityId}`" variant="default" size="sm">
             Go to editor panel

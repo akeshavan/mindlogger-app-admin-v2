@@ -1,5 +1,5 @@
 <template>
-    <div id="forgot" class="text-center">
+    <div id="forgot" class="text-center jumbotron mb-0">
     <h1> Reset Password </h1>
 
     <div id="forgotForm" class="container fluid">

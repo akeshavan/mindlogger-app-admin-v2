@@ -29,7 +29,8 @@
           </b-alert>
         </b-col>
       </b-row>
-      <b-row class="mt-3 pt-3">
+
+      <b-row class="mt-3 pt-3 mb-3">
         <b-col>
           <h2>Create</h2>
           <p>
@@ -42,6 +43,75 @@
           <div class="text-center">
             <img src="@/assets/custom/MentalModel.svg" class="w-75 mb-3"/>
           </div>
+          <p>
+            We've added some screenshots below to guide you through creating your
+            own activity set, activities, and screens.
+          </p>
+
+          <!-- start screenshots here -->
+          <b-row>
+            <b-col cols="4">
+              <img src="@/assets/screenshots/YourActivitySets.png" class="w-100 ml-3 mr-3 pl-3 pr-3 screenshot"/>
+            </b-col>
+            <b-col>
+              <p>
+              At the top navbar, navigate to <a href="/activitySets">Your Activity Sets</a>
+              where you will see a table of activity sets (it may be empty if you are
+              first using this site). You'll notice there are columns and (possibly)
+              buttons that will let you edit, manage, or view data for an activity set.
+              These roles will be explained in detail in the next section.
+              </p>
+              <p>
+              The green "Create a New Activity Set" button will navigate you to a new page
+              where you can name you activity set and add activities.
+              </p>
+            </b-col>
+          </b-row>
+
+          <b-row class="mt-3 mb-3">
+            <b-col>
+              <p>
+                You can edit the name of you activity set by clicking the title
+                and subtitle and typing. The page will <b>save automatically</b>
+                so you don't need to press any buttons.
+              </p>
+              <p>
+                You'll also see a table of activities. To create a new activity,
+                click the "Create New Activity" button in green. You can also
+                click the name of an existing activity in the activity table.
+              </p>
+              <p>
+                There are also navigation buttons at the top right to quickly
+                jump to the role management and view data panels.
+              </p>
+            </b-col>
+            <b-col cols="4">
+              <img src="@/assets/screenshots/EditActivitySet.png" class="w-100 ml-3 mr-3 pl-3 pr-3 screenshot"/>
+            </b-col>
+          </b-row>
+
+          <!-- live screen edit gif here -->
+          <b-row class="mt-3 mb-3">
+            <b-col cols="4">
+              <img src="@/assets/screenshots/LiveScreenEdit.gif" class="w-100 ml-3 mr-3 pl-3 pr-3 screenshot"/>
+            </b-col>
+            <b-col>
+              <p>
+                Each activity consists of screens. You can see the screens at the top of the page.
+                Each screen previews in real time, so as you edit the screen, you can get an idea
+                for how it will look on a mobile phone.
+              </p>
+              <p>
+                Its really important that you don't try to pack too much into 1 screen!
+                A general rule of thumb is, to only ask 1 question per screen.
+              </p>
+              <p>
+                Just like the activity set panel, the edits you make to the screens are
+                <b>saved automatically</b>, so you don't have to worry about losing your work.
+              </p>
+            </b-col>
+          </b-row>
+
         </b-col>
       </b-row>
 
@@ -76,10 +146,43 @@
             real users, its a good idea to add yourself as a <span class="text-danger">User</span>
             so you can test out your activity set.
           </p>
+          <!-- show the user panel here -->
+          <b-row class="mt-3 mb-3">
+            <b-col>
+              <p>
+                You can navigate to the Role Management panel either from
+                <a href="/activitySets">Your Activity Sets</a>
+                or from the editor panel. The screenshot to the right shows
+                the 4 roles you can manage. In this example,
+                I've added myself as a user to my activity set.
+                This way I can see how it looks on my phone.
+              </p>
+
+              <p>
+                To add a new user, start typing their email address in the
+                text input at the bottom, and then click
+                "Add". If the email address already has an account on our site,
+                it will autopopulate so you can select it.
+                If not, a new screen will pop up, asking you to create an account
+                for a new Mindlogger user.
+              </p>
+
+              <p>
+                The panel works the same way for adding
+                <span class="text-primary">Editors</span> and
+                <span class="text-success">Managers</span>.
+                You can also use the search tool to filter the tables.
+              </p>
+
+            </b-col>
+            <b-col cols="4">
+              <img src="@/assets/screenshots/RoleManagementPanel.png" class="w-100 ml-3 mr-3 screenshot"/>
+            </b-col>
+          </b-row>
         </b-col>
       </b-row>
 
-      <b-row class="mt-3 pt-3">
+      <b-row class="mt-3 pt-3 mb-3">
         <b-col>
           <h2>Get Data</h2>
           <p>
@@ -100,13 +203,31 @@
             only showing it to those who are authorized to see it on our IRB.
           </p>
 
-          <p>
-            Before deploying your activity set to real users, its a good idea to
-            add yourself as a <span class="text-info">Viewer</span> that has access
-            to yourself as a <span class="text-danger">User</span>. That way you can
-            take a look at the data you're collecting and make sure it meets
-            your expectations.
-          </p>
+          <!-- showing the viewer panel here -->
+          <!-- show the user panel here -->
+          <b-row class="mt-3 mb-3">
+            <b-col cols="4">
+              <img src="@/assets/screenshots/AddUserToViewer.png" class="w-100 ml-3 mr-3 screenshot"/>
+            </b-col>
+            <b-col>
+              <p>
+                Before deploying your activity set to real users, its a good idea to
+                add yourself as a <span class="text-info">Viewer</span> that has access
+                to yourself as a <span class="text-danger">User</span>. That way you can
+                take a look at the data you're collecting and make sure it meets
+                your expectations.
+              </p>
+              <p>
+                The screenshot on the left shows how I've
+                added myself as a viewer to see my own data. To add new viewers,
+                make sure all checkboxes are cleared, and add as you would an editor,
+                manager, or user. To add specific users to a viewer, check the viewers who
+                you want to add the user to, and then type in the user's email in the text
+                input at the bottom. Then click the "Add User to Viewers" button in blue.
+              </p>
+            </b-col>
+          </b-row>
+
         </b-col>
       </b-row>
 
@@ -117,5 +238,11 @@
 <style>
   .customWidth {
     width: 30%;
+  }
+
+  .screenshot {
+    -webkit-box-shadow: 3px 5px 30px -10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 3px 5px 30px -10px rgba(0,0,0,0.75);
+    box-shadow: 3px 5px 30px -10px rgba(0,0,0,0.75);
   }
 </style>

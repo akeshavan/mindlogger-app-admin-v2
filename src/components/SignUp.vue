@@ -81,7 +81,10 @@
         </b-form-group>
 
 
-        <b-button type="submit" variant="primary" :disabled="!validated">Submit</b-button>
+        <b-button type="submit" variant="primary" :disabled="status==='loading' || !validated">
+          <span v-if="status==='ready'">Submit</span>
+          <span v-else>Signing up...</span>
+        </b-button>
 
         <p class="mt-3">
           Already have an account? <router-link to="/login">Log In</router-link>
@@ -112,6 +115,7 @@ export default {
   name: 'signup',
   data() {
     return {
+      status: 'ready',
       form: {
         email: '',
         password: '',
@@ -139,6 +143,7 @@ export default {
     */
     onSubmit(e) {
       e.preventDefault();
+      this.status = 'loading';
       signup({
         email: this.form.email,
         password: this.form.password,
@@ -149,6 +154,7 @@ export default {
         /*
           make the response look the same as the login response
         */
+        this.status = 'ready';
         const keys = _.filter(Object.keys(resp.data), k => k !== 'authToken');
         const cleanedUser = {};
         _.map(keys, (k) => {
@@ -163,6 +169,7 @@ export default {
         this.errors.show = true;
         this.errors.code = err.response;
         this.errors.message = err.response.data.message;
+        this.status = 'ready';
       });
     },
   },

@@ -34,7 +34,7 @@
           </p>
 
           <transition name="fade" mode="out-in">
-          <b-table striped hover responsive v-if="userActivityTable.length"
+          <b-table striped hover responsive v-if="userActivityTable.length || status === 'ready'"
             :items="userActivityTable" :fields="userTableFields">
             <!-- A virtual column -->
             <template slot="logo" slot-scope="data">
@@ -95,6 +95,7 @@
           <Loading v-else />
           </transition>
 
+          <Error v-if="error.show" :error="error"/>
           <b-row>
             <b-col class="text-center">
               <b-button @click="createNewActivitySet" class="mb-3" variant="success" size="lg">
@@ -164,6 +165,7 @@ import {
   createNewActivitySet,
 } from '../api/api';
 import Loading from './library/Loading';
+import Error from './library/Error';
 
 export default {
   name: 'ActivitySets',
@@ -180,6 +182,7 @@ export default {
   },
   components: {
     Loading,
+    Error,
   },
   data() {
     return {
@@ -188,6 +191,10 @@ export default {
       userTableFields: ['logo', 'shortName', 'edit', 'manage', 'view', 'delete'],
       remainingTableFields: ['logo', 'shortName', 'description'],
       toDelete: {},
+      error: {
+        show: false,
+        message: '',
+      },
     };
   },
   computed: {
@@ -248,6 +255,7 @@ export default {
     if (this.token) {
       getAllActivitySets(this.authToken.token).then((resp) => {
         this.allActivitySets = resp.data;
+        this.status = 'ready';
       });
     }
   },
@@ -278,10 +286,15 @@ export default {
       return fullImageURL(id);
     },
     createNewActivitySet() {
+      this.error.show = false;
+      this.error.message = '';
       // eslint-disable-next-line
       createNewActivitySet(this.user._id, this.authToken.token).then((resp) => {
         // eslint-disable-next-line
         this.$router.push(`edit_activity_set/${resp.data._id}`);
+      }).catch((e) => {
+        this.error.show = true;
+        this.error.message = `Oh no! ${e.message}. Please contact site administrators to resolve this.`;
       });
     },
     deleteActivitySet(item) {

@@ -29,7 +29,10 @@
         </b-form-group>
 
 
-        <b-button type="submit" variant="primary">Submit</b-button>
+        <b-button type="submit" variant="primary" :disabled="status==='loading'">
+          <span v-if="status==='ready'">Submit</span>
+          <span v-else>Logging in...</span>
+        </b-button>
 
       </b-form>
 
@@ -65,6 +68,7 @@ export default {
   name: 'login',
   data() {
     return {
+      status: 'ready',
       form: {
         username: null,
         password: null,
@@ -79,9 +83,11 @@ export default {
   methods: {
     onSubmit(e) {
       e.preventDefault();
+      this.status = 'loading';
       signin({ user: this.form.username, password: this.form.password }).then((resp) => {
         this.$emit('login', resp.data);
         this.$router.push('/activitySets');
+        this.status = 'ready';
       }).catch((err) => {
         this.errors.code = err.response;
         if (this.errors.code.status === 401) {
@@ -90,6 +96,7 @@ export default {
           this.errors.message = err.message;
         }
         this.errors.show = true;
+        this.status = 'ready';
       });
     },
   },
