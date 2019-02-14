@@ -553,6 +553,10 @@ export default {
       this.activityData.meta.screens[this.currentSlide].name = name;
       this.screens[idx].name = name;
     },
+    /**
+     * update the current screen. but make sure you don't ping the server
+     * too many times.
+     */
     updateCurrentScreen: _.debounce(function foo() {
       console.log('updating');
       if (this.activityData.meta.screens[this.currentSlide]) {
