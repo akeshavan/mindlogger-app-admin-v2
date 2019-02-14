@@ -64,11 +64,13 @@
           <!-- start screenshots here -->
           <b-row>
             <b-col cols="4">
-              <img src="@/assets/screenshots/YourActivitySets.png" class="w-100 ml-3 mr-3 pl-3 pr-3 screenshot"/>
+              <img src="@/assets/screenshots/YourActivitySets.png"
+              class="w-100 ml-3 mr-3 pl-3 pr-3 screenshot"/>
             </b-col>
             <b-col>
               <p>
-              At the top navbar, navigate to <a href="/activitySets">Your Activity Sets</a>
+              At the top navbar, navigate to
+              <router-link to="/activitySets">Your Activity Sets</router-link>
               where you will see a table of activity sets (it may be empty if you are
               first using this site). You'll notice there are columns and (possibly)
               buttons that will let you edit, manage, or view data for an activity set.
@@ -99,14 +101,16 @@
               </p>
             </b-col>
             <b-col cols="4">
-              <img src="@/assets/screenshots/EditActivitySet.png" class="w-100 ml-3 mr-3 pl-3 pr-3 screenshot"/>
+              <img src="@/assets/screenshots/EditActivitySet.png"
+              class="w-100 ml-3 mr-3 pl-3 pr-3 screenshot"/>
             </b-col>
           </b-row>
 
           <!-- live screen edit gif here -->
           <b-row class="mt-3 mb-3">
             <b-col cols="4">
-              <img src="@/assets/screenshots/LiveScreenEdit.gif" class="w-100 ml-3 mr-3 pl-3 pr-3 screenshot"/>
+              <img src="@/assets/screenshots/LiveScreenEdit.gif"
+              class="w-100 ml-3 mr-3 pl-3 pr-3 screenshot"/>
             </b-col>
             <b-col>
               <p>
@@ -189,7 +193,8 @@
 
             </b-col>
             <b-col cols="4">
-              <img src="@/assets/screenshots/RoleManagementPanel.png" class="w-100 ml-3 mr-3 screenshot"/>
+              <img src="@/assets/screenshots/RoleManagementPanel.png"
+              class="w-100 ml-3 mr-3 screenshot"/>
             </b-col>
           </b-row>
         </b-col>
@@ -220,7 +225,8 @@
           <!-- show the user panel here -->
           <b-row class="mt-3 mb-3">
             <b-col cols="4">
-              <img src="@/assets/screenshots/AddUserToViewer.png" class="w-100 ml-3 mr-3 screenshot"/>
+              <img src="@/assets/screenshots/AddUserToViewer.png"
+              class="w-100 ml-3 mr-3 screenshot"/>
             </b-col>
             <b-col>
               <p>

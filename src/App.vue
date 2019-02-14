@@ -42,10 +42,14 @@
         <!-- </keep-alive> -->
      </transition>
     </div>
+
+    <!-- The footer -->
+
     <footer class="bg-light pt-3 pb-3 mt-3">
       <b-row>
         <b-col class="text-center">
           <p class="mt-3">
+          <!-- TODO: unhardcode this logo and text! -->
           <img class="logo"
           src="https://27c2s3mdcxk2qzutg1z8oa91-wpengine.netdna-ssl.com/wp-content/themes/childmind/assets/img/cmi-logo-vert-ko.svg" />
           © <a href="https://childmind.org">Child Mind Institute</a> MATTER Lab 2019</p>
@@ -67,24 +71,42 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 
-console.log('style', style);
 const localStorage = require('localStorage');
 
 Vue.use(BootstrapVue);
+
+/**
+ * App.vue is the main entrypoint to the app.
+ */
 
 export default {
   name: 'App',
   data() {
     return {
+      /**
+       * stores user data returned from authentication route
+       */
       user: {},
+      /**
+       * stores the auth token returned from authentication route.
+       * this is used for every subsequent REST call.
+       */
       authToken: {},
     };
   },
   computed: {
+    /**
+     * tells us if the user is logged in
+     * since empty objects evaluate to true in JS (crazy, i know)
+     * we use a lodash function to evaluate an empty object.
+     */
     isLoggedIn() {
       return !_.isEmpty(this.user);
     },
   },
+  /**
+   * check to see if a user is logged in by looking at local storage
+   */
   mounted() {
     try {
       this.user = JSON.parse(localStorage.getItem('user')) || {};
@@ -95,13 +117,18 @@ export default {
     }
   },
   methods: {
+    /**
+     * save the authtoken to localstorage
+     */
     saveToken(token) {
-      // console.log(token);
       this.user = token.user;
       this.authToken = token.authToken;
       localStorage.setItem('user', JSON.stringify(token.user));
       localStorage.setItem('authToken', JSON.stringify(token.authToken));
     },
+    /**
+     * clear the tokens when the user logs out
+     */
     logout() {
       this.user = {};
       this.authToken = {};

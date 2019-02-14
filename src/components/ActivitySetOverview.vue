@@ -68,11 +68,17 @@ import { fullImageURL } from '../api/api';
 export default {
   name: 'ActivitySetOverview',
   props: {
+    /**
+     * activity data from parent route. an object.
+     */
     activityData: {
       type: Object,
     },
   },
   methods: {
+    /**
+     * get the image url from the server.
+     */
     getImageURL(id) {
       return fullImageURL(id);
     },

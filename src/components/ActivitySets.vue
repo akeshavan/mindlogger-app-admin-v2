@@ -167,15 +167,28 @@ import {
 import Loading from './library/Loading';
 import Error from './library/Error';
 
+/**
+ * This is the main dashboard to view all the activity sets for a user.
+ */
+
 export default {
   name: 'ActivitySets',
   props: {
+    /**
+     * auth token from auth route.
+     */
     authToken: {
       type: Object,
     },
+    /**
+     * boolean that tells us if user is logged in.
+     */
     isLoggedIn: {
       type: Boolean,
     },
+    /**
+     * user data from auth route
+     */
     user: {
       type: Object,
     },
@@ -186,11 +199,29 @@ export default {
   },
   data() {
     return {
+      /**
+       * status to show loading component or not.
+       */
       status: 'loading',
+      /**
+       * a list of all activity sets
+       */
       allActivitySets: [],
+      /**
+       * the fields to show in the "your activity sets table"
+       */
       userTableFields: ['logo', 'shortName', 'edit', 'manage', 'view', 'delete'],
+      /**
+       * the fields to show in the public activity sets you can't edit
+       */
       remainingTableFields: ['logo', 'shortName', 'description'],
+      /**
+       * stage an activity set data for deletion
+       */
       toDelete: {},
+      /**
+       * if there is an error in grabbing activity sets, store the message here.
+       */
       error: {
         show: false,
         message: '',
@@ -198,9 +229,15 @@ export default {
     };
   },
   computed: {
+    /**
+     * quick reference for authtoken.
+     */
     token() {
       return this.authToken.token;
     },
+    /**
+     * grab the activity sets that this user has access to
+     */
     userActivitySets() {
       if (!this.isLoggedIn) {
         return [];
@@ -209,6 +246,9 @@ export default {
       return _.filter(this.allActivitySets,
         act => this.isEditor(act) || this.isManager(act) || this.isViewer(act));
     },
+    /**
+     * the activity sets that the user doesn't have access to
+     */
     remainingActivitySets() {
       if (!this.isLoggedIn) {
         return this.allActivitySets;
@@ -216,9 +256,15 @@ export default {
       return _.filter(this.allActivitySets,
         act => !this.isEditor(act) && !this.isManager(act) && !this.isViewer(act));
     },
+    /**
+     * get the metadata for each activity set the user has access to
+     */
     userActivityMeta() {
       return _.map(this.userActivitySets, act => act.meta);
     },
+    /**
+     * activity set data formatted for the bootstrap-vue table component.
+     */
     userActivityTable() {
       // eslint-disable-next-line
       return _.map(this.userActivityMeta, (act, index) => {
@@ -231,9 +277,15 @@ export default {
         };
       });
     },
+    /**
+     * metadata for the remaining activity sets.
+     */
     remainingActivityMeta() {
       return _.map(this.remainingActivitySets, act => act.meta);
     },
+    /**
+     * bootstrap-vue formatted metadata for the table
+     */
     remainingActivityTable() {
       // eslint-disable-next-line
       return _.map(this.remainingActivityMeta, (act) => {
@@ -242,6 +294,9 @@ export default {
     },
   },
   watch: {
+    /**
+     * if the authtoken changes, then fetch the activity sets if the user is now logged in
+     */
     token() {
       if (this.token) {
         getAllActivitySets(this.authToken.token).then((resp) => {
@@ -251,6 +306,9 @@ export default {
       }
     },
   },
+  /**
+   * if there is a token, then fetch all activity sets for the user.
+   */
   mounted() {
     if (this.token) {
       getAllActivitySets(this.authToken.token).then((resp) => {
@@ -260,21 +318,33 @@ export default {
     }
   },
   methods: {
+    /**
+     * whether or tnot the user is an editor.
+     */
     isEditor(activity) {
       // eslint-disable-next-line
       const userId = this.user._id;
       return activity.meta.members.editors.indexOf(userId) > -1;
     },
+    /**
+     * is user a manager,
+     */
     isManager(activity) {
       // eslint-disable-next-line
       const userId = this.user._id;
       return activity.meta.members.managers.indexOf(userId) > -1;
     },
+    /**
+     * is user a viewer
+     */
     isViewer(activity) {
       // eslint-disable-next-line
       const userId = this.user._id;
       return Object.keys(activity.meta.members.viewers).indexOf(userId) > -1;
     },
+    /**
+     * get the various roles of the user, return a list.
+     */
     getRole(activity) {
       // eslint-disable-next-line
       const userId = this.user._id;
@@ -282,9 +352,17 @@ export default {
       const roleNames = ['Editor', 'Manager', 'Viewer'];
       return _.filter(roleNames, (r, i) => roles[i]);
     },
+    /**
+     * get the image URL from the server
+     */
     getImageURL(id) {
       return fullImageURL(id);
     },
+    /**
+     * create a new activity set by talking to the seriver.
+     * if successful, rotue to the edit activity set screen
+     * if not, show an error.
+     */
     createNewActivitySet() {
       this.error.show = false;
       this.error.message = '';
@@ -297,10 +375,16 @@ export default {
         this.error.message = `Oh no! ${e.message}. Please contact site administrators to resolve this.`;
       });
     },
+    /**
+     * show the delete activity set modal to make sure
+     */
     deleteActivitySet(item) {
       this.toDelete = item;
       this.$refs.deleteModal.show();
     },
+    /**
+     * TODO: actually delete the activity set on the server.
+     */
     removeActivitySet() {
       console.log('removing...', this.toDelete);
       this.toDelete = {};

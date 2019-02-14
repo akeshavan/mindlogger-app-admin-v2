@@ -1,8 +1,8 @@
 <template>
   <div class="mt-3">
     <Loading v-if="status==='loading'"/>
-    <Unauthorized v-else-if="!authorized"/>
-    <div v-else>
+    <Unauthorized v-else-if="!authorized && status!=='ready'"/>
+    <div v-else-if="status==='ready'">
       <!-- Are you sure you want to delete modal? -->
       <b-modal id="delete" title="Deleting"
        v-on:ok="removeScreen" header-bg-variant="danger"
@@ -213,18 +213,34 @@ import {
 } from '../api/api';
 import schemas from '../api/schemas';
 
+/**
+ * Edit activity add docs
+ */
+
 export default {
   name: 'EditActivity',
   props: {
+    /**
+     * user info object
+     */
     user: {
       type: Object,
     },
+    /**
+     * isLoggedIn bool
+     */
     isLoggedIn: {
       type: Boolean,
     },
+    /**
+     * token used for all api calls
+     */
     authToken: {
       type: Object,
     },
+    /**
+     * id for the activity set.
+     */
     activitySetId: {
       type: String,
     },
