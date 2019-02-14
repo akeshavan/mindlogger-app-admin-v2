@@ -27,6 +27,19 @@
               repository <a href="https://github.com/akeshavan/mindlogger-app-admin-v2">here</a>.
             </p>
           </b-alert>
+
+          <b-alert :show="!isLoggedIn" variant="danger">
+            <p class="mb-0">
+              <strong>You need to be logged in to create, push,
+                and view activities and data on Mindlogger!</strong>
+            </p>
+            <p class="mb-0">
+              Either <router-link to="/login">log in</router-link> or
+              <router-link to="/signup">sign up</router-link>
+              to get started.
+            </p>
+          </b-alert>
+
         </b-col>
       </b-row>
 
@@ -246,3 +259,15 @@
     box-shadow: 3px 5px 30px -10px rgba(0,0,0,0.75);
   }
 </style>
+
+<script>
+export default {
+  name: 'UserGuide',
+  props: {
+    isLoggedIn: {
+      type: Boolean,
+    },
+  },
+};
+</script>
+

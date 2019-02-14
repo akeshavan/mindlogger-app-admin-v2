@@ -12,7 +12,7 @@
 
         <b-navbar-nav>
           <b-nav-item to="/activitySets" exact v-if="isLoggedIn">Your Activity Sets</b-nav-item>
-          <b-nav-item to="/guide" exact v-if="isLoggedIn">User Guide</b-nav-item>
+          <b-nav-item to="/guide" exact>User Guide</b-nav-item>
 
         </b-navbar-nav>
 
