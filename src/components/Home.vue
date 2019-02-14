@@ -48,6 +48,12 @@
           <h3>Welcome, {{user.firstName}} !</h3>
            <b-button variant="danger" size="lg" to="/activitySets">Manage Activity Sets</b-button>
         </div>
+        <b-col class="mt-3 text-center">
+          <div v-if="isLoggedIn">
+            <p>Check out our User Guide:</p>
+            <b-button to="/guide" size="lg" variant="primary">User Guide</b-button>
+          </div>
+        </b-col>
       </div>
 
       <div class="row">

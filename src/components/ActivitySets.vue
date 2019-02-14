@@ -16,11 +16,13 @@
             Each activity consists of various screens.
           </p>
           <img src="@/assets/custom/MentalModel.svg" class="w-75 mb-3"/>
-          <p>Not sure where to start? Check out our User Guide:</p>
-          <b-button to="/guide" size="lg" variant="primary">User Guide</b-button>
+          <div class="mb-3">
+            <p>Not sure where to start? Check out our User Guide:</p>
+            <b-button to="/guide" size="lg" variant="primary">User Guide</b-button>
+          </div>
         </b-col>
       </b-row>
-      <b-row v-if="isLoggedIn">
+      <b-row v-if="isLoggedIn" class="mt-3">
         <b-col>
 
           <h2>
@@ -28,7 +30,7 @@
             Your Activity Sets
           </h2>
           <p class="lead">
-            Here are the activies you own, manage, or can view.
+            Here are the activies you can edit, manage, or can view.
           </p>
 
           <transition name="fade" mode="out-in">
