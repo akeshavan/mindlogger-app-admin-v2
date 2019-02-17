@@ -28,7 +28,8 @@
         <strong>
           <span class="text-danger">{{query}}</span>
         has not been added as a <span class="text-danger"><b>user</b></span> yet!
-        Please add them as a user before adding them to a <span class="text-info"><b>viewer</b></span>.</strong>
+        Please add them as a user before adding them to
+        a <span class="text-info"><b>viewer</b></span>.</strong>
       </p>
     </b-modal>
 
