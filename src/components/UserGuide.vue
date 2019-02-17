@@ -105,15 +105,22 @@
             to perform these activities.
           </p>
           <div class="text-center">
-            <img src="@/assets/custom/MentalModel.svg" class="w-75 mb-3"/>
+            <img src="@/assets/screenshots/app1-login.png" width=150px/>
+            <img src="@/assets/screenshots/app3-activities.png" width=150px/>
+            <img src="@/assets/screenshots/app4-question.png" width=150px/>
+            <img src="@/assets/screenshots/app5-instruction.png" width=150px/>
+            <img src="@/assets/screenshots/app6-picture.png" width=150px/>
+            <img src="@/assets/screenshots/app7-record.png" width=150px/>
           </div>
           <!-- start screenshots here -->
           <b-row>
-            <b-col cols="4">
+            <b-col cols="1">
             </b-col>
             <b-col>
               <p>
-              From left to right: login screen, list of activities, survey activity
+              <i>Examples screenshots of a Mindlogger activity:</i>
+              login, activity list,survey question,
+              text instruction, picture, and voice record screens
               </p>
             </b-col>
           </b-row>
