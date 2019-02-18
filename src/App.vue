@@ -137,6 +137,7 @@ export default {
     },
   },
 };
+
 </script>
 
 <style lang="scss">
@@ -155,10 +156,6 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,200,400');
-
-.site-header {
-  background: url(//27c2s3mdcxk2qzutg1z8oa91-wpengine.netdna-ssl.com/wp-content/themes/childmind/assets/img/bg-header.svg) bottom center #0067a0;
-}
 
 #app {
   /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */

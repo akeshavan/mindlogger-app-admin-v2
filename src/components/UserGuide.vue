@@ -42,8 +42,6 @@
         </b-col>
       </b-row>
 
-
-
       <b-row class="mt-3 pt-3 mb-3">
         <b-col>
           <h2>Introduction</h2>
@@ -86,8 +84,6 @@
         </b-col>
       </b-row>
 
-
-
       <b-row class="mt-3 pt-3 mb-3">
         <b-col>
           <h2><span class="text-danger">Users</span></h2>
@@ -126,8 +122,6 @@
           </b-row>
         </b-col>
       </b-row>
-
-
 
       <b-row class="mt-3 pt-3 mb-3">
         <b-col>
@@ -287,8 +281,6 @@
       </b-row>
 
 
-
-
       <b-row class="mt-3 pt-3">
         <b-col>
           <h2><span class="text-success">Managers</span></h2>
@@ -353,7 +345,6 @@
           </b-row>
         </b-col>
       </b-row>
-
 
 
     </b-container>

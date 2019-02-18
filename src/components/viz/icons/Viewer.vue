@@ -1,5 +1,6 @@
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" id="viewer" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 32 40" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+      <!-- eslint-disable -->
       <g>
           <path d="M14.9,23.1c-1.4,1.4-3.3,2.3-5.4,2.3s-4-0.9-5.4-2.3C1.6,24.9,0,27.7,0,31c0,0.6,0.4,1,1,1h17.1   c0.6,0,1-0.4,1-1C19.1,27.7,17.4,24.9,14.9,23.1z" />
           <path d="M9.5,23.5c3,0,5.4-2.4,5.4-5.4s-2.4-5.4-5.4-5.4s-5.4,2.4-5.4,5.4S6.5,23.5,9.5,23.5z" />

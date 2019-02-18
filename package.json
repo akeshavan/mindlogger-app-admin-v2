@@ -32,7 +32,7 @@
     "vue-input-autowidth": "^1.0.2",
     "vue-resize": "^0.4.5",
     "vue-router": "^3.0.1",
-    "vue-slider-component": "^2.8.6",
+    "vue-slider-component": "^2.8.6"
   },
   "devDependencies": {
     "@vuedoc/md": "git+https://gitlab.com/akeshavan/md#master",

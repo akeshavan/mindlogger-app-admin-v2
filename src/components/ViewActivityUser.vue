@@ -71,7 +71,8 @@
              :colorArr="getColorArr(index)"
              v-on:setFilterDateRange="setFilterDateRange"
              />
-            <ActivityView :activity="act" :dateRange="filterDateRange" :color="getColorArr(index)[0]"/>
+            <ActivityView :activity="act" :dateRange="filterDateRange"
+            :color="getColorArr(index)[0]"/>
           </div>
         </b-col>
       </b-row>

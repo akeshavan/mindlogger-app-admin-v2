@@ -17,6 +17,9 @@ $purple:            #25286e;
 $green:             #00bb85;
 $dark-green: darken($green, 25);
 
+.site-header {
+  background: url(//27c2s3mdcxk2qzutg1z8oa91-wpengine.netdna-ssl.com/wp-content/themes/childmind/assets/img/bg-header.svg) bottom center $dark-blue;
+}
 
 // Set brand colors
 $brand-primary:     $dark-blue;
