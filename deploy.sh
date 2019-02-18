@@ -8,6 +8,7 @@ echo "Starting to update gh-pages\n"
 
 #copy data we're interested in to other place
 cp -R dist $HOME/dist
+cp -R docs $HOME/docs
 
 #go to home and setup git
 cd $HOME
@@ -21,7 +22,7 @@ git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/${GH_USER}/${
 cd gh-pages
 cp -Rf $HOME/dist/* .
 ls $HOME
-# cp -Rf $HOME/docs ./docs
+cp -Rf $HOME/docs ./docs
 
 echo "Allow files with underscore https://help.github.com/articles/files-that-start-with-an-underscore-are-missing/" > .nojekyll
 echo "[View live](https://${GH_USER}.github.io/${GH_REPO}/)" > README.md
