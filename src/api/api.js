@@ -232,27 +232,32 @@ export const createNewActivitySet = (userId, token) => axios({
 }).then((resp) => {
   console.log('got id', resp.data[0]._id);
   return resp.data[0]._id;
-}).then((parentId) => axios({
+}).then((parentId) => {
+  const bodyFormData = new FormData();
+  bodyFormData.set('name', 'untitled activity set');
+  bodyFormData.set('shortName', 'untitled');
+  bodyFormData.set('description', 'an untitled activity set');
+  bodyFormData.set('metadata', JSON.stringify({
+    shortName: 'untitled',
+    description: 'an untitled activity set',
+    members: {
+      editors: [userId],
+      managers: [userId],
+      users: [],
+      viewers: [],
+    },
+  }));
+  bodyFormData.set('parentId', parentId);
+  bodyFormData.set('parentType', 'collection');
+  bodyFormData.set('reuseExisting', true);
+
+  return axios({
   method: 'POST',
   url: `${config.apiHost}/folder`,
-  params: {
-    name: 'Untitled Activity Set',
-    metadata: {
-      shortName: 'untitled',
-      description: 'an untitled activity set',
-      members: {
-        editors: [userId],
-        managers: [userId],
-        users: [],
-        viewers: [],
-      },
-    },
-    parentId,
-    parentType: 'collection',
-    reuseExisting: true,
-  },
+  data: bodyFormData,
   headers: { 'Girder-Token': `${token}` },
-}));
+  })
+});
 
 export const updateActivitySetMetadata = ({name, metadata, parentId, token}) => axios({
   method: 'PUT',
