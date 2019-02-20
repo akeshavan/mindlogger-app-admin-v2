@@ -1,6 +1,6 @@
 # mindlogger-admin
 
-> An admin dashboard to build mindlogger applets
+> An admin dashboard to build Mindlogger applets
 
 ## Build Setup
 
