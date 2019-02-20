@@ -9,7 +9,7 @@
           <b-nav vertical pills class="w-100">
             <b-nav-item to="/activitySets" exact v-if="isLoggedIn">
             <i class="fas fa-long-arrow-alt-left"></i>
-            Your Activity Sets
+            Your Applets
             </b-nav-item>
             <b-nav-item
              :to="'/view_activity/'+ activityId +'/overview'">

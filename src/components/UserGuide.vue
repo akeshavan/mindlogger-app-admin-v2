@@ -60,7 +60,7 @@
               "I get notifications on my phone to take the Speech Study survey
               and record my voice."
           <br><br>
-          <span class="text-info">Viewer</span>:
+          <span class="text-info">Reviewer</span>:
               "I view <span class="text-danger">User</span>'s
               Speech Study data."
           <br><br>
@@ -70,7 +70,7 @@
           <br><br>
           <span class="text-success">Manager</span>:
               "I manage <span class="text-danger">User</span>,
-              <span class="text-info">Viewer</span>,
+              <span class="text-info">Reviewer</span>,
               <span class="text-primary">Editor</span>,
               and <span class="text-success">Manager</span>
               permissions for the Speech Study applet."
@@ -125,17 +125,17 @@
 
       <b-row class="mt-3 pt-3 mb-3">
         <b-col>
-          <h2><span class="text-info">Viewers</span></h2>
+          <h2><span class="text-info">Reviewers</span></h2>
           <p>
             If you want to view data for a specific
             <span class="text-danger">User</span> on
-            the <i><span class="text-info">Viewer</span> webpage</i>,
+            the <i><span class="text-info">Reviewer</span> webpage</i>,
             you must be assigned as a
-            <span class="text-info">Viewer</span> by the <span class="text-success">Manager</span>.
+            <span class="text-info">Reviewer</span> by the <span class="text-success">Manager</span>.
             If you are the <span class="text-success">Manager</span>,
-            you can add yourself as a <span class="text-info">Viewer</span>, and then you need to
+            you can add yourself as a <span class="text-info">Reviewer</span>, and then you need to
             add <span class="text-danger">Users</span> to each
-            <span class="text-info">Viewer</span>.
+            <span class="text-info">Reviewer</span>.
             This may seem unnecessarily complicated at first,
             but in many large data-collection projects, we may want to
             distribute work to different people in the study, and we may want
@@ -156,21 +156,21 @@
                 Before deploying your applet to real
                 <span class="text-danger">Users</span>,
                 it's a good idea to add yourself as a
-                <span class="text-info">Viewer</span> that has access
+                <span class="text-info">Reviewer</span> that has access
                 to yourself as a <span class="text-danger">User</span>.
                 That way you can take a look at the data you're collecting
                 and make sure it meets your expectations.
               </p>
               <p>
                 The screenshot on the left shows how I've
-                added myself as a <span class="text-info">Viewer</span>
+                added myself as a <span class="text-info">Reviewer</span>
                 to see my own data.
-                To add <span class="text-info">Viewers</span>
+                To add <span class="text-info">Reviewers</span>
                 to a specific <span class="text-danger">User</span>,
-                check the <span class="text-info">Viewers</span>
+                check the <span class="text-info">Reviewers</span>
                 and then type in the <span class="text-danger">User</span>'s
                 email in the text input at the bottom.
-                Then click the "Add User to Viewers" button in blue.
+                Then click the "Add User to Reviewers" button in blue.
               </p>
             </b-col>
           </b-row>
@@ -244,7 +244,7 @@
               <p>
                 There are also navigation buttons at the top right to quickly
                 jump to the <span class="text-success">Manager</span> webpage
-                and <span class="text-info">Viewer</span> webpage.
+                and <span class="text-info">Reviewer</span> webpage.
               </p>
             </b-col>
             <b-col cols="4">

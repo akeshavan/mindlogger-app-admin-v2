@@ -36,7 +36,7 @@
         </b-col>
         <b-col class="text-center">
           <h3>{{Object.keys(activityData.meta.members.viewers).length}}</h3>
-          <p>Viewers</p>
+          <p>Reviewers</p>
         </b-col>
         </b-row>
         <b-row>

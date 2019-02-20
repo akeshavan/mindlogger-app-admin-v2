@@ -46,7 +46,7 @@
         </div>
         <div v-else class="col-12 text-center">
           <h3>Welcome, {{user.firstName}} !</h3>
-           <b-button variant="danger" size="lg" to="/activitySets">Manage Activity Sets</b-button>
+           <b-button variant="danger" size="lg" to="/activitySets">Manage Applets</b-button>
         </div>
         <b-col class="mt-3 text-center">
           <div v-if="isLoggedIn">

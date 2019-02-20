@@ -1,12 +1,12 @@
 <template>
   <div class="mt-3">
-    <!-- back to activity set -->
+    <!-- back to applet -->
     <div class="row">
       <b-col cols="3">
       <span>
         <b-button :to="'/activitySets'" variant="default" size="sm">
           <i class="fas fa-long-arrow-alt-left"></i>
-          Back to your Activity Sets
+          Back to your applets
         </b-button>
       </span>
       </b-col>
@@ -45,7 +45,7 @@
            class="img role-icon mx-auto" alt="Thumbnail" /> -->
            <editor-icon :num="activityData.meta.members.editors.length"/>
           <p class="lead text-primary"><strong>Editors</strong></p>
-          <p>Editors can create and edit Activity Sets</p>
+          <p>Editors can create and edit applets</p>
         </b-col>
         <b-col
         :class="{'fancytab activeTab border-success': currentTab === 1,
@@ -55,7 +55,7 @@
            class="img role-icon mx-auto" alt="Thumbnail" /> -->
            <manager-icon :num="activityData.meta.members.managers.length" />
           <p class="lead text-success"><strong>Managers</strong></p>
-          <p>Managers can assign users and viewers of an activity set.</p>
+          <p>Managers can assign users and viewers of an applet.</p>
         </b-col>
         <b-col
         :class="{'fancytab activeTab border-danger': currentTab === 2,
@@ -65,7 +65,7 @@
            class="img role-icon mx-auto" alt="Thumbnail" /> -->
            <user-icon :num="activityData.meta.members.users.length"/>
           <p class="lead text-danger"><strong>Users</strong></p>
-          <p>Users have access to activity sets on their phones through the mindlogger app.</p>
+          <p>Users have access to applets on their phones through the mindlogger app.</p>
         </b-col>
         <b-col
         :class="{'fancytab activeTab border-info': currentTab === 3,
@@ -74,8 +74,8 @@
           <!-- <img src="@/assets/icons/noun_analyst_1186422.svg"
            class="img role-icon mx-auto" alt="Thumbnail" /> -->
            <viewer-icon :num="numViewers"/>
-          <p class="lead text-info"><strong>Viewers</strong></p>
-          <p>Viewers can see the data of specific users</p>
+          <p class="lead text-info"><strong>Reviewers</strong></p>
+          <p>Reviewers can see the data of specific users</p>
         </b-col>
       </b-row>
       <b-row class="mt-3">
@@ -396,7 +396,7 @@ export default {
         return this.activityData._id;
       })
         .catch((e) => {
-          console.log('error in get activity set', e);
+          console.log('error in get applet', e);
         });
     },
     /**

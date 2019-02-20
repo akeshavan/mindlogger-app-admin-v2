@@ -168,7 +168,7 @@ export default {
           }
           return resp.data[0]._id;
         })
-        // within Responses, get a list of Activity set folders
+        // within Responses, get a list of applet folders
         .then(folderId => getUserActivitySetFolders(folderId, this.authToken.token))
         // grab the folder name that matches the activity we want.
         .then(resp => _.filter(resp.data, v => v.name === this.activityData.name)[0]._id)

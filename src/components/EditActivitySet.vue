@@ -5,7 +5,7 @@
       <span>
         <b-button :to="'/activitySets'" variant="default" size="sm">
           <i class="fas fa-long-arrow-alt-left"></i>
-          Back to your Activity Sets
+          Back to your applets
         </b-button>
       </span>
       </b-col>
@@ -40,7 +40,7 @@
       </b-modal>
 
       <!-- main content -->
-      <p class="lead text-muted text-center mt-3">Edit Activity Set </p>
+      <p class="lead text-muted text-center mt-3">Edit Applet </p>
       <h1 class="text-center mt-3">
         <b-img v-if="activityData.meta.logoImage"
           thumbnail
@@ -103,7 +103,7 @@
             Activities
           </h3>
 
-          <p>in this activity set are:</p>
+          <p>in this applet are:</p>
 
            <b-table striped hover outlined responsive
            :items="activitiesTable" :fields="activityTableFields">
@@ -305,7 +305,7 @@ export default {
           });
         })
         .catch((e) => {
-          console.log('error in get activity set', e);
+          console.log('error in get applet', e);
         });
     },
     getUserMetadata(userId) {

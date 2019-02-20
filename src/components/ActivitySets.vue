@@ -11,8 +11,8 @@
 
       <b-row class="jumbotron mb-0 pb-0 mt-3 pt-3">
         <b-col class="text-center">
-          <h1>Activity Sets</h1>
-          <p class="lead">An activity set consists of various activities (e.g. assessments).
+          <h1>Applets</h1>
+          <p class="lead">An applet consists of various activities (e.g. assessments).
             Each activity consists of various screens.
           </p>
           <img src="@/assets/custom/MentalModel.svg" class="w-75 mb-3"/>
@@ -27,7 +27,7 @@
 
           <h2>
             <img src="@/assets/custom/ActivitySetIcon.svg" class="highlightIcon"/>
-            Your Activity Sets
+            Your Applets
           </h2>
           <p class="lead">
             Here are the activies you can edit, manage, or can view.
@@ -82,7 +82,7 @@
               <span v-if="data.item.role.indexOf('Editor') > -1">
                 <button type="button" class="close"
                  aria-label="Close" style="width:100%"
-                 v-b-tooltip.hover title="Delete this activity set"
+                 v-b-tooltip.hover title="Delete this applet"
                  @click="deleteActivitySet(data.item)"
                  >
                 <span aria-hidden="true">&times;</span>
@@ -99,7 +99,7 @@
           <b-row>
             <b-col class="text-center">
               <b-button @click="createNewActivitySet" class="mb-3" variant="success" size="lg">
-                <i class="fas fa-plus mr-2"></i>Create New Activity Set
+                <i class="fas fa-plus mr-2"></i>Create New Applet
               </b-button>
             </b-col>
           </b-row>
@@ -108,9 +108,9 @@
       </b-row>
       <b-row class="mt-3">
         <b-col>
-          <h2>Public Activity Sets</h2>
+          <h2>Public Applets</h2>
           <p class="lead">
-            Here are all the other activity sets. You don't have permission to see them, though.
+            Here are all the other applets. You don't have permission to see them, though.
           </p>
           <b-table striped hover :items="remainingActivityTable" :fields="remainingTableFields">
             <!-- A virtual column -->
@@ -168,7 +168,7 @@ import Loading from './library/Loading';
 import Error from './library/Error';
 
 /**
- * This is the main dashboard to view all the activity sets for a user.
+ * This is the main dashboard to view all the applets for a user.
  */
 
 export default {
@@ -204,23 +204,23 @@ export default {
        */
       status: 'loading',
       /**
-       * a list of all activity sets
+       * a list of all applets
        */
       allActivitySets: [],
       /**
-       * the fields to show in the "your activity sets table"
+       * the fields to show in the "your applets table"
        */
       userTableFields: ['logo', 'shortName', 'edit', 'manage', 'view', 'delete'],
       /**
-       * the fields to show in the public activity sets you can't edit
+       * the fields to show in the public applets you can't edit
        */
       remainingTableFields: ['logo', 'shortName', 'description'],
       /**
-       * stage an activity set data for deletion
+       * stage an applet data for deletion
        */
       toDelete: {},
       /**
-       * if there is an error in grabbing activity sets, store the message here.
+       * if there is an error in grabbing applets, store the message here.
        */
       error: {
         show: false,
@@ -236,7 +236,7 @@ export default {
       return this.authToken.token;
     },
     /**
-     * grab the activity sets that this user has access to
+     * grab the applets that this user has access to
      */
     userActivitySets() {
       if (!this.isLoggedIn) {
@@ -247,7 +247,7 @@ export default {
         act => this.isEditor(act) || this.isManager(act) || this.isViewer(act));
     },
     /**
-     * the activity sets that the user doesn't have access to
+     * the applets that the user doesn't have access to
      */
     remainingActivitySets() {
       if (!this.isLoggedIn) {
@@ -257,13 +257,13 @@ export default {
         act => !this.isEditor(act) && !this.isManager(act) && !this.isViewer(act));
     },
     /**
-     * get the metadata for each activity set the user has access to
+     * get the metadata for each applet the user has access to
      */
     userActivityMeta() {
       return _.map(this.userActivitySets, act => act.meta);
     },
     /**
-     * activity set data formatted for the bootstrap-vue table component.
+     * applet data formatted for the bootstrap-vue table component.
      */
     userActivityTable() {
       // eslint-disable-next-line
@@ -278,7 +278,7 @@ export default {
       });
     },
     /**
-     * metadata for the remaining activity sets.
+     * metadata for the remaining applets.
      */
     remainingActivityMeta() {
       return _.map(this.remainingActivitySets, act => act.meta);
@@ -295,7 +295,7 @@ export default {
   },
   watch: {
     /**
-     * if the authtoken changes, then fetch the activity sets if the user is now logged in
+     * if the authtoken changes, then fetch the applets if the user is now logged in
      */
     token() {
       if (this.token) {
@@ -307,7 +307,7 @@ export default {
     },
   },
   /**
-   * if there is a token, then fetch all activity sets for the user.
+   * if there is a token, then fetch all applets for the user.
    */
   mounted() {
     if (this.token) {
@@ -359,8 +359,8 @@ export default {
       return fullImageURL(id);
     },
     /**
-     * create a new activity set by talking to the seriver.
-     * if successful, rotue to the edit activity set screen
+     * create a new applet by talking to the seriver.
+     * if successful, rotue to the edit applet screen
      * if not, show an error.
      */
     createNewActivitySet() {
@@ -376,14 +376,14 @@ export default {
       });
     },
     /**
-     * show the delete activity set modal to make sure
+     * show the delete applet modal to make sure
      */
     deleteActivitySet(item) {
       this.toDelete = item;
       this.$refs.deleteModal.show();
     },
     /**
-     * TODO: actually delete the activity set on the server.
+     * TODO: actually delete the applet on the server.
      */
     removeActivitySet() {
       console.log('removing...', this.toDelete);

@@ -17,7 +17,7 @@
       <span>
         <b-button :to="'/edit_activity_set/' + this.activitySetId" variant="default" size="sm">
           <i class="fas fa-long-arrow-alt-left"></i>
-          Back to Activity Set: {{activitySetData.meta.shortName}}
+          Back to Applet: {{activitySetData.meta.shortName}}
         </b-button>
       </span>
       <b-container>
@@ -257,7 +257,7 @@ export default {
       type: Object,
     },
     /**
-     * id for the activity set.
+     * id for the applet.
      */
     activitySetId: {
       type: String,
@@ -361,7 +361,7 @@ export default {
     },
     getActivitySet() {
       return getActivitySet(this.activitySetId, this.authToken.token).then((resp) => {
-        console.log('activity set data', resp);
+        console.log('applet data', resp);
         this.activitySetData = resp.data;
       }).catch((e) => {
         console.log('error in getActivitySet', e);

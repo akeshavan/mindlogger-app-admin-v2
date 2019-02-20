@@ -151,8 +151,8 @@ export const getActivitySets = (parentId, token) => axios({
 export const fullImageURL = (fileId) => `${config.apiHost}/${fileId}/download?contentDisposition=inline`;
 
 /**
- * gets a specific activity set by its id
- * @param {String} activityId 
+ * gets a specific applet by its id
+ * @param {String} activityId
  */
 export const getActivitySet = (activityId, token) => axios({
   method: 'GET',
@@ -163,9 +163,9 @@ export const getActivitySet = (activityId, token) => axios({
 });
 
 /**
- * 
- * @param {String} activity_id 
- * once you get the id of the Activies folder for the particular Activity Set
+ *
+ * @param {String} activity_id
+ * once you get the id of the activities folder for the particular applet
  */
 const getContentsOfActivitiesFolder = (activity_id, token) => axios({
   method: 'GET',
@@ -234,12 +234,12 @@ export const createNewActivitySet = (userId, token) => axios({
   return resp.data[0]._id;
 }).then((parentId) => {
   const bodyFormData = new FormData();
-  bodyFormData.set('name', 'untitled activity set');
+  bodyFormData.set('name', 'untitled applet');
   bodyFormData.set('shortName', 'untitled');
-  bodyFormData.set('description', 'an untitled activity set');
+  bodyFormData.set('description', 'an untitled applet');
   bodyFormData.set('metadata', JSON.stringify({
     shortName: 'untitled',
-    description: 'an untitled activity set',
+    description: 'an untitled applet',
     members: {
       editors: [userId],
       managers: [userId],
@@ -378,7 +378,7 @@ export const deleteScreen = ({ itemId, token }) => axios({
 
 /**
  * get a user's metadata
- * @param {String} userId 
+ * @param {String} userId
  */
 export const getUserMetadata = (userId) => axios({
   method: 'GET',
@@ -603,7 +603,7 @@ export const uploadFile = (name, fileObject, parentType, parentId) => ({
     size:fileObject.size,
     mimeType: fileObject.type,
   })}`,
-  isUpload: true, 
+  isUpload: true,
   body: fileObject,
   extraHeaders: { 'Content-Type': fileObject.type }
 })

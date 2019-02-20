@@ -11,7 +11,7 @@
       <b-collapse is-nav id="nav_collapse">
 
         <b-navbar-nav>
-          <b-nav-item to="/activitySets" exact v-if="isLoggedIn">Your Activity Sets</b-nav-item>
+          <b-nav-item to="/activitySets" exact v-if="isLoggedIn">Your Applets</b-nav-item>
           <b-nav-item to="/guide" exact>User Guide</b-nav-item>
 
         </b-navbar-nav>
