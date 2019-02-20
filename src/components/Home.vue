@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-12 text-center jumbotron mb-0 pb-0">
           <h1 >Mindlogger Admin Dashboard v2</h1>
-          <p class="lead">A dashboard to build mindlogger applications and visualize data</p>
+          <p class="lead">A dashboard to build Mindlogger applications and visualize data</p>
         </div>
       </div>
 

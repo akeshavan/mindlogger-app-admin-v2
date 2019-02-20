@@ -13,7 +13,7 @@
         <b-col class="text-center">
           <h1>Applets</h1>
           <p class="lead">An applet consists of various activities (e.g. assessments).
-            Each activity consists of various screens.
+            Each activity consists of a sequence of screens.
           </p>
           <img src="@/assets/custom/MentalModel.svg" class="w-75 mb-3"/>
           <div class="mb-3">
@@ -30,7 +30,7 @@
             Your Applets
           </h2>
           <p class="lead">
-            Here are the activies you can edit, manage, or can view.
+            Here are the activities you can edit, manage, or can view.
           </p>
 
           <transition name="fade" mode="out-in">
