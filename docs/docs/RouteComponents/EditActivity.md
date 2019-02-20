@@ -18,7 +18,7 @@ Edit activity add docs
 
 - `activity-set-id` ***String*** (*optional*) 
 
-  id for the activity set. 
+  id for the applet. 
 
 ## data 
 
