@@ -71,7 +71,8 @@
            ref="swiper"
            class="bg-light pt-2"
            v-on:ready="swiperReady = true">
-            <swiper-slide v-for="(screen) in activityData.meta.screens" :key="screen.name">
+            <swiper-slide v-for="(screen, index) in activityData.meta.screens"
+              v-bind:key="makeUniqueKey(index)">
               <small>{{screen.name.slice(0,20)}}</small>
               <div v-if="screens[getIndex(screen)]">
                 <screen-preview :screenData="screens[getIndex(screen)].meta"/>
@@ -129,7 +130,6 @@
           <div v-if="currentSlide != null && screens.length" class="container mt-3">
             <div v-if="screens[currentScreenIndex]">
               <screen-editor
-                :key="screens[currentScreenIndex].name"
                 :screenName="screens[currentScreenIndex].name"
                 :allScreenNames="activityData.meta.screens"
                :screenData="screens[currentScreenIndex].meta"
@@ -354,6 +354,9 @@ export default {
     },
   },
   methods: {
+    makeUniqueKey() {
+      return `__key_prefix__${Math.random()}_`;
+    },
     isEditor(activity) {
       // eslint-disable-next-line
       const userId = this.user._id;
