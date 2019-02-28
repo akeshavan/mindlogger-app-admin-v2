@@ -138,7 +138,7 @@
                ttype="text"
                v-on:input="setTableRowName"
                > -->
-               <input v-model="data.value"/>
+               <input v-model="data.value" v-on:input="setTableRowName"/>
                <!-- v-on:input="setSurveyListText"
                v-on:needsSave="needsSave"> -->
                <!-- </textfield> -->

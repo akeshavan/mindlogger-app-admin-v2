@@ -527,7 +527,7 @@ export default {
     removeScreen() {
       const value = this.activityData.meta.screens[this.currentSlide];
       // console.log('removing', value);
-      deleteScreen({ itemId: value.id, token: this.authToken.token }).then((resp) => {
+      deleteScreen({ itemId: value.id, token: this.authToken.token }).then(() => {
         // console.log(resp);
         this.screens.splice(this.currentScreenIndex, 1);
         this.activityData.meta.screens.splice(this.currentSlide, 1);
