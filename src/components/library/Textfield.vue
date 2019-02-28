@@ -1,7 +1,7 @@
 <template>
   <div>
+    <!-- v-autowidth="{minWidth: '100px', comfortZone: 10}" -->
       <input ref="input" class="textfield"
-      v-autowidth="{minWidth: '100px', comfortZone: 10}"
       :value="value" :placeholder="getPlaceholder()"
       v-on:input="onInput" v-if="ttype=='text'"
       v-on:change="onChange"
@@ -56,10 +56,14 @@ export default {
     },
   },
   methods: {
-    onChange() {
+    onChange(e) {
+      e.preventDefault();
+      e.stopPropagation();
       this.$emit('change', this.value);
     },
     onInput(e) {
+      e.preventDefault();
+      e.stopPropagation();
       const value = e.target.value;
       // Add this line
       this.$emit('input', value, this.index);

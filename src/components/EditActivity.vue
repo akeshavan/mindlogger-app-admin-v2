@@ -470,7 +470,7 @@ export default {
         }
         this.screens[this.currentScreenIndex].meta[key] = value;
       }
-      console.log('needs save?', needsSave);
+      // console.log('needs save?', needsSave);
       if (needsSave) {
         this.updateCurrentScreen();
       }
@@ -491,7 +491,7 @@ export default {
     addBefore() {
       const screenSchema = schemas.screenSchema(`Q${this.screens.length}`);
       this.addScreen(screenSchema.name).then((resp) => {
-        console.log('response from addScreen is', resp);
+        // le.log('response from addScreen is', resp);
         this.screens.push(screenSchema);
         const activityScreenSchema = {
           // eslint-disable-next-line
@@ -504,9 +504,9 @@ export default {
     },
     addAfter() {
       const screenSchema = schemas.screenSchema(`Q${this.screens.length}`);
-      console.log('adding after');
+      // console.log('adding after');
       this.addScreen(screenSchema.name).then((resp) => {
-        console.log('adding screen');
+        // console.log('adding screen');
         this.screens.push(screenSchema);
         const activityScreenSchema = {
           // eslint-disable-next-line
@@ -523,9 +523,9 @@ export default {
     },
     removeScreen() {
       const value = this.activityData.meta.screens[this.currentSlide];
-      console.log('removing', value);
+      // console.log('removing', value);
       deleteScreen({ itemId: value.id, token: this.authToken.token }).then((resp) => {
-        console.log(resp);
+        // console.log(resp);
         this.screens.splice(this.currentScreenIndex, 1);
         this.activityData.meta.screens.splice(this.currentSlide, 1);
         Vue.set(this.activityData.meta, 'screens', [...this.activityData.meta.screens]);
@@ -558,11 +558,11 @@ export default {
      * too many times.
      */
     updateCurrentScreen: _.debounce(function foo() {
-      console.log('updating');
+      // console.log('updating');
       if (this.activityData.meta.screens[this.currentSlide]) {
-        console.log('hi', this.activityData.meta.screens[this.currentSlide]);
+        // console.log('hi', this.activityData.meta.screens[this.currentSlide]);
         if (this.activityData.meta.screens[this.currentSlide].id || this.activityData.meta.screens[this.currentSlide]['@id']) {
-          console.log('updating screen');
+          // console.log('updating screen');
           updateScreen({
             name: this.activityData.meta.screens[this.currentSlide].name,
             metadata: this.screens[this.currentScreenIndex].meta,
@@ -571,7 +571,7 @@ export default {
           }).then(() => {
             this.updateMetadata();
           }).catch((e) => {
-            console.log('oh no, an error');
+            // console.log('oh no, an error');
             this.error.message = e.message;
             this.error.show = true;
           });
@@ -599,8 +599,8 @@ export default {
         metadata: {},
         parentId: this.activityId,
         token: this.authToken.token,
-      }).then((resp) => {
-        console.log(resp);
+      }).then(() => {
+        // console.log(resp);
       });
     },
     resetError() {

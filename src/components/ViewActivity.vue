@@ -85,7 +85,7 @@ import Vue from 'vue';
 import { getActivitySet, getUserMetadata } from '../api/api';
 import Loading from './library/Loading';
 import Unauthorized from './library/Unauthorized';
-import Error from './library/Error';
+import Error from './library/Error/';
 
 
 export default {

@@ -165,7 +165,7 @@ import {
   createNewActivitySet,
 } from '../api/api';
 import Loading from './library/Loading';
-import Error from './library/Error';
+import Error from './library/Error/';
 
 /**
  * This is the main dashboard to view all the applets for a user.
