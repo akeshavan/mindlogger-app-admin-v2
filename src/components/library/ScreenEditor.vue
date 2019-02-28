@@ -71,7 +71,7 @@
               <textfield v-model="data.value"
                :index="data.index"
                ttype="text"
-               v-on:input="setSurveyListText"
+               v-on:change="setSurveyListText"
                >
                <!-- v-on:input="setSurveyListText"
                v-on:needsSave="needsSave"> -->
@@ -104,7 +104,7 @@
               <textfield v-model="data.value"
                :index="data.index"
                ttype="text"
-               v-on:input="setSurveyListText"
+               v-on:change="setSurveyListText"
                >
                <!-- v-on:input="setSurveyListText"
                v-on:needsSave="needsSave"> -->
@@ -133,15 +133,12 @@
         <b-col sm="10">
           <b-table :items="tableRowNames" :fields="tableFields" striped>
             <template slot="name" slot-scope="data">
-              <!-- <textfield v-model="data.value"
+              <textfield v-model="data.value"
                :index="data.index"
                ttype="text"
-               v-on:input="setTableRowName"
-               > -->
-               <input v-model="data.value" v-on:change="setTableRowName(data.value, data.index)"/>
-               <!-- v-on:input="setSurveyListText"
-               v-on:needsSave="needsSave"> -->
-               <!-- </textfield> -->
+               v-on:change="setTableRowName"
+               >
+               </textfield>
             </template>
 
             <!-- delete action -->
@@ -169,7 +166,7 @@
               <textfield v-model="data.value"
                :index="data.index"
                ttype="text"
-               v-on:input="setTableColName"
+               v-on:change="setTableColName"
                >
                <!-- v-on:input="setSurveyListText"
                v-on:needsSave="needsSave"> -->

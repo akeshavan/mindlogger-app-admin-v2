@@ -59,7 +59,9 @@ export default {
     onChange(e) {
       e.preventDefault();
       e.stopPropagation();
-      this.$emit('change', this.value);
+      const value = e.target.value;
+      this.$emit('change', value, this.index);
+      this.$emit('needsSave', true);
     },
     onInput(e) {
       e.preventDefault();
