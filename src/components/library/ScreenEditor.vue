@@ -133,14 +133,15 @@
         <b-col sm="10">
           <b-table :items="tableRowNames" :fields="tableFields" striped>
             <template slot="name" slot-scope="data">
-              <textfield v-model="data.value"
+              <!-- <textfield v-model="data.value"
                :index="data.index"
                ttype="text"
                v-on:input="setTableRowName"
-               >
+               > -->
+               <input v-model="data.value"/>
                <!-- v-on:input="setSurveyListText"
                v-on:needsSave="needsSave"> -->
-               </textfield>
+               <!-- </textfield> -->
             </template>
 
             <!-- delete action -->
