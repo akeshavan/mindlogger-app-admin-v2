@@ -1,6 +1,6 @@
 # mindlogger-admin
 
-> An admin website to build and manage Mindlogger applets
+> An admin website to build and manage MindLogger applets
 
 ## Build Setup
 

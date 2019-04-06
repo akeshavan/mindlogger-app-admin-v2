@@ -3,8 +3,8 @@
     <b-container>
       <div class="row">
         <div class="col-12 text-center jumbotron mb-0 pb-0">
-          <h1 >Mindlogger Admin Dashboard v2</h1>
-          <p class="lead">A dashboard to build Mindlogger applications and visualize data</p>
+          <h1 >MindLogger Admin Dashboard v2</h1>
+          <p class="lead">A dashboard to build MindLogger applications and visualize data</p>
         </div>
       </div>
 
@@ -25,7 +25,7 @@
       <b-row class="mt-2 mb-3 pb-3">
         <b-col class="text-center">
           <p>
-            Build Mindlogger EMAs
+            Build MindLogger EMAs
           </p>
         </b-col>
         <b-col class="text-center">

@@ -3,8 +3,8 @@
     <b-container>
       <b-row class="jumbotron mb-0 pb-0 mt-3 pt-3">
         <b-col class="text-center mt-3">
-          <h1>Mindlogger User Guide</h1>
-          <p class="lead">How to use a Mindlogger applet, view data,
+          <h1>MindLogger User Guide</h1>
+          <p class="lead">How to use a MindLogger applet, view data,
             create your own applet, and share with users
           </p>
           <b-alert show variant="warning" dismissible>
@@ -30,7 +30,7 @@
           <b-alert :show="!isLoggedIn" variant="danger">
             <p class="mb-0">
               <strong>You need to be logged in to create, push,
-                and view activities and data on Mindlogger!</strong>
+                and view activities and data on MindLogger!</strong>
             </p>
             <p class="mb-0">
               Either <router-link to="/login">log in</router-link> or
@@ -46,7 +46,7 @@
         <b-col>
           <h2>Introduction</h2>
           <p>This User Guide describes four different roles for
-          interacting with Mindlogger.
+          interacting with MindLogger.
           Let's imagine that you want to use mobile devices
           to collect voice and survey data
           from a group of participants in a "Speech Study".
@@ -92,7 +92,7 @@
             given project by a <span class="text-success">Manager</span>.
             In the example given in the Introduction,
             when the <span class="text-danger">User</span> installs
-            and opens up the Mindlogger mobile app,
+            and opens up the MindLogger mobile app,
             the <span class="text-danger">User</span> will see a Speech Study
             applet with a Speech Survey activity
             and Voice activity.
@@ -114,7 +114,7 @@
             </b-col>
             <b-col>
               <p>
-              <i>Examples screenshots of a Mindlogger activity:</i>
+              <i>Examples screenshots of a MindLogger activity:</i>
               login, activity list,survey question,
               text instruction, picture, and voice record screens
               </p>
@@ -183,9 +183,9 @@
           <h2><span class="text-primary">Editors</span></h2>
           <p>
             <span class="text-primary">Editors</span> create, edit, and
-            curate content for a Mindlogger applet in
+            curate content for a MindLogger applet in
             the <i><span class="text-primary">Editor</span> webpage</i>.
-            A Mindlogger applet contains one or more activities,
+            A MindLogger applet contains one or more activities,
             grouped by theme and/or notification schedule.
             In the example above, the Speech Study applet contains a
             Speech Survey activity and a Voice activity.
@@ -286,7 +286,7 @@
           <h2><span class="text-success">Managers</span></h2>
           <p>
             <span class="text-success">Managers</span> assign roles
-            for a Mindlogger applet in
+            for a MindLogger applet in
             the <i><span class="text-success">Manager</span> webpage</i>.
             For example, to push an applet to a mobile device, we need to assign
             <span class="text-danger">Users</span> to our applet.
@@ -299,7 +299,7 @@
             you can add a <span class="text-danger">User</span>.
             Once you add one or more <span class="text-danger">Users</span>
             to your applet, they will automatically receive your applet on
-            their mobile devices through the Mindlogger mobile app.
+            their mobile devices through the MindLogger mobile app.
             Before pushing your applet to real users,
             it's a good idea to add yourself as a
             <span class="text-danger">User</span>
@@ -325,7 +325,7 @@
                 "Add". If the email address already has an account on our site,
                 it will autopopulate so you can select it.
                 If not, a new screen will pop up, asking you to create an account
-                for a new Mindlogger <span class="text-danger">User</span>.
+                for a new MindLogger <span class="text-danger">User</span>.
               </p>
               <p>
                 The panel works the same way for adding
@@ -335,7 +335,7 @@
               </p>
               <p>
                 We wish you all the best in managing your first
-                Mindlogger applet!
+                MindLogger applet!
               </p>
             </b-col>
             <b-col cols="4">

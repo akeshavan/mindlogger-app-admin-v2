@@ -55,7 +55,7 @@
       header-text-variant="light"
       :ok-variant="variant">
       <p class="my-4">
-        <h4 class="mb-3">Create a new Mindlogger account for
+        <h4 class="mb-3">Create a new MindLogger account for
           <strong :class="`text-${variant}`">{{query}}</strong>
         </h4>
       <b-form-group :id="`emailAddressInputGroup_${role}`"
