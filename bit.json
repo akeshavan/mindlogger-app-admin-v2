@@ -1,6 +1,10 @@
 {
     "env": {},
-    "dependencies": {},
+    "dependencies": {
+        "akeshavan.mindlogger-web/api": "0.0.5",
+        "akeshavan.mindlogger-web/login": "0.0.10",
+        "akeshavan.mindlogger-web/sign-up": "0.0.3"
+    },
     "componentsDefaultDirectory": "components/{name}",
     "packageManager": "npm"
 }

@@ -131,7 +131,8 @@
             <span class="text-danger">User</span> on
             the <i><span class="text-info">Reviewer</span> webpage</i>,
             you must be assigned as a
-            <span class="text-info">Reviewer</span> by the <span class="text-success">Manager</span>.
+            <span class="text-info">Reviewer</span>
+            by the <span class="text-success">Manager</span>.
             If you are the <span class="text-success">Manager</span>,
             you can add yourself as a <span class="text-info">Reviewer</span>, and then you need to
             add <span class="text-danger">Users</span> to each

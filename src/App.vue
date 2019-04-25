@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <b-navbar toggleable="md" type="dark" class="site-header">
+    <!-- <b-navbar toggleable="md" type="dark" class="site-header">
 
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
@@ -16,11 +16,9 @@
 
         </b-navbar-nav>
 
-        <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
 
           <b-nav-item-dropdown right v-if="isLoggedIn">
-            <!-- Using button-content slot -->
             <template slot="button-content">
               <em>{{user.login}}</em>
             </template>
@@ -33,7 +31,14 @@
         </b-navbar-nav>
 
       </b-collapse>
-    </b-navbar>
+    </b-navbar> -->
+
+    <Navbar :user="user" :isLoggedIn="isLoggedIn" :logout="logout" :query="query">
+      <b-nav-item v-if="isLoggedIn" :to="{name: 'ActivitySets', query}">Home</b-nav-item>
+      <b-nav-item :to="{name: 'Guide', query}">User Guide</b-nav-item>
+
+    </Navbar>
+
     <div class="">
       <transition name="fade" mode="out-in">
         <!-- <keep-alive :exclude="['view_activity']"> -->
@@ -62,6 +67,7 @@
 <script>
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
+import Navbar from '@bit/akeshavan.mindlogger-web.navbar';
 import _ from 'lodash';
 // eslint-disable-next-line
 import style from './custom-bootstrap.scss';
@@ -94,6 +100,9 @@ export default {
       authToken: {},
     };
   },
+  components: {
+    Navbar,
+  },
   computed: {
     /**
      * tells us if the user is logged in
@@ -102,6 +111,12 @@ export default {
      */
     isLoggedIn() {
       return !_.isEmpty(this.user);
+    },
+    /**
+     * query from vue-router
+     */
+    query() {
+      return this.$router.query;
     },
   },
   /**

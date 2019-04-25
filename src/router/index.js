@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/components/Home';
-import Login from '@/components/Login';
-import SignUp from '@/components/SignUp';
+import Login from '@bit/akeshavan.mindlogger-web.login';
+import SignUp from '@bit/akeshavan.mindlogger-web.sign-up';
 import ActivitySets from '@/components/ActivitySets';
 import ViewActivity from '@/components/ViewActivity';
 import ActivitySetOverview from '@/components/ActivitySetOverview';
@@ -13,6 +13,8 @@ import EditActivity from '@/components/EditActivity';
 import EditActivitySetParentRoute from '@/components/EditActivitySetParentRoute';
 import Manage from '@/components/Manage';
 import Guide from '@/components/UserGuide';
+import config from '@/config';
+
 
 Vue.use(Router);
 
@@ -36,16 +38,19 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login,
+      props: {
+        apiHost: config.apiHost,
+        signupLink: { name: 'SignUp' },
+      },
     },
     {
       path: '/signup',
       name: 'SignUp',
       component: SignUp,
-    },
-    {
-      path: '/signup',
-      name: 'SignUp',
-      component: SignUp,
+      props: {
+        apiHost: config.apiHost,
+        signupLink: { name: 'SignUp' },
+      },
     },
     {
       path: '/forgot',
