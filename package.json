@@ -16,10 +16,10 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.3.1",
-    "@bit/akeshavan.mindlogger-web.api": "0.0.8",
-    "@bit/akeshavan.mindlogger-web.login": "0.0.11",
+    "@bit/akeshavan.mindlogger-web.api": "0.0.9",
+    "@bit/akeshavan.mindlogger-web.login": "0.0.12",
     "@bit/akeshavan.mindlogger-web.navbar": "0.0.4",
-    "@bit/akeshavan.mindlogger-web.sign-up": "0.0.7",
+    "@bit/akeshavan.mindlogger-web.sign-up": "0.0.8",
     "@fortawesome/fontawesome-free": "^5.6.3",
     "axios": "^0.18.0",
     "bootstrap-vue": "^2.0.0-rc.11",
