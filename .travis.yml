@@ -1,15 +1,18 @@
 sudo: false
 language: node_js
 node_js:
-- '6.0'
-#cache:
-#  directories:
-#  - node_modules
+- '8.0'
+cache:
+  directories:
+  - node_modules
 branches:
   only:
   - master
+  - v2
 notifications:
   email: false
+before-install:
+- npm config set '@bit:registry' https://node.bitsrc.io
 before_script:
 - npm install
 script:
