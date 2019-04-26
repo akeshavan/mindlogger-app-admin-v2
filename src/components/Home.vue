@@ -41,12 +41,13 @@
       </b-row>
       <div class="row mt-3">
         <div class="col-12 text-center" v-if="!isLoggedIn">
-          <b-button variant="primary" to="/login">Log In</b-button>
-          <b-button variant="success" to="/signup">Sign Up</b-button>
+          <b-button variant="primary" to="/login" size="lg">Log In</b-button>
+          or
+          <b-button variant="success" to="/signup" size="lg">Sign Up</b-button>
         </div>
         <div v-else class="col-12 text-center">
           <h3>Welcome, {{user.firstName}} !</h3>
-           <b-button variant="danger" size="lg" to="/activitySets">Manage Applets</b-button>
+           <b-button variant="danger" size="lg" to="/allApplets">Manage Applets</b-button>
         </div>
         <b-col class="mt-3 text-center">
           <div v-if="isLoggedIn">

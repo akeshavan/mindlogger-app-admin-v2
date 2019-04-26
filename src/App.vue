@@ -34,7 +34,7 @@
     </b-navbar> -->
 
     <Navbar :user="user" :isLoggedIn="isLoggedIn" :logout="logout" :query="query">
-      <b-nav-item v-if="isLoggedIn" :to="{name: 'ActivitySets', query}">Home</b-nav-item>
+      <b-nav-item v-if="isLoggedIn" :to="{name: 'AllApplets', query}">Home</b-nav-item>
       <b-nav-item :to="{name: 'Guide', query}">User Guide</b-nav-item>
 
     </Navbar>
@@ -50,7 +50,7 @@
 
     <!-- The footer -->
 
-    <footer class="bg-light pt-3 pb-3 mt-3">
+    <footer class="bg-light pt-3 pb-3 mt-3 footer">
       <b-row>
         <b-col class="text-center">
           <p class="mt-3">
@@ -60,6 +60,7 @@
           © <a href="https://childmind.org">Child Mind Institute</a> MATTER Lab 2019</p>
         </b-col>
       </b-row>
+      <div class="extra"></div>
     </footer>
   </div>
 </template>
@@ -170,7 +171,7 @@ export default {
 </style>
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,200,400');
+/* @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,200,400'); */
 
 #app {
   /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */
@@ -202,5 +203,53 @@ li {
   .hideTabHeader {
     display: none;
   }
+
+
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  text-align: center;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+html
+  {
+      width:100%;
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+      overflow-x:hidden;
+  }
+
+body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 10rem;
+  min-height: 100%;
+  overflow-x:hidden;
+}
+
+
+#login {
+  margin-top: 60px;
+}
+
+#signup {
+  margin-top: 60px;
+}
+
 
 </style>

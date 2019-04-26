@@ -3,14 +3,11 @@ import Router from 'vue-router';
 import Home from '@/components/Home';
 import Login from '@bit/akeshavan.mindlogger-web.login';
 import SignUp from '@bit/akeshavan.mindlogger-web.sign-up';
-import ActivitySets from '@/components/ActivitySets';
-import ViewActivity from '@/components/ViewActivity';
-import ActivitySetOverview from '@/components/ActivitySetOverview';
-import ViewActivityUser from '@/components/ViewActivityUser';
+import AllApplets from '@/components/AllApplets';
+import ViewApplet from '@/components/ViewActivity';
+import AppletOverview from '@/components/ActivitySetOverview';
+import ViewAppletUser from '@/components/ViewActivityUser';
 import ForgotPassword from '@/components/ForgotPassword';
-import EditActivitySet from '@/components/EditActivitySet';
-import EditActivity from '@/components/EditActivity';
-import EditActivitySetParentRoute from '@/components/EditActivitySetParentRoute';
 import Manage from '@/components/Manage';
 import Guide from '@/components/UserGuide';
 import config from '@/config';
@@ -58,48 +55,29 @@ export default new Router({
       component: ForgotPassword,
     },
     {
-      path: '/manage/:activitySetId',
+      path: '/manage/:appletId',
       name: 'Manage',
       component: Manage,
     },
     {
-      path: '/edit_activity_set/:activitySetId',
-      name: 'EditActivitySet',
-      redirect: '/edit_activity_set/:activitySetId/',
-      component: EditActivitySetParentRoute,
-      children: [
-        {
-          name: 'edit_activity_set_overview',
-          path: '/',
-          component: EditActivitySet,
-        },
-        {
-          path: 'edit_activity/:activityId',
-          name: 'EditActivity',
-          component: EditActivity,
-        },
-      ],
+      path: '/allApplets',
+      name: 'AllApplets',
+      component: AllApplets,
     },
     {
-      path: '/activitySets',
-      name: 'ActivitySets',
-      component: ActivitySets,
-    },
-    {
-      path: '/view_activity/:activityId',
-      // name: 'ViewActivity',
-      component: ViewActivity,
-      redirect: '/view_activity/:activityId/overview',
+      path: '/review/:appletId',
+      component: ViewApplet,
+      redirect: '/review/:appletId/overview',
       children: [
         {
           name: 'overview',
           path: 'overview',
-          component: ActivitySetOverview,
+          component: AppletOverview,
         },
         {
           name: 'view_user',
           path: 'view_user/:userId',
-          component: ViewActivityUser,
+          component: ViewAppletUser,
         },
       ],
     },

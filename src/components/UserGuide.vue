@@ -45,7 +45,7 @@
       <b-row class="mt-3 pt-3 mb-3">
         <b-col>
           <h2>Introduction</h2>
-          <p>This User Guide describes four different roles for
+          <p>This User Guide describes three different roles for
           interacting with Mindlogger.
           Let's imagine that you want to use mobile devices
           to collect voice and survey data
@@ -64,14 +64,9 @@
               "I view <span class="text-danger">User</span>'s
               Speech Study data."
           <br><br>
-          <span class="text-primary">Editor</span>:
-              "I edit the content of the Speech Study applet, such as
-              the Speech Survey and Voice activities."
-          <br><br>
           <span class="text-success">Manager</span>:
               "I manage <span class="text-danger">User</span>,
               <span class="text-info">Reviewer</span>,
-              <span class="text-primary">Editor</span>,
               and <span class="text-success">Manager</span>
               permissions for the Speech Study applet."
           </p>
@@ -179,109 +174,6 @@
       </b-row>
 
 
-      <b-row class="mt-3 pt-3 mb-3">
-        <b-col>
-          <h2><span class="text-primary">Editors</span></h2>
-          <p>
-            <span class="text-primary">Editors</span> create, edit, and
-            curate content for a Mindlogger applet in
-            the <i><span class="text-primary">Editor</span> webpage</i>.
-            A Mindlogger applet contains one or more activities,
-            grouped by theme and/or notification schedule.
-            In the example above, the Speech Study applet contains a
-            Speech Survey activity and a Voice activity.
-            Each activity consists of a sequence of screens;
-            the Speech Survey activity's screens may contain
-            instruction screens and survey questions.
-            The Voice activity's screens may contain instruction screens,
-            record audio screens, and a quiz.
-            The <span class="text-primary">Editor</span> builds or edits
-            each screen using widgets.
-            The standard widgets that can be used for any screen include:
-            picture, text display, audio play, and comment box widgets.
-            Additional survey widgets include radio buttons, checkboxes, slider bar, table, etc.
-            There is also a draw widget, voice record widget, and photo capture widget.
-          </p>
-          <div class="text-center">
-            <img src="@/assets/custom/MentalModel.svg" class="w-75 mb-3"/>
-          </div>
-          <p>
-            We've added some screenshots below to guide you through creating your
-            own applet, activities, and screens.
-          </p>
-          <!-- start screenshots here -->
-          <b-row>
-            <b-col cols="4">
-              <img src="@/assets/screenshots/YourActivitySets.png"
-              class="w-100 ml-3 mr-3 pl-3 pr-3 screenshot"/>
-            </b-col>
-            <b-col>
-              <p>
-              At the top navbar, navigate to
-              <router-link to="/activitySets">Your Applets</router-link>
-              where you will see a table of applets (it may be empty if you haven't
-              used this site before). You'll notice there are columns and (possibly)
-              buttons that will let you edit, manage, or view data for an applet.
-              See the relevant sections of this User Guide for descriptions of each of these roles.
-              </p>
-              <p>
-              The green "Create a New Applet" button will navigate you to a new page
-              where you can name your applet and add activities.
-              </p>
-            </b-col>
-          </b-row>
-          <b-row class="mt-3 mb-3">
-            <b-col>
-              <p>
-                You can edit the name of your applet by clicking the title
-                and subtitle and typing. The page will <b>save automatically</b>
-                so you don't need to press any buttons.
-              </p>
-              <p>
-                You'll also see a table of activities. To create a new activity,
-                click the "Create New activity" button in green. You can also
-                click the name of an existing activity in the activity table.
-              </p>
-              <p>
-                There are also navigation buttons at the top right to quickly
-                jump to the <span class="text-success">Manager</span> webpage
-                and <span class="text-info">Reviewer</span> webpage.
-              </p>
-            </b-col>
-            <b-col cols="4">
-              <img src="@/assets/screenshots/EditActivitySet.png"
-              class="w-100 ml-3 mr-3 pl-3 pr-3 screenshot"/>
-            </b-col>
-          </b-row>
-          <!-- live screen edit gif here -->
-          <b-row class="mt-3 mb-3">
-            <b-col cols="4">
-              <img src="@/assets/screenshots/LiveScreenEdit.gif"
-              class="w-100 ml-3 mr-3 pl-3 pr-3 screenshot"/>
-            </b-col>
-            <b-col>
-              <p>
-                Each activity consists of a sequence of screens.
-                You can see the screens at the top of the page.
-                Each screen previews in real time, so as you edit the screen,
-                you can get an idea of how it will look on a mobile device.
-              </p>
-              <p>
-                It's really important that you don't try to pack too much
-                into a single screen! A general rule of thumb is to separate
-                instructions from an activity.
-              </p>
-              <p>
-                Just like the applet panel, the edits you make to the screens
-                are <b>saved automatically</b>,
-                so you don't have to worry about losing your work.
-              </p>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-
-
       <b-row class="mt-3 pt-3">
         <b-col>
           <h2><span class="text-success">Managers</span></h2>
@@ -294,7 +186,7 @@
           </p>
           <p>
             When you create a new applet, you are automatically assigned
-            two roles: an <span class="text-primary">Editor</span> and
+            as a
             <span class="text-success">Manager</span>.
             Since you are a <span class="text-success">Manager</span>,
             you can add a <span class="text-danger">User</span>.
@@ -312,8 +204,7 @@
               <p>
                 You can navigate to the
                 <i><span class="text-success">Manager</span> webpage</i>
-                either from <a href="/activitySets">Your Applets</a> or from the
-                <i><span class="text-primary">Editor</span> webpage</i>.
+                from <a href="/activitySets">Your Applets</a>.
                 The screenshot to the right shows the four roles you can manage.
                 In this example, I've added myself as a
                 <span class="text-danger">User</span> to my applet.
@@ -330,7 +221,7 @@
               </p>
               <p>
                 The panel works the same way for adding
-                <span class="text-primary">Editors</span> and
+                other
                 <span class="text-success">Managers</span>.
                 You can also use the search tool to filter the tables.
               </p>
