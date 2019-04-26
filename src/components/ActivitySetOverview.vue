@@ -63,7 +63,7 @@
 </style>
 
 <script>
-import { fullImageURL } from '../api/api';
+// import { fullImageURL } from '../api/api';
 
 export default {
   name: 'ActivitySetOverview',

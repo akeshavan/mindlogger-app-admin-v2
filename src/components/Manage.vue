@@ -225,19 +225,19 @@ import Vue from 'vue';
 import _ from 'lodash';
 import Loading from './library/Loading';
 import Unauthorized from './library/Unauthorized';
-import {
-  getActivitySet,
-  getUserMetadata,
-  getAllUsers,
-  addExistingUserToActivitySet,
-  getActivitySetAccess,
-  removeUserFromActivitySet,
+//import {
+ // getActivitySet,
+  //getUserMetadata,
+  //getAllUsers,
+  //addExistingUserToActivitySet,
+  //getActivitySetAccess,
+  //removeUserFromActivitySet,
   // getAllActivitySets,
   // fullImageURL,
   // getActivitiesInActivitySet,
   // getActivityMetadata,
   // updateActivitySetMetadata,
-} from '../api/api';
+//} from '../api/api';
 import ManagerIcon from './viz/icons/Manager';
 import EditorIcon from './viz/icons/Editor';
 import UserIcon from './viz/icons/User';

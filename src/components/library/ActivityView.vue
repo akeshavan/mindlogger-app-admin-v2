@@ -92,7 +92,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import axios from 'axios';
 import SubTable from './SubTable';
-import functions from '../../api/functions';
+// import functions from '../../api/functions';
 import BarPlot from '../viz/BarCalendar';
 
 window.moment = moment;

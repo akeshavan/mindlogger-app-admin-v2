@@ -96,7 +96,7 @@ li {
 
 <script>
 import _ from 'lodash';
-import { getUserMetadata, getUserDataFolder, getUserActivitySetFolders, getUserActivitySetData } from '../api/api';
+// import { getUserMetadata, getUserDataFolder, getUserActivitySetFolders, getUserActivitySetData } from '../api/api';
 import ActivityView from './library/ActivityView';
 import Loading from './library/Loading';
 import Error from './library/Error/';

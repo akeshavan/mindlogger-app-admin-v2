@@ -40,7 +40,7 @@
 
 
 <script>
-import { forgotPassword } from '../api/api';
+// import { forgotPassword } from '../api/api';
 
 export default {
   name: 'forgot',
