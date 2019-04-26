@@ -11,7 +11,7 @@ branches:
   - v2
 notifications:
   email: false
-before-install:
+before_install:
 - npm config set '@bit:registry' https://node.bitsrc.io
 before_script:
 - npm install
