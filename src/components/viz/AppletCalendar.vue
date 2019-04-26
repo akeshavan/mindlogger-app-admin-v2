@@ -4,16 +4,15 @@
       <activity-calendar v-for="(act, index) in data"
        :key="act.name"
        :width="width"
-       :activity="act"
+       :activity="act.data"
        :tMin="tMin"
        :tMax="tMax"
        :idx="index"
-       :title="act[0].meta.activity.name"
+       :title="act.name"
        :height="axisHeight"
        :padding="padding"
        :color="getColor(index)"
       />
-
       <activity-calendar
        key="scrubber"
        ref="scrub"
@@ -69,7 +68,7 @@ Vue.use(VueResize);
 const d3 = require('d3');
 
 export default {
-  name: 'AllActivitiesCalendar',
+  name: 'AppletCalendar',
   props: {
     id: {
       type: String,
@@ -160,7 +159,10 @@ export default {
      */
     dataFlat() {
       // eslint-disable-next-line
-      const dataFlat = _.map([].concat.apply([], this.data), _.clone);
+      let dataFlat = [];
+      _.map(this.data, (d) => {
+        dataFlat = dataFlat.concat(d.data);
+      });
       return dataFlat;
     },
   },
@@ -179,8 +181,8 @@ export default {
     getDateRange() {
       const allDateTimes = [];
       _.map(this.data, (d) => {
-        _.map(d, (e) => {
-          allDateTimes.push(moment(e.created));
+        _.map(d.data, (e) => {
+          allDateTimes.push(moment(e.time_of_response));
         });
       });
       const min = moment.min(allDateTimes);

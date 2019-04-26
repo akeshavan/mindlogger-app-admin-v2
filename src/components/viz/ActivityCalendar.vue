@@ -107,7 +107,7 @@ export default {
       d3.select(this.$refs.g)
         .selectAll(`.${className}`)
         .attr('cy', 0)
-        .attr('cx', d => this.xScale(moment(d.updated).toDate()))
+        .attr('cx', d => this.xScale(moment(d.time_of_response).toDate()))
         .attr('r', 5)
         .attr('fill', this.color);
     },

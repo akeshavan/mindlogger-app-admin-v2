@@ -3,39 +3,35 @@
       <b-row>
         <b-col>
           <h1 class="text-center">
-            <b-img v-if="activityData.meta.logoImage"
+            <!-- <b-img v-if="activityData.meta.logoImage"
             thumbnail
             rounded
             width="75" height="75" blank-color="#777"
             class=""
             :src="getImageURL(activityData.meta.logoImage['@id'])">
-            </b-img>
-            {{activityData.name}}
+            </b-img> -->
+            {{appletData.name}}
           </h1>
         </b-col>
       </b-row>
       <b-row>
         <b-col>
           <p class="lead text-center">
-            {{activityData.meta.description}}
+            description here.
           </p>
         </b-col>
       </b-row>
       <b-row>
         <b-col class="text-center">
-          <h3>{{activityData.meta.members.editors.length}}</h3>
-          <p>Editors</p>
-        </b-col>
-        <b-col class="text-center">
-          <h3>{{activityData.meta.members.managers.length}}</h3>
+          <h3>1</h3>
           <p>Managers</p>
         </b-col>
         <b-col class="text-center">
-          <h3>{{activityData.meta.members.users.length}}</h3>
+          <h3>1</h3>
           <p>Users</p>
         </b-col>
         <b-col class="text-center">
-          <h3>{{Object.keys(activityData.meta.members.viewers).length}}</h3>
+          <h3>1</h3>
           <p>Reviewers</p>
         </b-col>
         </b-row>
@@ -49,7 +45,7 @@
         </b-row>
         <b-row>
           <b-col class="text-center">
-            <img class="mx-auto w-100 pl-3 pr-3"
+            <img class="mx-auto w-50 pl-3 pr-3"
             src="../assets/undraw/undraw_data_trends_b0wg.svg"/>
           </b-col>
         </b-row>
@@ -71,17 +67,12 @@ export default {
     /**
      * activity data from parent route. an object.
      */
-    activityData: {
+    appletData: {
       type: Object,
     },
   },
   methods: {
-    /**
-     * get the image url from the server.
-     */
-    getImageURL(id) {
-      return fullImageURL(id);
-    },
+
   },
 };
 </script>

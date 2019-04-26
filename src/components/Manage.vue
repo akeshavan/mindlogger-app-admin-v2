@@ -4,7 +4,7 @@
     <div class="row">
       <b-col cols="3">
       <span>
-        <b-button :to="'/activitySets'" variant="default" size="sm">
+        <b-button :to="'/allApplets'" variant="default" size="sm">
           <i class="fas fa-long-arrow-alt-left"></i>
           Back to your applets
         </b-button>
@@ -12,14 +12,8 @@
       </b-col>
       <b-col cols="6"></b-col>
       <b-col cols="3" class="text-right">
-        <div v-if="isAnEditor">
-          <b-button :to="`/edit_activity_set/${activityId}`" variant="default" size="sm">
-            Go to editor panel
-            <i class="fas fa-long-arrow-alt-right"></i>
-          </b-button>
-        </div>
         <div v-if="isAViewer">
-          <b-button :to="`/view_activity/${activityId}`" variant="default" size="sm">
+          <b-button :to="`/review/${appletId}`" variant="default" size="sm">
             View data
             <i class="fas fa-long-arrow-alt-right"></i>
           </b-button>
@@ -38,42 +32,32 @@
         </b-row>
       <b-row class="mt-3 text-center">
         <b-col
-        :class="{'fancytab activeTab border-primary': currentTab === 0,
+        :class="{'fancytab activeTab border-success': currentTab === 0,
         'fancytab': currentTab !== 0}"
          @click="setTab(0)">
-          <!-- <img src="@/assets/icons/noun_editor_1307710.svg"
-           class="img role-icon mx-auto" alt="Thumbnail" /> -->
-           <editor-icon :num="activityData.meta.members.editors.length"/>
-          <p class="lead text-primary"><strong>Editors</strong></p>
-          <p>Editors can create and edit applets</p>
-        </b-col>
-        <b-col
-        :class="{'fancytab activeTab border-success': currentTab === 1,
-        'fancytab': currentTab !== 1}"
-         @click="setTab(1)">
           <!-- <img src="@/assets/icons/noun_team_666360.svg"
            class="img role-icon mx-auto" alt="Thumbnail" /> -->
-           <manager-icon :num="activityData.meta.members.managers.length" />
+           <manager-icon :num="managerTable.length" />
           <p class="lead text-success"><strong>Managers</strong></p>
           <p>Managers can assign users and viewers of an applet.</p>
         </b-col>
         <b-col
-        :class="{'fancytab activeTab border-danger': currentTab === 2,
-        'fancytab': currentTab !== 2}"
-         @click="setTab(2)">
+        :class="{'fancytab activeTab border-danger': currentTab === 1,
+        'fancytab': currentTab !== 1}"
+         @click="setTab(1)">
           <!-- <img src="@/assets/icons/noun_Phone User_159534.svg"
            class="img role-icon mx-auto" alt="Thumbnail" /> -->
-           <user-icon :num="activityData.meta.members.users.length"/>
+           <user-icon :num="userTable.length"/>
           <p class="lead text-danger"><strong>Users</strong></p>
           <p>Users have access to applets on their phones through the mindlogger app.</p>
         </b-col>
         <b-col
-        :class="{'fancytab activeTab border-info': currentTab === 3,
-        'fancytab': currentTab !== 3}"
-         @click="setTab(3)">
+        :class="{'fancytab activeTab border-info': currentTab === 2,
+        'fancytab': currentTab !== 2}"
+         @click="setTab(2)">
           <!-- <img src="@/assets/icons/noun_analyst_1186422.svg"
            class="img role-icon mx-auto" alt="Thumbnail" /> -->
-           <viewer-icon :num="numViewers"/>
+           <viewer-icon :num="viewerTable.length"/>
           <p class="lead text-info"><strong>Reviewers</strong></p>
           <p>Reviewers can see the data of specific users</p>
         </b-col>
@@ -89,25 +73,7 @@
 
             -->
             <b-tabs nav-class="hideTabHeader" ref="tabs" v-on:input="setTab" v-model="currentTab">
-              <b-tab title="editors" active>
-                <management-editor
-                 :editorTable="editorTable"
-                 :tableFields="tableFields"
-                 :user="user"
-                 role="editors"
-                 variant="primary"
-                 type="regular"
-                 :canRemoveYourself="false"
-                 :canBeEmpty="false"
-                 :form="form"
-                 :allUsers="allUsers"
-                 v-on:removeUser="removeUser"
-                 v-on:inviteUser="inviteUser"
-                 v-on:addUser="addUser"
-                 />
-
-              </b-tab>
-              <b-tab title="managers" >
+              <b-tab title="managers" active>
                 <management-editor
                  :editorTable="managerTable"
                  :tableFields="tableFields"
@@ -166,6 +132,7 @@
           </b-card>
         </b-col>
       </b-row>
+      <!-- make things bigger for the dropdown -->
       <b-row>
         <b-col class="jumbotron"></b-col>
       </b-row>
@@ -225,19 +192,6 @@ import Vue from 'vue';
 import _ from 'lodash';
 import Loading from './library/Loading';
 import Unauthorized from './library/Unauthorized';
-//import {
- // getActivitySet,
-  //getUserMetadata,
-  //getAllUsers,
-  //addExistingUserToActivitySet,
-  //getActivitySetAccess,
-  //removeUserFromActivitySet,
-  // getAllActivitySets,
-  // fullImageURL,
-  // getActivitiesInActivitySet,
-  // getActivityMetadata,
-  // updateActivitySetMetadata,
-//} from '../api/api';
 import ManagerIcon from './viz/icons/Manager';
 import EditorIcon from './viz/icons/Editor';
 import UserIcon from './viz/icons/User';
@@ -269,7 +223,28 @@ export default {
       tableFields: ['firstName', 'lastName', 'email', 'action'],
       viewerTableFields: ['select', 'firstName', 'lastName', 'email', 'numUsers', 'show_users', 'action'],
       currentTab: 0,
-      allUsers: [],
+      allUsers: [
+        {
+          firstName: 'fake',
+          lastName: 'manager',
+          email: 'fakemanager@gmail.com',
+        },
+        {
+          firstName: 'fake2',
+          lastName: 'manager2',
+          email: 'fakemanager2@gmail.com',
+        },
+        {
+          firstName: 'fake',
+          lastName: 'user',
+          email: 'fakeuser@gmail.com',
+        },
+        {
+          firstName: 'fake',
+          lastName: 'reviewer',
+          email: 'fakereviewer@gmail.com',
+        },
+      ],
       form: {
         email: null,
         username: null,
@@ -290,133 +265,68 @@ export default {
     ManagementEditor,
   },
   computed: {
-    activityId() {
-      return this.$route.params.activitySetId;
+    appletId() {
+      return this.$route.params.appletId;
     },
     authorized() {
-      if (this.activityData) {
-        if (this.activityData.meta) {
-          const isEditor = this.isEditor(this.activityData);
-          const isManager = this.isManager(this.activityData);
-          return isEditor || isManager;
-        }
-      }
-      if (this.status === 'loading') {
-        return true;
-      }
-      return false;
+      return true;
     },
     isAViewer() {
-      if (this.activityData.meta) {
-        return this.isViewer(this.activityData);
-      }
-      return null;
+      return true;
     },
     isAnEditor() {
-      if (this.activityData.meta) {
-        return this.isEditor(this.activityData);
-      }
-      return null;
+      return false;
     },
     numViewers() {
-      return Object.keys(this.activityData.meta.members.viewers).length;
+      return this.viewerTable.length;
     },
     editorTable() {
-      if (this.activityData) {
-        return _.map(this.activityData.meta.members.editors, (e) => {
-          if (this.userData[e]) {
-            const { firstName, lastName, email, _id } = this.userData[e];
-            return { firstName, lastName, email, _id };
-          }
-          return {};
-        });
-      }
-      return [{}];
+      return [];
     },
     managerTable() {
-      if (this.activityData) {
-        return _.map(this.activityData.meta.members.managers, (e) => {
-          if (this.userData[e]) {
-            const { firstName, lastName, email, _id } = this.userData[e];
-            return { firstName, lastName, email, _id };
-          }
-          return {};
-        });
-      }
-      return [{}];
+      return [{
+        firstName: 'fake',
+        lastName: 'manager',
+        email: 'fakemanager@gmail.com',
+      },
+      {
+        firstName: 'fake2',
+        lastName: 'manager2',
+        email: 'fakemanager2@gmail.com',
+      }];
     },
     userTable() {
-      if (this.activityData) {
-        return _.map(this.activityData.meta.members.users, (e) => {
-          if (this.userData[e]) {
-            const { firstName, lastName, email, _id } = this.userData[e];
-            return { firstName, lastName, email, _id };
-          }
-          return {};
-        });
-      }
-      return [{}];
+      return [{
+        firstName: 'fake',
+        lastName: 'user',
+        email: 'fakeuser@gmail.com',
+      }];
     },
     validUsersToView() {
-      return _.filter(this.allUsers, u => this.activityData.meta.members.users.indexOf(u._id) > -1);
+      return this.userTable;
     },
     viewerTable() {
-      if (this.activityData) {
-        return _.map(Object.keys(this.activityData.meta.members.viewers), (e) => {
-          if (this.userData[e]) {
-            const { firstName, lastName, email, _id } = this.userData[e];
-            // eslint-disable-next-line
-            const numUsers = this.activityData.meta.members.viewers[_id].length;
-            return {
-              firstName,
-              lastName,
-              email,
-              numUsers,
-              _id,
-              _rowVariant: numUsers ? '' : 'warning',
-              // eslint-disable-next-line
-              users: _.map(this.activityData.meta.members.viewers[_id], i => this.userData[i]),
-              _showDetails: false };
-          }
-          return {};
-        });
-      }
-      return [{}];
+      return [{
+        firstName: 'fake',
+        lastName: 'reviewer',
+        email: 'fakereviewer@gmail.com',
+        users: this.userTable,
+      }];
     },
     validated() {
       return this.form.password === this.form.password2;
     },
   },
   methods: {
-    getActivitySet() {
-      return getActivitySet(this.activityId, this.authToken.token).then((resp) => {
-        this.activityData = resp.data;
-        this.status = 'complete';
-        // eslint-disable-next-line
-        return this.activityData._id;
-      })
-        .catch((e) => {
-          console.log('error in get applet', e);
-        });
+    getAppletRoles() {
+      this.status = 'complete';
     },
     /**
      * For all userId's in this.activityData.meta.members, get their metadata
      * and store it in this.userData[userId]
      */
     getAllUserMetadata() {
-      const keys = ['editors', 'managers', 'users'];
-      let allUsers = [];
-      _.map(keys, (k) => {
-        allUsers = allUsers.concat(this.activityData.meta.members[k]);
-      });
-      // viewers has a different structure.
-      const allViewers = Object.keys(this.activityData.meta.members.viewers);
-      _.map(allViewers, (v) => {
-        allUsers.push(v);
-        allUsers = allUsers.concat(this.activityData.meta.members.viewers[v]);
-      });
-      allUsers = _.uniq(allUsers);
-      _.map(allUsers, this.getUserMetadata);
+
     },
     getUserMetadata(userId) {
       // console.log('getting usermetedata', userId);
@@ -428,133 +338,53 @@ export default {
     isEditor(activity) {
       // eslint-disable-next-line
       const userId = this.user._id;
-      return activity.meta.members.editors.indexOf(userId) > -1;
+      return true;
     },
     isManager(activity) {
       // eslint-disable-next-line
       const userId = this.user._id;
-      return activity.meta.members.managers.indexOf(userId) > -1;
+      return true;
     },
     isViewer(activity) {
       // eslint-disable-next-line
       const userId = this.user._id;
-      return Object.keys(activity.meta.members.viewers).indexOf(userId) > -1;
+      return true;
     },
     removeUser(role, data) {
-      const editors = [...this.activityData.meta.members[role]];
 
-      _.remove(editors,
-      // eslint-disable-next-line
-        d => d === data._id);
-
-      this.activityData.meta.members[role] = editors;
-      // tell the server to get rid of this.
-      removeUserFromActivitySet({
-        token: this.authToken.token,
-        parentId: this.activityId,
-        name: this.activityData.name,
-        metadata: this.activityData.meta,
-      });
-      // .then((resp) => {
-      //   console.log('delete', resp.data);
-      // });
     },
     removeViewer(role, data) {
       console.log('you want to remove viewer', data);
-      this.activityData.meta.members[role] = _.pick(this.activityData.meta.members[role],
-        // eslint-disable-next-line
-        _.filter(Object.keys(this.activityData.meta.members[role]), k => k !== data._id));
-      // Why doesn't the below line work?
-      // Vue.delete(this.activityData.meta.members[role], data.id);
-      removeUserFromActivitySet({
-        token: this.authToken.token,
-        parentId: this.activityId,
-        name: this.activityData.name,
-        metadata: this.activityData.meta,
-      });
+
     },
     setTab(index) {
       this.currentTab = index;
     },
     getAllUsers() {
-      getAllUsers(this.authToken.token).then((resp) => {
-        this.allUsers = resp.data;
-      });
+
     },
     addUser(role, data) {
-      this.activityData.meta.members[role] = data.newList;
-      // eslint-disable-next-line
-      this.getUserMetadata(data.id);
 
-      addExistingUserToActivitySet({
-        token: this.authToken.token,
-        parentId: this.activityId,
-        name: this.activityData.name,
-        metadata: this.activityData.meta,
-      }).then((resp) => {
-        console.log('response from put', resp);
-      });
     },
     addViewer(role, data) {
-      Vue.set(this.activityData.meta.members[role], data.id, []);
-      this.getUserMetadata(data.id);
 
-      addExistingUserToActivitySet({
-        token: this.authToken.token,
-        parentId: this.activityId,
-        name: this.activityData.name,
-        metadata: this.activityData.meta,
-      }).then((resp) => {
-        console.log('response from put', resp);
-      });
     },
     inviteUser(role, data) {
       console.log('you want to invite', role, data);
     },
-    getActivitySetAccess() {
-      getActivitySetAccess({ token: this.authToken.token, activitySetId: this.activityId })
-        .then((resp) => {
-          this.access = resp.data;
-        });
+    getAppletAccess() {
+
     },
     addUserToViewer({ user, selected }) {
-      console.log('adding', user, 'to', selected);
-      _.map(selected, (s) => {
-        const existingUsers = this.activityData.meta.members.viewers[s];
-        // eslint-disable-next-line
-        existingUsers.push(user._id);
-        this.activityData.meta.members.viewers[s] = _.uniq(existingUsers);
-      });
-      addExistingUserToActivitySet({
-        token: this.authToken.token,
-        parentId: this.activityId,
-        name: this.activityData.name,
-        metadata: this.activityData.meta,
-      }).then((resp) => {
-        console.log('response from put', resp);
-      });
+
     },
     removeUserFromViewer({ user, viewer }) {
-      let existingUsers = this.activityData.meta.members.viewers[viewer];
-      existingUsers = _.uniq(_.filter(existingUsers, u => u !== user));
-      this.activityData.meta.members.viewers[viewer] = existingUsers;
-      removeUserFromActivitySet({
-        token: this.authToken.token,
-        parentId: this.activityId,
-        name: this.activityData.name,
-        metadata: this.activityData.meta,
-      });
+
     },
   },
   mounted() {
     this.status = 'loading';
-    this.getActivitySet().then(() => {
-      this.status = 'complete';
-      this.getAllUserMetadata();
-      this.getAllUsers();
-      // TODO: does the access object even matter?
-      // this.getActivitySetAccess();
-    });
+    this.getAppletRoles();
   },
 };
 </script>

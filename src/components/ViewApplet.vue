@@ -7,12 +7,12 @@
       <b-row>
         <b-col class="pt-3 bg-light col-md-3 col-sm-12 col-xs-12">
           <b-nav vertical pills class="w-100">
-            <b-nav-item to="/activitySets" exact v-if="isLoggedIn">
+            <b-nav-item to="/allApplets" exact v-if="isLoggedIn">
             <i class="fas fa-long-arrow-alt-left"></i>
             Your Applets
             </b-nav-item>
             <b-nav-item
-             :to="'/view_activity/'+ activityId +'/overview'">
+             :to="'/review/'+ appletId +'/overview'">
               Overview
             </b-nav-item>
 
@@ -27,7 +27,7 @@
               <!-- Links to user's pages -->
               <div class="mt-3">
                 <b-nav-item v-for="subId in searchUsers" :key="subId" class="w-100"
-                 :to="'/view_activity/'+ activityId + '/view_user/' + subId">
+                 :to="'/review/'+ appletId + '/view_user/' + subId">
                  <span v-if="userData[subId]">
                    <span v-if="userData[subId].lastName">
                     {{userData[subId].lastName}}, {{userData[subId].firstName}}
@@ -41,14 +41,8 @@
           <div class="row">
             <b-col cols="8"></b-col>
             <b-col cols="4" class="text-right">
-              <div v-if="isAnEditor">
-                <b-button :to="`/edit_activity_set/${activityId}`" variant="default" size="sm">
-                  Go to editor panel
-                  <i class="fas fa-long-arrow-alt-right"></i>
-                </b-button>
-              </div>
               <div v-if="isAManager">
-                <b-button :to="`/manage/${activityId}`" variant="default" size="sm">
+                <b-button :to="`/manage/${appletId}`" variant="default" size="sm">
                   Go to management panel
                   <i class="fas fa-long-arrow-alt-right"></i>
                 </b-button>
@@ -56,7 +50,7 @@
             </b-col>
           </div>
           <transition name="fade" mode="out-in">
-            <router-view :activityData="activityData" :authToken="authToken"></router-view>
+            <router-view :appletData="appletData" :authToken="authToken"></router-view>
           </transition>
         </b-col>
       </b-row>
@@ -81,7 +75,6 @@
 
 <script>
 import _ from 'lodash';
-import Vue from 'vue';
 // import { getActivitySet, getUserMetadata } from '../api';
 import Loading from './library/Loading';
 import Unauthorized from './library/Unauthorized';
@@ -89,7 +82,7 @@ import Error from './library/Error/';
 
 
 export default {
-  name: 'viewActivity',
+  name: 'viewApplet',
   props: {
     user: {
       type: Object,
@@ -108,38 +101,46 @@ export default {
   },
   data() {
     return {
-      activityData: {},
+      appletData: {
+        name: 'Fake Applet',
+      },
       status: 'loading',
       error: {
         message: null,
       },
-      userData: {},
+      userData: {
+        userid0: {
+          firstName: 'fake',
+          lastName: 'user',
+        },
+      },
       userSearch: '',
       // viewableUsers: [],
     };
   },
+  watch: {
+    token() {
+      if (this.token) {
+        this.mount();
+      }
+    },
+  },
   computed: {
-    activityId() {
-      return this.$route.params.activityId;
+    appletId() {
+      return this.$route.params.appletId;
+    },
+    token() {
+      return this.authToken.token;
     },
     viewableUsers() {
       // eslint-disable-next-line
-      return Object.keys(this.userData) // this.activityData.meta.members.viewers[this.user._id];
+      return ['userid0'];
     },
     currentRoute() {
       return this.$router.currentRoute.name;
     },
-    isAnEditor() {
-      if (this.activityData.meta) {
-        return this.isEditor(this.activityData);
-      }
-      return null;
-    },
     isAManager() {
-      if (this.activityData.meta) {
-        return this.isManager(this.activityData);
-      }
-      return null;
+      return true;
     },
     searchUsers() {
       if (!this.userSearch) {
@@ -155,57 +156,29 @@ export default {
     },
   },
   methods: {
-    getActivitySet() {
-      return getActivitySet(this.activityId, this.authToken.token).then((resp) => {
-        this.activityData = resp.data;
-      });
+    getApplet() {
+
     },
-    isViewer(activity) {
-      // eslint-disable-next-line
-      const userId = this.user._id;
-      return Object.keys(activity.meta.members.viewers).indexOf(userId) > -1;
+    isViewer() {
+      return true;
     },
-    isEditor(activity) {
-      // eslint-disable-next-line
-      const userId = this.user._id;
-      return activity.meta.members.editors.indexOf(userId) > -1;
+    isEditor() {
+      return true;
     },
-    isManager(activity) {
-      // eslint-disable-next-line
-      const userId = this.user._id;
-      return activity.meta.members.managers.indexOf(userId) > -1;
+    isManager() {
+      return true;
     },
-    getUserMetadata(userId) {
-      // console.log('getting usermetedata', userId);
-      getUserMetadata(userId).then((resp) => {
-        Vue.set(this.userData, userId, resp.data);
-        this.$forceUpdate();
-      });
+    getUserMetadata() {
+
     },
     mount() {
-      this.status = 'loading';
-      this.getActivitySet().then(() => {
-        this.status = 'complete';
-        // eslint-disable-next-line
-        const viewableUsers = this.activityData.meta.members.viewers[this.user._id];
-        _.map(viewableUsers, this.getUserMetadata);
-        if (!this.isViewer(this.activityData) || !this.isLoggedIn) {
-          this.status = 'unauthorized';
-        }
-      })
-        .catch((e) => {
-          this.status = 'error';
-          this.error.message = e.message;
-        });
+      this.status = 'ready';
     },
   },
   mounted() {
     if (this.authToken.token) {
       this.mount();
     }
-  },
-  deactivated() {
-    this.$destroy();
   },
 };
 </script>
