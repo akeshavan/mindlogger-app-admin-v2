@@ -144,119 +144,52 @@
 
       <div class="mt-3 pt-3 mb-3 pb-3">
         <h2 class="mt-3 mb-3 text-center">Scheduling</h2>
-        <div v-for="act in activities" :key="act.name" class="mt-3 mb-3">
+        <div v-for="(act, index) in activities" :key="act.name" class="mt-3 mb-3">
           <h4 class="mt-3">{{act.name}}</h4>
+
           <b-form-checkbox
+            v-model="act.longitudinal"
+            class="mt-3 mb-3"
+          >
+            <div>Longitudinal</div>
+            <small>This activity
+              <span v-if="act.longitudinal">
+                will
+              </span>
+              <span v-else>
+                <b> will not </b>
+              </span>
+              accept multiple timepoint data
+            </small>
+          </b-form-checkbox>
+
+          <b-form-group label="Schedule type">
+            <b-form-radio-group
+              v-model="act.unrestricted"
+              :options="scheduleTypeOptions"
+              :name="`scheduletype-${index}`"
+              stacked
+              :disabled="!act.longitudinal"
+            ></b-form-radio-group>
+          </b-form-group>
+
+          <!-- No restrictions-->
+          <!-- <b-form-checkbox
             v-model="act.unrestricted"
             class="mt-3 mb-3"
           >
             <div>No restrictions</div>
             <small>User can respond anytime,
-              and any number of times</small>
-          </b-form-checkbox>
+              and any number of times,
+              and there are no recurring notifications</small>
+          </b-form-checkbox> -->
 
-          <div>
-            <div>Repeat</div>
-            <b-form-select v-model="act.repeatUnit"
-              :options="act.repeatUnitOptions"
-              :disabled="act.unrestricted"
-              class="mt-3 mb-3"
-              ></b-form-select>
+          <!-- Repeats -->
+          <ScheduleRepeats :act="act"/>
 
-            <div v-if="act.repeatUnit === 'week'">
-              <b-form-group  :disabled="act.unrestricted"
-              label="on:"
-              >
-                <b-form-checkbox-group
-                  :disabled="act.unrestricted"
-                  v-model="act.repeatUnitSubOptions[act.repeatUnit]"
-                  :options="repeatUnitSubOptionsCategories[act.repeatUnit]"
-                  buttons
-                  button-variant="outline-primary"
-                  size="sm"
-                  name="buttons-2"
-                ></b-form-checkbox-group>
-              </b-form-group>
-            </div>
+          <!-- Specific dates -->
 
 
-            <div v-if="act.repeatUnit === 'month'">
-              <b-form-group  :disabled="act.unrestricted"
-              label="by date:"
-              >
-                <b-form-checkbox-group
-                  :disabled="act.unrestricted"
-                  v-model="act.monthFrequencySubOptions.byDate"
-                  :options="repeatUnitSubOptionsCategories[act.repeatUnit].byDate"
-                  buttons
-                  button-variant="outline-primary"
-                  size="sm"
-                  name="buttons-2"
-                ></b-form-checkbox-group>
-              </b-form-group>
-
-              <b-form-group  :disabled="act.unrestricted"
-              label="and/or on every:"
-              >
-                <b-form-checkbox-group
-                  :disabled="act.unrestricted"
-                  v-model="act.monthFrequencySubOptions.byWeek"
-                  :options="repeatUnitSubOptionsCategories[act.repeatUnit].byWeek"
-                  buttons
-                  button-variant="outline-primary"
-                  size="sm"
-                  name="buttons-2"
-                ></b-form-checkbox-group>
-              </b-form-group>
-
-              <b-form-group  :disabled="act.unrestricted"
-              >
-                <b-form-checkbox-group
-                  :disabled="act.unrestricted"
-                  v-model="act.monthFrequencySubOptions.byDay"
-                  :options="repeatUnitSubOptionsCategories[act.repeatUnit].byDay"
-                  buttons
-                  button-variant="outline-primary"
-                  size="sm"
-                  name="buttons-2"
-                ></b-form-checkbox-group>
-              </b-form-group>
-
-            </div>
-
-
-              <b-row>
-                <b-col>
-              <b-form-group label="Duration" class="mt-3 mb-3">
-                <b-form-radio-group
-                  :disabled="act.unrestricted"
-                  v-model="act.startTime.duration"
-                  :options="act.startTime.durationOptions"
-                ></b-form-radio-group>
-              </b-form-group>
-
-                </b-col>
-                <b-col>
-              <div class="mt-3 mb-3">
-                <div>Number of responses over duration</div>
-                <b-form-input :disabled="act.unrestricted"
-                  v-model="act.startTime.numResponses" type="number" ></b-form-input>
-              </div>
-                </b-col>
-              </b-row>
-
-
-              <!-- if time range -->
-              <b-row v-if="act.startTime.duration === 'timeRange'" class="mt-3 mb-3">
-                show time range options here.
-              </b-row>
-
-              <!-- if time range -->
-              <b-row v-if="act.startTime.duration === 'allDay'" class="mt-3 mb-3">
-                notifications
-              </b-row>
-
-          </div>
           <hr>
         </div>
         <AnotherCal />
@@ -322,6 +255,7 @@ import EditorIcon from './viz/icons/Editor';
 import UserIcon from './viz/icons/User';
 import ViewerIcon from './viz/icons/Viewer';
 import ManagementEditor from './library/ManagementEditor';
+import ScheduleRepeats from './library/ScheduleRepeats';
 
 import AnotherCal from './AnotherCal';
 
@@ -345,94 +279,13 @@ export default {
     return {
       status: 'loading',
       activityData: {},
-      repeatUnitSubOptionsCategories: {
-        week: [
-          {
-            text: 'M',
-            value: 'Monday',
-          },
-          {
-            text: 'Tu',
-            value: 'Tuesday',
-          },
-          {
-            text: 'W',
-            value: 'Wednesday',
-          },
-          {
-            text: 'Th',
-            value: 'Thursday',
-          },
-          {
-            text: 'F',
-            value: 'Friday',
-          },
-          {
-            text: 'Sa',
-            value: 'Saturday',
-          },
-          {
-            text: 'Su',
-            value: 'Sunday',
-          },
-        ],
-        month: {
-          byDate: _.map(_.range(28), i => ({ text: i + 1, value: i + 1 })),
-          byWeek: [
-            {
-              text: '1st',
-              value: 1,
-            },
-            {
-              text: '2nd',
-              value: 2,
-            },
-            {
-              text: '3rd',
-              value: 3,
-            },
-            {
-              text: '4th',
-              value: 4,
-            },
-          ],
-          byDay: [
-            {
-              text: 'M',
-              value: 'Monday',
-            },
-            {
-              text: 'Tu',
-              value: 'Tuesday',
-            },
-            {
-              text: 'W',
-              value: 'Wednesday',
-            },
-            {
-              text: 'Th',
-              value: 'Thursday',
-            },
-            {
-              text: 'F',
-              value: 'Friday',
-            },
-            {
-              text: 'Sa',
-              value: 'Saturday',
-            },
-            {
-              text: 'Su',
-              value: 'Sunday',
-            },
-          ],
-        },
-      },
       activities: [
         {
           name: 'EMA: Morning',
           unrestricted: true,
           repeatUnit: 'day',
+          longitudinal: true,
+          userStart: false,
           repeatUnitOptions: ['day', 'week', 'month'],
           repeatUnitSubOptions: {
             week: [],
@@ -464,6 +317,7 @@ export default {
           name: 'EMA: Evening',
           unrestricted: true,
           repeatUnit: 'week',
+          longitudinal: true,
           repeatUnitOptions: ['day', 'week', 'month'],
           repeatUnitSubOptions: {
             week: [],
@@ -479,6 +333,7 @@ export default {
             exact: false,
             random: false,
             allDay: true,
+            userStart: false,
             duration: 'allDay',
             durationOptions: [
               { text: 'All Day', value: 'allDay' },
@@ -528,6 +383,10 @@ export default {
         firstName: null,
         lastName: null,
       },
+      scheduleTypeOptions: [
+        { text: 'None', value: true },
+        { text: 'Recurring', value: false },
+      ],
     };
   },
   components: {
@@ -539,6 +398,7 @@ export default {
     ViewerIcon,
     ManagementEditor,
     AnotherCal,
+    ScheduleRepeats,
   },
   computed: {
     appletId() {
