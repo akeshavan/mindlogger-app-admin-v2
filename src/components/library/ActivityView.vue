@@ -80,9 +80,6 @@
   max-height: 100%;
   overflow: auto;
 }
-.d5 {
-    /* height:3000px */
-}
 
 </style>
 
@@ -169,9 +166,6 @@ export default {
   computed: {
     activityName() {
       return this.activity[0].meta.activity.name;
-    },
-    reducerURL() {
-      return functions[this.activityName];
     },
     filteredActivity() {
       let allData = this.activity;

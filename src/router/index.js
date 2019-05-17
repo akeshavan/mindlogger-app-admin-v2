@@ -7,7 +7,6 @@ import AllApplets from '@/components/AllApplets';
 import ViewApplet from '@/components/ViewApplet';
 import AppletOverview from '@/components/AppletOverview';
 import ViewAppletUser from '@/components/ViewAppletForUser';
-import ForgotPassword from '@/components/ForgotPassword';
 import Manage from '@/components/Manage';
 import Guide from '@/components/UserGuide';
 import config from '@/config';
@@ -48,11 +47,6 @@ export default new Router({
         apiHost: config.apiHost,
         signupLink: { name: 'SignUp' },
       },
-    },
-    {
-      path: '/forgot',
-      name: 'Forgot',
-      component: ForgotPassword,
     },
     {
       path: '/manage/:appletId',

@@ -28,8 +28,14 @@
             name="radio-btn-outline"
           ></b-form-radio-group>
         </b-form-group> -->
-        <b-button variant="success" class="mt-1 mb-1" v-if="data.item.manager && data.item.appletId" :to="`/manage/${data.item.appletId}`">Manage</b-button>
-        <b-button variant="info" class="mt-1 mb-1" v-if="data.item.reviewer && data.item.appletId" :to="`/review/${data.item.appletId}`">Review</b-button>
+        <b-button variant="success" class="mt-1 mb-1"
+         v-if="data.item.manager && data.item.appletId" :to="`/manage/${data.item.appletId}`"
+          >Manage
+        </b-button>
+        <b-button variant="info" class="mt-1 mb-1"
+         v-if="data.item.reviewer && data.item.appletId" :to="`/review/${data.item.appletId}`">
+         Review
+        </b-button>
       </template>
 
     </b-table>

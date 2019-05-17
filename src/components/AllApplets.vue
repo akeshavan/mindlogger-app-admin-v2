@@ -9,20 +9,6 @@
         </p>
       </b-modal>
 
-      <!-- <b-row class="jumbotron mb-0 pb-0 mt-3 pt-3">
-        <b-col class="text-center">
-          <h1>Applets</h1>
-          <p class="lead">An applet consists of various activities (e.g. assessments).
-            Each activity consists of a sequence of screens.
-          </p>
-          <img src="@/assets/custom/MentalModel.svg" class="w-75 mb-3"/>
-          <div class="mb-3">
-            <p>Not sure where to start? Check out our User Guide:</p>
-            <b-button to="/guide" size="lg" variant="primary">User Guide</b-button>
-          </div>
-        </b-col>
-      </b-row> -->
-
       <b-row v-if="isLoggedIn" class="mt-3">
         <b-col>
 
@@ -45,62 +31,6 @@
                 </b-col>
               </b-row>
             </div>
-            <!-- <b-table striped hover responsive v-if="userActivityTable.length || status === 'ready'"
-              :items="userActivityTable" :fields="userTableFields">
-              <template slot="logo" slot-scope="data">
-                <span v-if="data.item.logoImage">
-                  <img :src="getImageURL(data.item.logoImage['@id'])" class="tableLogo">
-                </span>
-              </template>
-
-              <template slot="manage" slot-scope="data">
-                <span v-if="data.item.role.indexOf('Manager') > -1">
-                  <b-button
-                  v-b-tooltip.hover title="Manage User Roles"
-                    size="sm"
-                    variant="outline-primary"
-                    :to="'/manage/'+data.item.activityId">
-                    <i class="fas fa-users"></i>
-                  </b-button>
-                </span>
-              </template>
-              <template slot="view" slot-scope="data">
-                <span v-if="data.item.role.indexOf('Viewer') > -1">
-                  <b-button
-                    size="sm"
-                    variant="info"
-                    v-b-tooltip.hover title="View data"
-                    :to="'/view_activity/'+data.item.activityId">
-                    <i class="fas fa-eye"></i>
-                  </b-button>
-                </span>
-              </template>
-
-              <template slot="edit" slot-scope="data">
-                <span v-if="data.item.role.indexOf('Editor') > -1">
-                  <b-button
-                    size="sm"
-                    variant="secondary"
-                    v-b-tooltip.hover title="Edit activities"
-                    :to="'/edit_activity_set/'+data.item.activityId">
-                    <i class="fas fa-pen"></i>
-                  </b-button>
-                </span>
-              </template>
-
-              <template slot="delete" slot-scope="data">
-                <span v-if="data.item.role.indexOf('Editor') > -1">
-                  <button type="button" class="close"
-                  aria-label="Close" style="width:100%"
-                  v-b-tooltip.hover title="Delete this applet"
-                  @click="deleteActivitySet(data.item)"
-                  >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                </span>
-              </template>
-
-            </b-table> -->
 
             <Loading v-else-if="status === 'loading'" />
           </transition>
