@@ -42,6 +42,7 @@
     "vue-cal": "^1.56.0",
     "vue-ctk-date-time-picker": "^2.0.6",
     "vue-input-autowidth": "^1.0.2",
+    "vue-json-pretty": "^1.6.0",
     "vue-resize": "^0.4.5",
     "vue-router": "^3.0.1",
     "vue-slider-component": "^2.8.6",

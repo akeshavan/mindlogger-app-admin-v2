@@ -36,6 +36,9 @@ export default {
       type: Boolean,
       default: true,
     },
+    input: {
+      type: Array,
+    },
   },
   data() {
     return {
@@ -51,16 +54,25 @@ export default {
         start: null,
         end: null,
       });
+      this.$emit('update', this.ranges);
     },
     removeRange(idx) {
       this.ranges.splice(idx, 1);
+      this.$emit('update', this.ranges);
     },
     setStart(t, i) {
       this.ranges[i].start = t;
+      this.$emit('update', this.ranges);
     },
     setEnd(t, i) {
       this.ranges[i].end = t;
+      this.$emit('update', this.ranges);
     },
+  },
+  mounted() {
+    if (this.input.length) {
+      this.ranges = this.input;
+    }
   },
 };
 </script>

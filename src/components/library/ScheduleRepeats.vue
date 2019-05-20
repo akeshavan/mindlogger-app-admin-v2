@@ -1,7 +1,6 @@
 <template>
   <div v-if="!act.unrestricted && act.longitudinal">
     <h5 class="mb-3">Recurrence Options</h5>
-
     <b-form-group label="Scheduling reference point">
       <b-form-radio-group
         v-model="act.userStart"
@@ -14,7 +13,7 @@
     <div v-if="!act.userStart">
       <div> Repeat by </div>
       <b-form-select v-model="act.repeatUnit"
-        :options="act.repeatUnitOptions"
+        :options="repeatUnitOptions"
         :disabled="act.unrestricted"
         class="mt-3 mb-3"
         ></b-form-select>
@@ -42,7 +41,7 @@
         >
           <b-form-checkbox-group
             :disabled="act.unrestricted"
-            v-model="act.monthFrequencySubOptions.byDate"
+            v-model="act.repeatUnitSubOptions.month.byDate"
             :options="repeatUnitSubOptionsCategories[act.repeatUnit].byDate"
             buttons
             button-variant="outline-primary"
@@ -56,7 +55,7 @@
         >
           <b-form-checkbox-group
             :disabled="act.unrestricted"
-            v-model="act.monthFrequencySubOptions.byWeek"
+            v-model="act.repeatUnitSubOptions.month.byWeek"
             :options="repeatUnitSubOptionsCategories[act.repeatUnit].byWeek"
             buttons
             button-variant="outline-primary"
@@ -69,7 +68,7 @@
         >
           <b-form-checkbox-group
             :disabled="act.unrestricted"
-            v-model="act.monthFrequencySubOptions.byDay"
+            v-model="act.repeatUnitSubOptions.month.byDay"
             :options="repeatUnitSubOptionsCategories[act.repeatUnit].byDay"
             buttons
             button-variant="outline-primary"
@@ -86,8 +85,8 @@
             <b-form-group label="Duration" class="mt-3 mb-3">
               <b-form-radio-group
                 :disabled="act.unrestricted"
-                v-model="act.startTime.duration"
-                :options="act.startTime.durationOptions"
+                v-model="act.time.duration"
+                :options="absoluteDurationOptions"
               ></b-form-radio-group>
             </b-form-group>
 
@@ -95,18 +94,18 @@
           <b-col>
         <div class="mt-3 mb-3" v-if="!act.unrestricted">
           <div>Number of responses
-            <span v-if="act.startTime.duration === 'allDay'">in a day</span>
+            <span v-if="act.time.duration === 'allDay'">in a day</span>
             <span v-else>per time range</span>
           </div>
           <b-form-input :disabled="act.unrestricted"
-            v-model="act.startTime.numResponses" type="number" ></b-form-input>
+            v-model="act.time.numResponses" type="number" ></b-form-input>
         </div>
           </b-col>
         </b-row>
 
 
         <!-- if time range -->
-        <div v-if="act.startTime.duration === 'timeRange'" class="mt-3 mb-3">
+        <div v-if="act.time.duration === 'timeRange'" class="mt-3 mb-3">
             <p>This activity will be available during the following times:</p>
             <TimeRangeGroup id="hi"/>
         </div>
@@ -115,12 +114,16 @@
 
         <div class="mt-3 mb-3" v-if="!act.unrestricted">
           <b-form-radio-group
-            v-model="randomNotification"
+            v-model="act.time.random"
             :options="randomNotificationOptions"
             ></b-form-radio-group>
 
-          <TimeRangeGroup id="notifications" :useEnd="false" v-if="!randomNotification"/>
-          <TimeRangeGroup id="notifications" :useEnd="true" v-else />
+          <TimeRangeGroup id="notifications" :useEnd="false" v-if="!act.time.random"
+           :input="act.time.notifications" v-on:update="setNotification"/>
+
+          <TimeRangeGroup id="notifications" :useEnd="true" v-else
+           :input="act.time.notifications"
+           v-on:update="setNotification"/>
         </div>
 
     </div>
@@ -139,7 +142,7 @@
         </b-col>
         <b-col :cols="5">
           <b-form-select v-model="act.repeatUnit"
-            :options="act.repeatUnitOptions"
+            :options="repeatUnitOptions"
             :disabled="act.unrestricted"
             ></b-form-select>
         </b-col>
@@ -214,9 +217,19 @@ export default {
       type: Object,
     },
   },
+  methods: {
+    setNotification(times) {
+      this.act.time.notifications = times;
+    },
+  },
   data() {
     return {
       randomNotification: false,
+      repeatUnitOptions: ['day', 'week', 'month'],
+      absoluteDurationOptions: [
+        { text: 'All Day', value: 'allDay' },
+        { text: 'Time Range', value: 'timeRange' },
+      ],
       userStartOptions: [
         { text: 'Relative to the first time a user responds', value: true },
         { text: 'Absolute date times', value: false },

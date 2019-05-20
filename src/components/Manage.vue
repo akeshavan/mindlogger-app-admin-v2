@@ -144,9 +144,11 @@
 
       <div class="mt-3 pt-3 mb-3 pb-3">
         <h2 class="mt-3 mb-3 text-center">Scheduling</h2>
+
         <div v-for="(act, index) in activities" :key="act.name" class="mt-3 mb-3">
           <h4 class="mt-3">{{act.name}}</h4>
-
+          <vue-json-pretty :data="act"/>
+          <br>
           <b-form-checkbox
             v-model="act.longitudinal"
             class="mt-3 mb-3"
@@ -245,6 +247,7 @@
 <script>
 /* eslint-disable */
 import _ from 'lodash';
+import VueJsonPretty from 'vue-json-pretty';
 // import 'tui-calendar/dist/tui-calendar.css';
 // import { Calendar } from '@toast-ui/vue-calendar';
 /* eslint-enable */
@@ -286,30 +289,22 @@ export default {
           repeatUnit: 'day',
           longitudinal: true,
           userStart: false,
-          repeatUnitOptions: ['day', 'week', 'month'],
           repeatUnitSubOptions: {
             week: [],
-            month: [],
+            month: {
+              byDate: [],
+              byWeek: [],
+              byDay: [],
+            },
           },
-          monthFrequencySubOptions: {
-            byDate: [],
-            byWeek: [],
-            byDay: [],
-          },
-          startTime: {
+          time: {
             exact: false,
             random: false,
             allDay: false,
             duration: 'allDay',
-            durationOptions: [
-              { text: 'All Day', value: 'allDay' },
-              { text: 'Time Range', value: 'timeRange' },
-            ],
             numResponses: 1,
-            range: {
-              start: new Date(),
-              end: new Date(),
-            },
+            durationRange: [],
+            notifications: [],
             durationHours: 3,
           },
         },
@@ -318,32 +313,24 @@ export default {
           unrestricted: true,
           repeatUnit: 'week',
           longitudinal: true,
-          repeatUnitOptions: ['day', 'week', 'month'],
           repeatUnitSubOptions: {
             week: [],
-            month: [],
+            month: {
+              useDate: false,
+              byDate: [],
+              byWeek: [1],
+              byDay: ['Monday', 'Wednesday', 'Friday'],
+            },
           },
-          monthFrequencySubOptions: {
-            useDate: false,
-            byDate: [],
-            byWeek: [1],
-            byDay: ['Monday', 'Wednesday', 'Friday'],
-          },
-          startTime: {
+          time: {
             exact: false,
             random: false,
             allDay: true,
             userStart: false,
             duration: 'allDay',
-            durationOptions: [
-              { text: 'All Day', value: 'allDay' },
-              { text: 'Time Range', value: 'timeRange' },
-            ],
             numResponses: 1,
-            range: {
-              start: new Date(),
-              end: new Date(),
-            },
+            durationRange: [],
+            notifications: [],
             durationHours: 1.5,
           },
         },
@@ -399,6 +386,7 @@ export default {
     ManagementEditor,
     AnotherCal,
     ScheduleRepeats,
+    VueJsonPretty,
   },
   computed: {
     appletId() {
