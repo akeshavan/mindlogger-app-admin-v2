@@ -288,7 +288,7 @@ export default {
           unrestricted: true,
           repeatUnit: 'day',
           longitudinal: true,
-          userStart: false,
+          relative: false,
           repeatUnitSubOptions: {
             week: [],
             month: {
@@ -301,11 +301,24 @@ export default {
             exact: false,
             random: false,
             allDay: false,
+            userStart: false,
+            userStartOptions: {
+              repeat: {
+                number: 1,
+                unit: 'day',
+              },
+              duration: {
+                number: 1,
+                unit: 'hours',
+              },
+              sendNotificationsAtStart: true,
+            },
             duration: 'allDay',
             numResponses: 1,
             durationRange: [],
             notifications: [],
             durationHours: 3,
+            recurrences: 6,
           },
         },
         {
@@ -327,11 +340,23 @@ export default {
             random: false,
             allDay: true,
             userStart: false,
+            userStartOptions: {
+              repeat: {
+                number: 1,
+                unit: 'day',
+              },
+              duration: {
+                number: 1,
+                unit: 'hours',
+              },
+              sendNotificationsAtStart: true,
+            },
             duration: 'allDay',
             numResponses: 1,
             durationRange: [],
             notifications: [],
             durationHours: 1.5,
+            recurrences: 6,
           },
         },
       ],

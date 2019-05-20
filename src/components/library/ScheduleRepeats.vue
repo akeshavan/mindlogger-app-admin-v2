@@ -2,15 +2,18 @@
   <div v-if="!act.unrestricted && act.longitudinal">
     <h5 class="mb-3">Recurrence Options</h5>
     <b-form-group label="Scheduling reference point">
+      <!-- reference point -->
       <b-form-radio-group
-        v-model="act.userStart"
+        v-model="act.time.userStart"
         :options="userStartOptions"
         :name="`userstart-${act.name}`"
         stacked
       ></b-form-radio-group>
     </b-form-group>
 
-    <div v-if="!act.userStart">
+
+    <!-- ABSOLUTE REFERENCE -->
+    <div v-if="!act.time.userStart">
       <div> Repeat by </div>
       <b-form-select v-model="act.repeatUnit"
         :options="repeatUnitOptions"
@@ -127,6 +130,8 @@
         </div>
 
     </div>
+
+    <!-- RELATIVE REFERENCE -->
     <div v-else>
       <b-row>
         <b-col>
@@ -138,12 +143,14 @@
           <span>every</span>
         </b-col>
         <b-col :cols="5">
-          <b-form-input placeholder="N" type="number" value="1"></b-form-input>
+          <b-form-input placeholder="N" type="number"
+           v-model="act.time.userStartOptions.repeat.number"></b-form-input>
         </b-col>
         <b-col :cols="5">
-          <b-form-select v-model="act.repeatUnit"
+          <b-form-select
             :options="repeatUnitOptions"
             :disabled="act.unrestricted"
+            v-model="act.time.userStartOptions.repeat.unit"
             ></b-form-select>
         </b-col>
       </b-row>
@@ -158,12 +165,14 @@
           <span>Duration for this activity:</span>
         </b-col>
         <b-col :cols="4">
-          <b-form-input placeholder="N" type="number" value="1"></b-form-input>
+          <b-form-input placeholder="N" type="number" value="1"
+           v-model="act.time.userStartOptions.duration.number"></b-form-input>
         </b-col>
         <b-col :cols="4">
           <b-form-select
             value="hours"
             :options="durationOptions"
+            v-model="act.time.userStartOptions.duration.unit"
             ></b-form-select>
         </b-col>
       </b-row>
@@ -181,6 +190,7 @@
 
           <b-form-checkbox
             class="mt-3 mb-3"
+            v-model="act.time.userStartOptions.sendNotificationsAtStart"
           >
             <div>Send notification at start time</div>
           </b-form-checkbox>
