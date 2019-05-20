@@ -111,10 +111,16 @@
             <TimeRangeGroup id="hi"/>
         </div>
 
+        <p>Send notifications at the following times:</p>
 
         <div class="mt-3 mb-3" v-if="!act.unrestricted">
-          <p>Send notifications at the following times:</p>
-          <TimeRangeGroup id="notifications" :useEnd="false"/>
+          <b-form-radio-group
+            v-model="randomNotification"
+            :options="randomNotificationOptions"
+            ></b-form-radio-group>
+
+          <TimeRangeGroup id="notifications" :useEnd="false" v-if="!randomNotification"/>
+          <TimeRangeGroup id="notifications" :useEnd="true" v-else />
         </div>
 
     </div>
@@ -162,6 +168,8 @@
       <b-row class="mt-3">
         <b-col cols="4">
           Number of responses over duration:
+          <br>
+          <small>Type -1 for infinite</small>
         </b-col>
         <b-col cols="8">
           <b-form-input placeholder="N" type="number" value="1"></b-form-input>
@@ -174,6 +182,20 @@
             <div>Send notification at start time</div>
           </b-form-checkbox>
 
+    </div>
+    <div class="mt-3">
+      <b-row>
+        <b-col cols="4">
+          <p>Number of recurrences
+            <br>
+            <small>Type -1 for infinite</small>
+          </p>
+
+        </b-col>
+        <b-col cols="8">
+          <b-form-input placeholder="N" type="number" value="6"></b-form-input>
+        </b-col>
+      </b-row>
     </div>
   </div>
 </template>
@@ -194,6 +216,7 @@ export default {
   },
   data() {
     return {
+      randomNotification: false,
       userStartOptions: [
         { text: 'Relative to the first time a user responds', value: true },
         { text: 'Absolute date times', value: false },
@@ -201,6 +224,10 @@ export default {
       durationOptions: [
         { text: 'hours', value: 'hours' },
         { text: 'days', value: 'days' },
+      ],
+      randomNotificationOptions: [
+        { text: 'exact', value: false },
+        { text: 'random', value: true },
       ],
       repeatUnitSubOptionsCategories: {
         week: [
