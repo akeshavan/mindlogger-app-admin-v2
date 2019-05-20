@@ -107,7 +107,7 @@
         <!-- if time range -->
         <div v-if="act.time.duration === 'timeRange'" class="mt-3 mb-3">
             <p>This activity will be available during the following times:</p>
-            <TimeRangeGroup id="hi"/>
+            <TimeRangeGroup id="hi" :input="act.time.durationRange" v-on:update="setDurationTimes"/>
         </div>
 
         <p>Send notifications at the following times:</p>
@@ -220,6 +220,9 @@ export default {
   methods: {
     setNotification(times) {
       this.act.time.notifications = times;
+    },
+    setDurationTimes(times) {
+      this.act.time.durationRange = times;
     },
   },
   data() {
