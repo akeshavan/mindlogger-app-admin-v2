@@ -196,6 +196,7 @@
           </b-form-checkbox>
 
     </div>
+
     <div class="mt-3">
       <b-row>
         <b-col cols="4">
@@ -206,15 +207,24 @@
 
         </b-col>
         <b-col cols="8">
-          <b-form-input placeholder="N" type="number" value="6"></b-form-input>
+          <b-form-input placeholder="N" type="number" value="6" v-model="act.time.recurrences">
+          </b-form-input>
         </b-col>
       </b-row>
     </div>
+
+    <div class="mt-3">
+      <b-button @click="sendDates">
+        Calculate Dates
+      </b-button>
+    </div>
+
   </div>
 </template>
 
 <script>
 import _ from 'lodash';
+import moment from 'moment';
 import TimeRangeGroup from './TimeRangeGroup';
 
 export default {
@@ -233,6 +243,50 @@ export default {
     },
     setDurationTimes(times) {
       this.act.time.durationRange = times;
+    },
+    sendDates() {
+      this.$emit('dates', this.getDates());
+    },
+    getDates() {
+      if (this.act.time.userStart) {
+        // TODO: insert calculation for relative start time here.
+        return this.relativeCalc(new Date());
+      }
+      // TODO: calculation from absolute dates here.
+      return this.absoluteCalc();
+    },
+    absoluteCalc() {
+      console.log('absolute');
+    },
+    relativeCalc(timeOfResponse) {
+      const t = moment(timeOfResponse);
+      const needsNotifications = this.act.time.userStartOptions.sendNotificationsAtStart;
+      let N = this.act.time.recurrences;
+      N = N < 0 ? 100 : N;
+      const rNumber = this.act.time.userStartOptions.repeat.number;
+      const rUnit = this.act.time.userStartOptions.repeat.unit;
+
+      const dNumber = this.act.time.userStartOptions.duration.number;
+      const dUnit = this.act.time.userStartOptions.duration.unit;
+
+      const output = [];
+      let prev = t;
+      for (let i = 0; i < N; i += 1) {
+        const entry = { notification: {}, duration: {} };
+        const newTime = prev.clone().add(rNumber, rUnit);
+        if (needsNotifications) {
+          entry.notification = newTime;
+        }
+        entry.duration = {
+          start: newTime,
+          end: newTime.clone().add(dNumber, dUnit),
+          n: this.act.time.numResponses,
+        };
+        prev = newTime;
+        output.push(entry);
+      }
+      console.log(output);
+      return output;
     },
   },
   data() {

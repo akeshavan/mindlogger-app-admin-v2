@@ -147,7 +147,7 @@
 
         <div v-for="(act, index) in activities" :key="act.name" class="mt-3 mb-3">
           <h4 class="mt-3">{{act.name}}</h4>
-          <vue-json-pretty :data="act"/>
+          <!-- <vue-json-pretty :data="act"/> -->
           <br>
           <b-form-checkbox
             v-model="act.longitudinal"
@@ -187,14 +187,12 @@
           </b-form-checkbox> -->
 
           <!-- Repeats -->
-          <ScheduleRepeats :act="act"/>
+          <ScheduleRepeats :act="act" v-on:dates="dates => setDates(act, index, dates)"/>
 
           <!-- Specific dates -->
-
-
           <hr>
         </div>
-        <AnotherCal />
+        <AnotherCal :events="events"/>
       </div>
 
     </b-container>
@@ -282,13 +280,14 @@ export default {
     return {
       status: 'loading',
       activityData: {},
+      dates: {},
+      events: [],
       activities: [
         {
           name: 'EMA: Morning',
           unrestricted: true,
           repeatUnit: 'day',
           longitudinal: true,
-          relative: false,
           repeatUnitSubOptions: {
             week: [],
             month: {
@@ -467,6 +466,31 @@ export default {
     },
   },
   methods: {
+    setDates(act, index, dates) {
+      this.dates[index] = {
+        name: act.name,
+        dates,
+      };
+      this.$forceUpdate();
+      this.computeEvents();
+    },
+    computeEvents() {
+      console.log('computing events');
+      const output = [];
+      _.mapValues(this.dates, (d) => {
+        console.log('hi', d);
+        _.map(d.dates, (dd) => {
+          const entry = {};
+          entry.title = d.name;
+          entry.name = d.name;
+          entry.start = dd.duration.start.format('YYYY-MM-DD HH:mm');
+          entry.end = dd.duration.end.format('YYYY-MM-DD HH:mm');
+          output.push(entry);
+        });
+      });
+      console.log('output', output);
+      this.events = output;
+    },
     getAppletRoles() {
       this.status = 'complete';
     },
